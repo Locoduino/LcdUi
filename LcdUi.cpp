@@ -7,7 +7,6 @@ description: <Base functions of the library>
 #include "LcdUi.h"
 
 #ifndef VISUALSTUDIO
-#include "MemoryFree.hpp"
 #include "arduino.h"
 #include <avr/pgmspace.h>
 #endif
@@ -74,16 +73,16 @@ LcdUi::LcdUi()
 	this->pWindowInterrupt = 0;
 }
 
-void FillBuffer(__FlashStringHelper *str)
+void FillBuffer(const __FlashStringHelper *str)
 {
 #ifdef VISUALSTUDIO
 	strcpy_s(Screen::buffer, 80, str);
 #else
-	char myChar;
+	const char *p = (const char *)str;
 	int k;
-	for (k = 0; k < pgm_read_byte(str + k) != 0x00; k++)
+	for (k = 0; k < pgm_read_byte(p + k) != 0x00; k++)
 	{
-		myChar = pgm_read_byte_near(str + k);
+		char myChar = pgm_read_byte_near(p + k);
 		Screen::buffer[k] = myChar;
 	}
 	Screen::buffer[k] = 0;
@@ -135,17 +134,13 @@ void LcdUi::StartSetup()
 	Serial.println(F(""));
 
 	Serial.println(F("*** Setup LcdUI started."));
-	freemem = freeMemory();
 #endif
 }
 
 void LcdUi::EndSetup()
 {	
 #ifdef DEBUG_MODE
-	Serial.print(F("*** Setup LcdUI Finished."));
-	Serial.print(F("   Memory used = "));
-	Serial.print(freemem - freeMemory());
-	Serial.println(F(" bytes"));
+	Serial.println(F("*** Setup LcdUI Finished."));
 #endif
 }
 

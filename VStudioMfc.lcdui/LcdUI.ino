@@ -30,9 +30,7 @@ const char  str_incconfig[] PROGMEM = "Vit Incrément";
 const char  str_nameconfig[] PROGMEM = "Nom";
 const char  str_loconew[] PROGMEM = "Nouvelle Loco";
 const char  str_locodel[] PROGMEM = "Supprimer loco";
-const char  str_locoedit[] PROGMEM = "Editer loco";
-const char  str_splash1[] PROGMEM = "LcdUI Demo 0.1";
-const char  str_splash2[] PROGMEM = "By ... you !";
+const char  str_locoedit[] PROGMEM = "Editer loco"; 
 
 const char * const string_table[] PROGMEM =
 {
@@ -60,10 +58,8 @@ const char * const string_table[] PROGMEM =
 	str_nameconfig,
 	str_loconew,
 	str_locodel,
-	str_locoedit,
-	str_splash1,
-	str_splash2
-};
+	str_locoedit
+}; 
 
 #define STR_DC		0
 #define STR_DCC		1
@@ -81,17 +77,15 @@ const char * const string_table[] PROGMEM =
 #define STR_MODECONFIG		13
 #define STR_LOCOSELECT		14
 #define STR_RESETCONFIG		15
-#define STR_YES			16
-#define STR_NO			17
-#define STR_CONFIRM		18
+#define STR_YES				16
+#define STR_NO				17
+#define STR_CONFIRM			18
 #define STR_BACKLIGHTCFG	19
-#define STR_INCCFG		20
-#define STR_NAMECFG		21
-#define STR_LOCONEW		22
-#define STR_LOCOREMOVE		23
-#define STR_LOCOEDIT		24
-#define STR_SPLASH1		25
-#define STR_SPLASH2		26
+#define STR_INCCFG			20
+#define STR_NAMECFG			21
+#define STR_LOCONEW			20
+#define STR_LOCOREMOVE		21
+#define STR_LOCOEDIT		22
 
 LcdUi lcd;
 ScreenTwoLines screen;
@@ -101,7 +95,7 @@ bool backlight;
 char name[80];
 
 void setup()
-{
+{								
 	LcdUi::StartSetup();
 
 	screen.Setup(16, 2, string_table, 0, 1, 2, 3, 4, 5, 6);
@@ -109,23 +103,22 @@ void setup()
 	Screen::NoMsg = 17;
 	lcd.Setup(&screen, 10);
 
-	WindowSplash *pSplash = (WindowSplash *)lcd.AddWindow(new WindowSplash(STR_SPLASH1, STR_SPLASH2, 500));	// Splash screen
-	WindowChoice *pChoiceMain = (WindowChoice *)lcd.AddWindow(new WindowChoice(STR_MODEMODECHOICE));	// menu
-	pChoiceMain->AddChoice(STR_MODECONFIG);
-		WindowChoice *pChoiceConfig = (WindowChoice *)lcd.AddWindow(new WindowChoice(STR_MODECONFIG), pChoiceMain, 0);	// config
-		pChoiceConfig->AddChoice(STR_INCCFG);
-			lcd.AddWindow(new WindowInt(STR_INCCFG), pChoiceConfig, 0);	// config incValue
-		pChoiceConfig->AddChoice(STR_NAMECFG);
-			lcd.AddWindow(new WindowText(STR_NAMECFG, 10), pChoiceConfig, 1);	// config name
-		pChoiceConfig->AddChoice(STR_BACKLIGHTCFG);
-			lcd.AddWindow(new WindowYesNo(STR_BACKLIGHTCFG), pChoiceConfig, 2);	// config backlight
-		pChoiceConfig->AddChoice(STR_RESETCONFIG);
-			lcd.AddWindow(new WindowConfirm(STR_RESETCONFIG, STR_CONFIRM), pChoiceConfig, 3);	// reset config 
-	pChoiceMain->AddChoice(STR_MODELOCOCTRL);
-		lcd.AddWindow(new Window(STR_MODELOCOCTRL), pChoiceMain, 1); // run
-
-	lcd.AddWindow(new WindowInterrupt(STR_STOP, STR_STOP2)); // Emergency stop
-	lcd.AddWindow(new WindowInterrupt(STR_DCDCC, STR_DCDCC2)); // Mode Dc/DCC change
+	WindowChoice *pChoice = (WindowChoice *) lcd.AddWindow(new WindowChoice(0, STR_MODEMODECHOICE));	// menu
+	pChoice->AddChoice(STR_MODECONFIG);
+	pChoice->AddChoice(STR_MODELOCOCTRL);
+	pChoice->AddChoice(STR_BACKLIGHTCFG);
+	pChoice = (WindowChoice *) lcd.AddWindow(new WindowChoice(1, STR_MODECONFIG));	// config
+	pChoice->AddChoice(STR_INCCFG);
+	pChoice->AddChoice(STR_NAMECFG);
+	pChoice->AddChoice(STR_BACKLIGHTCFG);
+	pChoice->AddChoice(STR_RESETCONFIG);
+	lcd.AddWindow(new WindowInt(2, STR_INCCFG));	// config val1
+	lcd.AddWindow(new WindowText(2, STR_NAMECFG, 10));	// config val2
+	lcd.AddWindow(new WindowYesNo(2, STR_BACKLIGHTCFG));	// config val3
+	lcd.AddWindow(new WindowConfirm(2, STR_RESETCONFIG, STR_CONFIRM));	// config val3
+	lcd.AddWindow(new Window(1, STR_MODELOCOCTRL)); // run
+	lcd.AddWindow(new Window(0, STR_STOP)); // Except
+	lcd.AddWindow(new Window(0, STR_DCDCC)); // Error
 
 	incValue = 10;
 	backlight = false;
@@ -160,7 +153,7 @@ void loop()
 	}
 #endif
 
-	if (event != EVENT_NONE || lcd.GetState() != STATE_NONE || lcd.GetCurrentWindow()->GetType() == WINDOWTYPE_SPLASH)
+	if (event != EVENT_NONE || lcd.GetState() != STATE_NONE)
 	{
 		lcd.Loop(event);
 
