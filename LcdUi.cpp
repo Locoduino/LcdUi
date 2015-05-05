@@ -317,8 +317,11 @@ Window *LcdUi::GetWindow(byte inId)
 	return 0;
 }
 
-void LcdUi::Loop(byte inEvent)
+bool LcdUi::Loop(byte inEvent)
 {
+	if (inEvent == EVENT_NONE && this->GetState() == STATE_NONE && this->GetCurrentWindow()->GetType() != WINDOWTYPE_SPLASH)
+		return false;
+
 	if (this->pWindowInterrupt != 0)
 	{
 		this->pWindowInterrupt->Event(inEvent, this);
@@ -334,7 +337,7 @@ void LcdUi::Loop(byte inEvent)
 		else
 			if (this->pWindowInterrupt->GetState() == STATE_ABORTED)
 				InterruptEnd();
-		return;
+		return true;
 	}
 
 	this->pCurrentWindow->Event(inEvent, this);
@@ -349,6 +352,8 @@ void LcdUi::Loop(byte inEvent)
 
 	if (this->pCurrentWindow->GetState() == STATE_ABORTED)
 		GetPrevUIWindow();
+
+	return true;
 }
 
 void LcdUi::Interrupt(WindowInterrupt *inpWindow)

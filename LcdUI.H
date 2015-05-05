@@ -127,7 +127,7 @@ public:
 	static void StartSetup();
 	static void EndSetup();
 
-	void Loop(byte inEvent);
+	bool Loop(byte inEvent);
 	void Interrupt(WindowInterrupt *pInterrupt);
 	void InterruptEnd();
 	inline Window *GetCurrentWindow() { return this->pCurrentWindow; }

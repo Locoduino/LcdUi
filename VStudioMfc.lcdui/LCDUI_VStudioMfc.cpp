@@ -243,7 +243,6 @@ void setup()
 		lcd.AddWindow(new Window(STR_MODELOCOCTRL), pChoiceMain, 1); // run
 
 	lcd.AddWindow(new WindowInterrupt(STR_STOP, STR_STOP2)); // Emergency stop
-	lcd.AddWindow(new WindowInterrupt(STR_DCDCC, STR_DCDCC2)); // Mode Dc/DCC change
 
 	incValue = 10;
 	backlight = false;
@@ -278,10 +277,8 @@ void loop()
 	}
 #endif
 
-	if (event != EVENT_NONE || lcd.GetState() != STATE_NONE || lcd.GetCurrentWindow()->GetType() == WINDOWTYPE_SPLASH)
+	if (lcd.Loop(event))
 	{
-		lcd.Loop(event);
-
 		switch (lcd.GetState())
 		{
 		case STATE_INITIALIZE:

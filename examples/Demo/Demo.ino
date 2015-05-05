@@ -105,8 +105,8 @@ void setup()
 	LcdUi::StartSetup();
 
 	screen.Setup(16, 2, string_table, 0, 1, 2, 3, 4, 5, 6);
-	Screen::YesMsg = 16;
-	Screen::NoMsg = 17;
+	Screen::YesMsg = STR_YES;
+	Screen::NoMsg = STR_NO;
 	lcd.Setup(&screen, 10);
 
 	WindowSplash *pSplash = (WindowSplash *)lcd.AddWindow(new WindowSplash(STR_SPLASH1, STR_SPLASH2, 500));	// Splash screen
