@@ -92,6 +92,9 @@ void FillBuffer(const __FlashStringHelper *str)
 void LcdUi::Setup(Screen *inpScreen, int inNbWindows)
 {
 	this->pScreen = inpScreen;
+	this->SetWindowsNumber(inNbWindows);
+
+#ifdef DEBUG_MODE
 	this->pScreen->setCursor(0, 0);
 	if (this->pScreen->GetSizeX() <= 16)
 		FillBuffer(STR_LCDTITLE16);
@@ -113,8 +116,7 @@ void LcdUi::Setup(Screen *inpScreen, int inNbWindows)
 #else
 	delay(1000);
 #endif
-
-	this->SetWindowsNumber(inNbWindows);
+#endif
 }
 
 void LcdUi::StartSetup()
@@ -189,9 +191,9 @@ int LcdUi::GetWindowIndex(Window *inpRef)
 Window *LcdUi::GetChildWindow(Window *inpRef, byte inChoice)
 {
 	for (int ref1 = 0; ref1 < this->windowAddcounter; ref1++)
-		if (this->GetFather(pWindows[ref1]) == inpRef)
+		if (this->GetFather(ref1) == inpRef)
 		{
-			byte choice = this->GetFatherChoice(pWindows[ref1]);
+			byte choice = this->GetFatherChoice(ref1);
 			if (inChoice == 255 || choice == inChoice)
 				return pWindows[ref1];
 		}
@@ -285,7 +287,7 @@ void LcdUi::GetPrevUIWindow()
 		WindowChoice *pChoice = (WindowChoice *) pPrev;
 		if (pChoice != 0 && this->pCurrentWindow->GetState() == STATE_ABORTED)
 		{
-			byte escapeWindow = pChoice->GetEscapeWindows()[pChoice->GetChoiceIndex()];
+			byte escapeWindow = pChoice->GetChoiceEscapeWindow();
 			if (escapeWindow != 255)
 			{
 				Interrupt((WindowInterrupt *) this->GetWindow(escapeWindow));
