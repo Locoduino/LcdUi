@@ -3,8 +3,6 @@
 #define __window_H__
 //-------------------------------------------------------------------
 
-//-------------------------------------------------------------------
-
 #include "arduino.h"
 
 #ifdef VISUALSTUDIO
@@ -57,6 +55,7 @@ class Window
 protected:
 	byte firstLine;
 	byte state;
+	byte choiceValue;	// string number as stored in 'choices', not the index !
 
 public:
 	Window(byte inFirstLine);
@@ -67,8 +66,8 @@ public:
 	inline void SetFirstLine(byte inLine) { this->firstLine = inLine; }
 	inline void SetState(byte inState) { this->state = inState; }
 
-	inline virtual byte GetChoiceValue() const { return 0; }
-	inline virtual void SetChoiceValue(byte inValue) { }
+	inline virtual byte GetChoiceValue() const { return this->choiceValue; }
+	inline virtual void SetChoiceValue(byte inValue) { this->choiceValue = inValue; }
 	inline virtual int GetIntValue() const { return 0; }
 	inline virtual void SetValue(int inValue) { }
 	inline virtual const char *GetTextValue() const { return 0; }
@@ -77,23 +76,6 @@ public:
 	inline virtual byte GetType() const { return 255; }
 	inline virtual void Event(byte inEventType, LcdUi *inpLcd) {}
 };
-
-//-------------------------------------------------------------------
-
-//===================================================================
-// -> DO NOT WRITE ANYTHING BETWEEN HERE...
-// 		This section is reserved for automated code generation
-// 		This process tries to detect all user-created
-// 		functions in main_sketch.cpp, and inject their  
-// 		declarations into this file.
-// 		If you do not want to use this automated process,  
-//		simply delete the lines below, with "&MM_DECLA" text 
-//===================================================================
-//---- DO NOT DELETE THIS LINE -- @MM_DECLA_BEG@---------------------
-//---- DO NOT DELETE THIS LINE -- @MM_DECLA_END@---------------------
-// -> ...AND HERE. This space is reserved for automated code generation!
-//===================================================================
-
 
 //-------------------------------------------------------------------
 #endif

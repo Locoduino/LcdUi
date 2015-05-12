@@ -22,7 +22,6 @@ void WindowYesNo::Event(byte inEventType, LcdUi *inpLcd)
 	{
 		pScreen->DisplayHeader(this->firstLine);
 
-		//this->MemoChoiceValue();
 		this->state = STATE_INITIALIZE;
 	}
 
@@ -41,7 +40,6 @@ void WindowYesNo::Event(byte inEventType, LcdUi *inpLcd)
 		this->state = STATE_CONFIRMED;
 		break;
 	case EVENT_CANCEL:
-		//this->RestoreChoiceValue();
 		this->state = STATE_ABORTED;
 		break;
 	}

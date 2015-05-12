@@ -76,7 +76,7 @@ LcdUi::LcdUi()
 void FillBuffer(const __FlashStringHelper *str)
 {
 #ifdef VISUALSTUDIO
-	strcpy_s(Screen::buffer, 80, str);
+	strcpy_s(Screen::buffer, 40, str);
 #else
 	const char *p = (const char *)str;
 	int k;

@@ -3,10 +3,8 @@
 #define __windowText_H__
 //-------------------------------------------------------------------
 
-//-------------------------------------------------------------------
-
 #include "Window.hpp"
-#include "string.h"
+//#include "string.h"
 
 //-------------------------------------------------------------------
 
@@ -21,7 +19,7 @@ private:
 	byte maxTextValueLength;
 	byte currentCharPos;
 	byte currentCharEdited;
-	char textValue[WINDOW_MAXTEXTVALUESIZE + 1], memoTextValue[WINDOW_MAXTEXTVALUESIZE + 1];
+	char textValue[WINDOW_MAXTEXTVALUESIZE + 1];
 
 public:
 	WindowText(byte inFirstLine, byte inMaxLengthValue = WINDOW_MAXTEXTVALUESIZE);
@@ -35,23 +33,6 @@ public:
 
 	void Event(byte inEventType, LcdUi *inpLcd);
 };
-
-//-------------------------------------------------------------------
-
-//===================================================================
-// -> DO NOT WRITE ANYTHING BETWEEN HERE...
-// 		This section is reserved for automated code generation
-// 		This process tries to detect all user-created
-// 		functions in main_sketch.cpp, and inject their  
-// 		declarations into this file.
-// 		If you do not want to use this automated process,  
-//		simply delete the lines below, with "&MM_DECLA" text 
-//===================================================================
-//---- DO NOT DELETE THIS LINE -- @MM_DECLA_BEG@---------------------
-//---- DO NOT DELETE THIS LINE -- @MM_DECLA_END@---------------------
-// -> ...AND HERE. This space is reserved for automated code generation!
-//===================================================================
-
 
 //-------------------------------------------------------------------
 #endif

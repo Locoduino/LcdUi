@@ -13,8 +13,8 @@ WindowText::WindowText(byte inFirstLine, byte inMaxLengthValue) : Window(inFirst
 { 
 	this->maxTextValueLength = inMaxLengthValue;
 	this->currentCharPos = 0;
+	this->currentCharEdited = 0;
 	memset(this->textValue, 0, WINDOW_MAXTEXTVALUESIZE);
-	memset(this->memoTextValue, 0, WINDOW_MAXTEXTVALUESIZE);
 }
 
 void WindowText::Event(byte inEventType, LcdUi *inpLcd)

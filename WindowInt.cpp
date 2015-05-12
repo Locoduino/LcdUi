@@ -17,7 +17,6 @@ WindowInt::WindowInt(byte inFirstLine, int inMaxIntValue, int inMinIntValue) : W
 void WindowInt::Event(byte inEventType, LcdUi *inpLcd)
 {
 	bool showValue = false;
-	Screen *pScreen = inpLcd->GetScreen();
 
 	if (this->state == STATE_INITIALIZE)
 	{
@@ -27,7 +26,7 @@ void WindowInt::Event(byte inEventType, LcdUi *inpLcd)
 
 	if (this->state == STATE_START)
 	{
-		pScreen->DisplayHeader(this->firstLine);
+		inpLcd->GetScreen()->DisplayHeader(this->firstLine);
 
 		if (this->intValue > this->maxIntValue)
 			this->intValue = this->maxIntValue;
@@ -37,37 +36,34 @@ void WindowInt::Event(byte inEventType, LcdUi *inpLcd)
 		this->state = STATE_INITIALIZE;
 	}
 
+	int newValue = this->intValue;
 	switch (inEventType)
 	{
-	case EVENT_MORE:
-	{
-		int newValue = this->intValue + 1;
-		if (newValue <= this->maxIntValue)
-			this->intValue = newValue;
-	}
-	showValue = true;
-	break;
-	case EVENT_LESS:
-	{
-		int newValue = this->intValue - 1;
-		if (newValue >= this->minIntValue)
-			this->intValue = newValue;
-	}
-	showValue = true;
-	break;
-	case EVENT_MOVE:
-		break;
-	case EVENT_SELECT:
-		this->state = STATE_CONFIRMED;
-		break;
-	case EVENT_CANCEL:
-		this->state = STATE_ABORTED;
-		break;
+		case EVENT_MORE:
+			newValue++;
+			if (newValue <= this->maxIntValue)
+				this->intValue = newValue;
+			showValue = true;
+			break;
+		case EVENT_LESS:
+			newValue--;
+			if (newValue >= this->minIntValue)
+				this->intValue = newValue;
+			showValue = true;
+			break;
+		case EVENT_MOVE:
+			break;
+		case EVENT_SELECT:
+			this->state = STATE_CONFIRMED;
+			break;
+		case EVENT_CANCEL:
+			this->state = STATE_ABORTED;
+			break;
 	}
 
 	if (showValue)
 	{
-		pScreen->DisplayInt(this->intValue);
+		inpLcd->GetScreen()->DisplayInt(this->intValue);
 	}
 }
 

@@ -19,7 +19,13 @@
 
 //-------------------------------------------------------------------
 
-class ScreenTwoLines: public Screen
+#ifdef VISUALSTUDIO
+#define SCREEN	this->pScreenVS->
+#else
+#define SCREEN	this->pLcd->
+#endif
+
+class ScreenTwoLines : public Screen
 {
 private:
 	LiquidCrystalFast *pLcd;
@@ -41,12 +47,23 @@ public:
 #ifndef VISUALSTUDIO
 	void print(const __FlashStringHelper *inString);
 #endif
-	void print(const char *inString);
+	inline void print(const char *inString){
+		SCREEN print(inString);
+	}
 	void print(int inValue, char inType);
-	void write(char inValue);
-	void clear();
-	void home();
-	void setCursor(byte Col, byte Row);
+	inline void write(char inValue){
+		SCREEN write(inValue);
+	}
+	inline void clear(){
+		SCREEN clear();
+	}
+	inline void home(){
+		SCREEN home();
+	}
+	inline void setCursor(byte Col, byte Row){
+		SCREEN setCursor(Col, Row);
+	}
+
 	void cursor_on();
 	void cursor_off();
 	void blink_on();

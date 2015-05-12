@@ -20,7 +20,7 @@ protected:
 	byte sizex, sizey;
 
 public:
-	static char buffer[80];
+	static char buffer[40];
 	static int YesMsg;
 	static int NoMsg;
 

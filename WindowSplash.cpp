@@ -15,18 +15,16 @@ WindowSplash::WindowSplash(byte inFirstLine, byte inSecondLine, unsigned long in
 
 void WindowSplash::Event(byte inEventType, LcdUi *inpLcd)
 {
-	bool showValue = false;
-	Screen *pScreen = inpLcd->GetScreen();
-
 	if (this->state == STATE_INITIALIZE)
 	{
 		this->state = STATE_NONE;
-		showValue = true;
 		return;
 	}
 
 	if (this->state == STATE_START)
 	{
+		Screen *pScreen = inpLcd->GetScreen();
+
 		pScreen->DisplayHeader(this->firstLine);
 		pScreen->setCursor(0, 1);
 		pScreen->GetString(this->secondLine);

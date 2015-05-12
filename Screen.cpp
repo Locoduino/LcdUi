@@ -7,7 +7,7 @@ description: <Class for a basic screen>
 #include "LcdUi.h"
 #include "Screen.hpp"
 
-char Screen::buffer[80];
+char Screen::buffer[];
 int Screen::YesMsg;
 int Screen::NoMsg;
 
@@ -115,7 +115,7 @@ byte Screen::BuildStringLeft(const char *inString, byte inSizeMax, char *outStri
 char *Screen::GetString(int inString)
 {
 #ifdef VISUALSTUDIO
-	strcpy_s(buffer, 80, this->pStringTable[inString]);
+	strcpy_s(buffer, 40, this->pStringTable[inString]);
 #else
 	strcpy_P(buffer, (char*)pgm_read_word(&this->pStringTable[inString]));
 #endif

@@ -10,7 +10,6 @@ description: <Class for a basic screen>
 WindowConfirm::WindowConfirm(byte inFirstLine, byte inPrefix) : Window(inFirstLine)
 { 
 	this->prefix = inPrefix;
-	this->choiceValue = 0;
 }
 
 void WindowConfirm::Event(byte inEventType, LcdUi *inpLcd)

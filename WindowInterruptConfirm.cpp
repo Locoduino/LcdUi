@@ -9,7 +9,6 @@ description: <Class for a confirm dialog in interrupt context>
 
 WindowInterruptConfirm::WindowInterruptConfirm(byte inFirstLine, byte inPrefix) : WindowInterrupt(inFirstLine, inPrefix)
 { 
-	this->choiceValue = 0;
 }
 
 void WindowInterruptConfirm::Event(byte inEventType, LcdUi *inpLcd)

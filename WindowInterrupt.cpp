@@ -14,22 +14,16 @@ WindowInterrupt::WindowInterrupt(byte inFirstLine, byte inSecondLine) : Window(i
 
 void WindowInterrupt::Event(byte inEventType, LcdUi *inpLcd)
 {
-	bool showValue = false;
-	Screen *pScreen = inpLcd->GetScreen();
-
 	if (this->state == STATE_INITIALIZE)
-	{
 		this->state = STATE_NONE;
-		showValue = true;
-	}
 
 	if (this->state == STATE_START)
 	{
-		pScreen->DisplayHeader(this->firstLine);
-		pScreen->setCursor(0, 1);
-		pScreen->GetString(this->secondLine);
+		inpLcd->GetScreen()->DisplayHeader(this->firstLine);
+		inpLcd->GetScreen()->setCursor(0, 1);
+		inpLcd->GetScreen()->GetString(this->secondLine);
 
-		pScreen->print(Screen::buffer);
+		inpLcd->GetScreen()->print(Screen::buffer);
 
 		this->state = STATE_INITIALIZE;
 	}

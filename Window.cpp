@@ -11,5 +11,6 @@ Window::Window(byte inFirstLine)
 {
 	this->firstLine = inFirstLine;
 	this->state = STATE_START;
+	this->choiceValue = 0;
 }
 

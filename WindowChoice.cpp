@@ -10,8 +10,6 @@ description: <Class for a basic screen>
 WindowChoice::WindowChoice(byte inFirstLine) : Window(inFirstLine)
 {
 	this->choiceAddCounter = 0;
-	this->choiceValue = 0;
-	this->memoChoiceValue = 0;
 }
 
 void WindowChoice::AddChoice(byte inStringNumber, byte inInterruptOnEscape)
@@ -40,33 +38,28 @@ byte WindowChoice::GetChoiceIndex() const
 // Get the next choice value from choices, if the current selection is the last one, return to the first...
 void WindowChoice::MoveNextChoice()
 {
-	for (byte i = 0; i < this->choiceAddCounter; i++)
-		if (choices[i] == this->choiceValue)
-		{
-			i++;
-			if (i >= this->choiceAddCounter)
-				i = 0;
-			this->choiceValue = this->choices[i];
-			return;
-		}
+	byte ind = GetChoiceIndex();
 
-	this->choiceValue = choices[0];
+	if (ind == 255)
+		this->choiceValue = choices[0];
+
+	ind++;
+	if (ind >= this->choiceAddCounter)
+		ind = 0;
+	this->choiceValue = this->choices[ind];
 }
 
 // Get the previous choice value from choices, if the current selection is the first one, go to the last...
 void WindowChoice::MovePreviousChoice()
 {
-	for (byte i = 0; i < this->choiceAddCounter; i++)
-		if (choices[i] == this->choiceValue)
-		{
-			i--;
-			if (i == 255)
-				i = this->choiceAddCounter - 1;
-			this->choiceValue = this->choices[i];
-			return;
-		}
+	byte ind = GetChoiceIndex();
 
-	this->choiceValue = choices[0];
+	if (ind == 255)
+		this->choiceValue = choices[0];
+
+	if (ind == 0)
+		ind = this->choiceAddCounter;
+	this->choiceValue = this->choices[--ind];
 }
 
 void WindowChoice::Event(byte inEventType, LcdUi *inpLcd)
@@ -97,8 +90,6 @@ void WindowChoice::Event(byte inEventType, LcdUi *inpLcd)
 		this->MovePreviousChoice();
 		showValue = true;
 		break;
-	case EVENT_MOVE:
-		break;
 	case EVENT_SELECT:
 		this->SetState(STATE_CONFIRMED);
 		break;
@@ -109,6 +100,6 @@ void WindowChoice::Event(byte inEventType, LcdUi *inpLcd)
 
 	if (showValue)
 	{
-		pScreen->DisplayChoice(this->GetChoiceValue());
+		pScreen->DisplayChoice(this->choiceValue);
 	}
 }

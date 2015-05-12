@@ -25,36 +25,11 @@ void ScreenTwoLines::print(const __FlashStringHelper *inString)
 }
 #endif
 
-void ScreenTwoLines::print(const char *inString)
-{
-	SCREEN print(inString);
-}
-
 void ScreenTwoLines::print(int inValue, char inType)
 {
 #ifndef VISUALSTUDIO
 	SCREEN print(inValue, inType);
 #endif
-}
-
-void ScreenTwoLines::write(char inValue)
-{
-	SCREEN write(inValue);
-}
-
-void ScreenTwoLines::clear()
-{
-	SCREEN clear();
-}
-
-void ScreenTwoLines::home()
-{
-	SCREEN home();
-}
-
-void ScreenTwoLines::setCursor(byte Col, byte Row)
-{
-	SCREEN setCursor(Col, Row);
 }
 
 void ScreenTwoLines::cursor_on() 
