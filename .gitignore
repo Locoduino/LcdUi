@@ -4,3 +4,11 @@ VStudioMfc.lcdui/LCDUI_VStudioMfc.sdf
 VStudioMfc.lcdui/LCDUI_VStudioMfc.v12.suo
 VStudioMfc.lcdui/VStudioMfc.v12.suo
 VStudioMfc.lcdui/stdafx.pch
+VStudioMfc/Debug/
+VStudioMfc/LCDUI_VStudioMfc.aps
+VStudioMfc/LCDUI_VStudioMfc.sdf
+VStudioMfc/LCDUI_VStudioMfc.v12.suo
+VStudioMfc/LCDUI_VStudioMfc.vcxproj.user
+.gitignore
+VStudioMfc/ipch/lcdui_vstudiomfc-fc367587/vc120.ipch
+VStudioMfc/stdafx.pch
