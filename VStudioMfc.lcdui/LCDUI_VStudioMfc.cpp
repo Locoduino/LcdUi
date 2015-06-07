@@ -216,7 +216,7 @@ ScreenTwoLines screen;
 
 int incValue;
 bool backlight;
-char name[80];
+char name[40];
 
 void setup()
 {
@@ -225,6 +225,7 @@ void setup()
 	screen.Setup(16, 2, string_table, 0, 1, 2, 3, 4, 5, 6);
 	Screen::YesMsg = 16;
 	Screen::NoMsg = 17;
+	/*
 	lcd.Setup(&screen, 10);
 
 	lcd.AddWindow(new WindowSplash(STR_SPLASH1, STR_SPLASH2, 500));	// Splash screen
@@ -243,7 +244,25 @@ void setup()
 		lcd.AddWindow(new Window(STR_MODELOCOCTRL), pChoiceMain, 1); // run
 
 	lcd.AddWindow(new WindowInterrupt(STR_STOP, STR_STOP2)); // Emergency stop
+	*/
+	BEGIN_UI(lcd, screen, 10);
+	WINDOWSPLASH(STR_SPLASH1, STR_SPLASH2, 500);
+	WIN choice = WINDOWCHOICE(STR_MODEMODECHOICE);
+	ADDCHOICE(choice, STR_MODECONFIG);
+		WIN choice1 = WINDOWCHOICE(STR_MODECONFIG, choice, 0);
+		ADDCHOICE(choice1, STR_INCCFG);
+			WINDOWINT(STR_INCCFG, 200, 0, choice1, 0);
+		ADDCHOICE(choice1, STR_NAMECFG);
+			WINDOWTEXT(STR_NAMECFG, 10, choice1, 1);
+		ADDCHOICE(choice1, STR_BACKLIGHTCFG);
+		WINDOWYESNO(STR_BACKLIGHTCFG, choice1, 2);
+		ADDCHOICE(choice1, STR_RESETCONFIG);
+		WINDOWCONFIRM(STR_RESETCONFIG, STR_CONFIRM, choice1, 3);
+	ADDCHOICE(choice, STR_MODELOCOCTRL);
 
+	WINDOWINTERRUPT(STR_STOP, STR_STOP2);
+	END_UI();
+	
 	incValue = 10;
 	backlight = false;
 	strcpy(name, "Test");

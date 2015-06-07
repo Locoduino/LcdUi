@@ -106,9 +106,7 @@ private:
 	
 	// functions to move in the windows list
 	byte GetParentWindow(byte inRef);
-	byte GetChildWindow(byte inRef, byte inChoice = 255);
 	byte GetNextChildWindow(byte inRef);
-	byte GetPrevSiblingWindow(byte inRef);
 
 	// Functions used by interactive mode to evolute in the UI
 	void GetNextUIWindow();
@@ -157,3 +155,16 @@ public:
 #endif
 };
 
+#define BEGIN_UI(lui, screen, nb)					LcdUi *plui = &lui;	plui->Setup(&screen, nb);
+#define WIN											Window *
+#define WINDOWCHOICE(first, ...)					plui->AddWindow(new WindowChoice(first), ##__VA_ARGS__);
+#define ADDCHOICE(win, text, ...)					((WindowChoice *)win)->AddChoice(text);
+#define WINDOWCONFIRM(first, prefix, ...)			plui->AddWindow(new WindowConfirm(first, prefix), ##__VA_ARGS__)
+#define WINDOWINT(first, max, min, ...)				plui->AddWindow(new WindowInt(first, max, min), ##__VA_ARGS__)
+#define WINDOWINTERRUPT(first, second, ...)			plui->AddWindow(new WindowInterrupt(first, second), ##__VA_ARGS__)
+#define WINDOWINTERRUPTCONFIRM(first, prefix, ...)	plui->AddWindow(new WindowInterruptConfirm(first, prefix), ##__VA_ARGS__)
+#define WINDOWSPLASH(first, second, delay, ...)		plui->AddWindow(new WindowSplash(first, second, delay), ##__VA_ARGS__)
+#define WINDOWTEXT(first, len, ...)					plui->AddWindow(new WindowText(first, len), ##__VA_ARGS__)
+#define WINDOWYESNO(first, ...)						plui->AddWindow(new WindowYesNo(first), ##__VA_ARGS__)
+#define WINDOWCUSTOM(win, ...)						plui->AddWindow(win, ##__VA_ARGS__)
+#define END_UI()

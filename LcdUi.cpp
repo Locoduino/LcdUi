@@ -204,22 +204,6 @@ byte LcdUi::GetWindowIndex(Window *inpWindow) const
 	return 255;
 }
 
-byte LcdUi::GetChildWindow(byte inRef, byte inChoice)
-{
-	for (int ref1 = 0; ref1 < this->windowAddcounter; ref1++)
-		if (this->GetFather(ref1) == inRef)
-		{
-			byte choice = this->GetFatherChoice(ref1);
-			if (inChoice == 255 || choice == inChoice)
-				return ref1;
-		}
-
-#ifdef DEBUG_MODE
-	Serial.println(F("Window first child not found !"));
-#endif
-	return 255;
-}
-
 byte LcdUi::GetNextChildWindow(byte inRef)
 {
 	byte actualChoice = this->GetFatherChoice(inRef);
@@ -236,24 +220,6 @@ byte LcdUi::GetNextChildWindow(byte inRef)
 
 #ifdef DEBUG_MODE
 	Serial.println(F("Window next child not found !"));
-#endif
-	return 255;
-}
-
-byte LcdUi::GetPrevSiblingWindow(byte inRef)
-{
-	byte actualChoice = this->GetFatherChoice(inRef);
-
-	for (int ref1 = inRef - 1; ref1 >= 0; ref1--)
-		if (this->GetFather(ref1) == this->GetFather(inRef))
-		{
-			if (pWindows[ref1]->GetType() == WINDOWTYPE_INTERRUPT)
-				continue;
-			return ref1;
-		}
-
-#ifdef DEBUG_MODE
-	Serial.println(F("Window previous sibling not found !"));
 #endif
 	return 255;
 }
@@ -277,10 +243,43 @@ void LcdUi::GetNextUIWindow()
 	if (this->GetType() == WINDOWTYPE_CHOICE)
 	{
 		WindowChoice *pChoice = (WindowChoice *) this->GetGlobalCurrentWindow();
-		next = this->GetChildWindow(this->CurrentWindow, pChoice->GetChoiceIndex());
+		for (int ref1 = 0; ref1 < this->windowAddcounter; ref1++)
+			if (this->GetFather(ref1) == this->CurrentWindow)
+			{
+				byte choice = this->GetFatherChoice(ref1);
+				if (pChoice->GetChoiceIndex() == 255 || choice == pChoice->GetChoiceIndex())
+				{
+					next = ref1;
+					break;
+				}
+			}
+
+#ifdef DEBUG_MODE
+		if (next == 255)
+			Serial.println(F("Window first child not found !"));
+#endif
 	}
 	if (next == 255)
-		next = this->GetNextChildWindow(this->CurrentWindow);
+	{
+		byte actualChoice = this->GetFatherChoice(this->CurrentWindow);
+
+		for (int ref1 = this->CurrentWindow + 1; ref1 < this->windowAddcounter; ref1++)
+			if (this->GetFather(ref1) == this->GetFather(this->CurrentWindow))
+			{
+				if (pWindows[ref1]->GetType() == WINDOWTYPE_INTERRUPT)
+					continue;
+				byte choice = this->GetFatherChoice(ref1);
+				if (actualChoice == 255 || choice == actualChoice)
+				{
+					next = ref1;
+					break;
+				}
+			}
+
+#ifdef DEBUG_MODE
+		Serial.println(F("Window next child not found !"));
+#endif
+	}
 
 	if (next != 255)
 	{
@@ -308,9 +307,21 @@ void LcdUi::GetPrevUIWindow()
 	else
 	{
 		// If no parent : look for the previous sibling window...
-		prev = this->GetPrevSiblingWindow(this->CurrentWindow);
+
+		for (int ref1 = this->CurrentWindow - 1; ref1 >= 0; ref1--)
+			if (this->GetFather(ref1) == this->GetFather(this->CurrentWindow))
+			{
+				if (pWindows[ref1]->GetType() == WINDOWTYPE_INTERRUPT)
+					continue;
+				prev = ref1;
+			}
+
+#ifdef DEBUG_MODE
 		if (prev == 255)
-			this->SetState(STATE_NONE);
+			Serial.println(F("Window previous sibling not found !"));
+#endif
+		if (prev == 255)
+			this->GetGlobalCurrentWindow()->SetState(STATE_NONE);
 	}
 
 	if(prev != 255)
