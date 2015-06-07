@@ -7,7 +7,7 @@ description: <Class for a basic screen>
 #include "LcdUi.h"
 #include "WindowChoice.hpp"
 
-WindowChoice::WindowChoice(byte inFirstLine) : Window(inFirstLine)
+WindowChoice::WindowChoice(byte inFirstLine, int inTag) : Window(inFirstLine, inTag)
 {
 	this->choiceAddCounter = 0;
 }

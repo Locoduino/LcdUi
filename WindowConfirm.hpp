@@ -13,7 +13,7 @@ private:
 	byte prefix;
 
 public:
-	WindowConfirm(byte inFirstLine, byte prefix);
+	WindowConfirm(byte inFirstLine, byte prefix, int inTag = 0);
 
 	inline byte GetType() const { return WINDOWTYPE_CONFIRM; }
 

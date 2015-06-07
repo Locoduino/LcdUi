@@ -7,7 +7,7 @@ description: <Class for a basic screen>
 #include "LcdUi.h"
 #include "WindowInterrupt.hpp"
 
-WindowInterrupt::WindowInterrupt(byte inFirstLine, byte inSecondLine) : Window(inFirstLine)
+WindowInterrupt::WindowInterrupt(byte inFirstLine, byte inSecondLine, int inTag) : Window(inFirstLine, inTag)
 { 
 	this->secondLine = inSecondLine;
 }

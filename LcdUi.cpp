@@ -11,8 +11,6 @@ description: <Base functions of the library>
 #include <avr/pgmspace.h>
 #endif
 
-static int freemem = 0;
-
 #ifdef DEBUG_MODE
 void static CheckPinNb(int inPin, const __FlashStringHelper *inFunc)
 {
@@ -55,6 +53,23 @@ void LcdUi::CheckIndex(int inIndex, const __FlashStringHelper *inFunc)
 		}
 }
 
+void LcdUi::printEvent(byte inEvent, const __FlashStringHelper *inFunc)
+{
+	Serial.print(inFunc);
+	Serial.print(": ");
+	switch (inEvent)
+	{
+	case EVENT_NONE:	Serial.println(F("EVENT_NONE"));	break;
+	case EVENT_MORE:	Serial.println(F("EVENT_MORE"));	break;
+	case EVENT_LESS:	Serial.println(F("EVENT_LESS"));	break;
+	case EVENT_SELECT:	Serial.println(F("EVENT_SELECT"));	break;
+	case EVENT_CANCEL:	Serial.println(F("EVENT_CANCEL"));	break;
+	case EVENT_MOVE:	Serial.println(F("EVENT_MOVE"));	break;
+	case EVENT_END:		Serial.println(F("EVENT_END"));		break;
+	default:			Serial.println(inEvent);			break;
+	}
+}
+
 #define CHECK(val, text)	CheckIndex(val, F(text))
 #define CHECKADD(val, text)	CheckAddIndex(val, F(text))
 #else
@@ -69,8 +84,8 @@ LcdUi::LcdUi()
 	this->pNodeFather = 0;
 	this->windowSize = 0;
 	this->windowAddcounter = 0;
-	this->pCurrentWindow = 0;
-	this->pWindowInterrupt = 0;
+	this->CurrentWindow = 255;
+	this->WindowInterrupt = 255;
 }
 
 void FillBuffer(const __FlashStringHelper *str)
@@ -148,6 +163,9 @@ void LcdUi::EndSetup()
 
 void LcdUi::SetWindowsNumber(int inNbWindows)
 {
+	if (this->windowSize == inNbWindows)
+		return;
+
 	this->windowSize = inNbWindows;
 	this->windowAddcounter = 0;
 	if (inNbWindows > 0)
@@ -161,136 +179,128 @@ Window *LcdUi::AddWindow(Window *inpWindow, Window *inpFatherWindow, byte inChoi
 {
 	CHECKADD(this->windowAddcounter, "AddWindow");
 	this->pWindows[this->windowAddcounter] = inpWindow;
-	if (inpFatherWindow == 0)
+	byte index = this->GetWindowIndex(inpFatherWindow);
+	if (index == 255)
 		this->pNodeFather[this->windowAddcounter] = 0;
 	else
-		this->pNodeFather[this->windowAddcounter] = (GetWindowIndex(inpFatherWindow) + 1) * 100 + (inChoiceNumber == 255?0:inChoiceNumber+1);
+		this->pNodeFather[this->windowAddcounter] = (index + 1) * 100 + (inChoiceNumber == 255 ? 0 : inChoiceNumber + 1);
 
 	if (this->windowAddcounter == 0)
-		this->SetWindow(inpWindow);
+		this->SetWindow(0);
 
 	this->windowAddcounter++;
-
 	return inpWindow;
 }
 
-int LcdUi::GetWindowIndex(Window *inpRef)
+byte LcdUi::GetWindowIndex(Window *inpWindow) const
 {
-	int ref = 0;
-	for (ref = 0; ref < this->windowAddcounter; ref++)
-		if (this->pWindows[ref] == inpRef)
-			return ref;
+	for (int ref1 = 0; ref1 < this->windowAddcounter; ref1++)
+		if (this->pWindows[ref1] == inpWindow)
+			return ref1;
 
 #ifdef DEBUG_MODE
 	Serial.println(F("Window not found !"));
 #endif
-
-	return -1;
+	return 255;
 }
 
-Window *LcdUi::GetChildWindow(Window *inpRef, byte inChoice)
+byte LcdUi::GetChildWindow(byte inRef, byte inChoice)
 {
 	for (int ref1 = 0; ref1 < this->windowAddcounter; ref1++)
-		if (this->GetFather(ref1) == inpRef)
+		if (this->GetFather(ref1) == inRef)
 		{
 			byte choice = this->GetFatherChoice(ref1);
 			if (inChoice == 255 || choice == inChoice)
-				return pWindows[ref1];
+				return ref1;
 		}
 
 #ifdef DEBUG_MODE
 	Serial.println(F("Window first child not found !"));
 #endif
-	return 0;
+	return 255;
 }
 
-Window *LcdUi::GetNextChildWindow(Window *inpRef)
+byte LcdUi::GetNextChildWindow(byte inRef)
 {
-	int actualChild = GetWindowIndex(inpRef);
-	byte actualChoice = this->GetFatherChoice(actualChild);
+	byte actualChoice = this->GetFatherChoice(inRef);
 
-	for (int ref1 = actualChild + 1; ref1 < this->windowAddcounter; ref1++)
-		if (this->GetFather(pWindows[ref1]) == this->GetFather(inpRef))
+	for (int ref1 = inRef + 1; ref1 < this->windowAddcounter; ref1++)
+		if (this->GetFather(ref1) == this->GetFather(inRef))
 		{
 			if (pWindows[ref1]->GetType() == WINDOWTYPE_INTERRUPT)
 				continue;
-			byte choice = this->GetFatherChoice(pWindows[ref1]);
+			byte choice = this->GetFatherChoice(ref1);
 			if (actualChoice == 255 || choice == actualChoice)
-				return pWindows[ref1];
+				return ref1;
 		}
 
 #ifdef DEBUG_MODE
 	Serial.println(F("Window next child not found !"));
 #endif
-	return 0;
+	return 255;
 }
 
-Window *LcdUi::GetPrevSiblingWindow(Window *inpRef)
+byte LcdUi::GetPrevSiblingWindow(byte inRef)
 {
-	int actualChild = GetWindowIndex(inpRef);
-	if (actualChild == 0)
-		return 0;
+	byte actualChoice = this->GetFatherChoice(inRef);
 
-	byte actualChoice = this->GetFatherChoice(actualChild);
-
-	for (int ref1 = actualChild - 1; ref1 >= 0; ref1--)
-		if (this->GetFather(pWindows[ref1]) == this->GetFather(inpRef))
+	for (int ref1 = inRef - 1; ref1 >= 0; ref1--)
+		if (this->GetFather(ref1) == this->GetFather(inRef))
 		{
 			if (pWindows[ref1]->GetType() == WINDOWTYPE_INTERRUPT)
 				continue;
-			return pWindows[ref1];
+			return ref1;
 		}
 
 #ifdef DEBUG_MODE
 	Serial.println(F("Window previous sibling not found !"));
 #endif
-	return 0;
+	return 255;
 }
 
-Window *LcdUi::GetParentWindow(Window *inpRef)
+byte LcdUi::GetParentWindow(byte inRef)
 {
-	int ref = GetWindowIndex(inpRef);
-
-	if (GetFather(ref) != 0)
-		return GetFather(ref);
+	byte father = this->GetFather(inRef);
+	if (father != 255)
+		return father;
 
 #ifdef DEBUG_MODE
 	Serial.println(F("Window parent not found !"));
 #endif
-	return 0;
+	return 255;
 }
 
 void LcdUi::GetNextUIWindow()
 {
-	Window *pNext = 0;
+	byte next = 255;
 
-	if (this->pCurrentWindow->GetType() == WINDOWTYPE_CHOICE)
+	if (this->GetType() == WINDOWTYPE_CHOICE)
 	{
-		WindowChoice *pChoice = (WindowChoice *) this->pCurrentWindow;
-		pNext = this->GetChildWindow(this->pCurrentWindow, pChoice->GetChoiceIndex());
+		WindowChoice *pChoice = (WindowChoice *) this->GetGlobalCurrentWindow();
+		next = this->GetChildWindow(this->CurrentWindow, pChoice->GetChoiceIndex());
 	}
-	if (pNext == 0)
-		pNext = this->GetNextChildWindow(this->pCurrentWindow);
+	if (next == 255)
+		next = this->GetNextChildWindow(this->CurrentWindow);
 
-	if (pNext != 0)
+	if (next != 255)
 	{
-		SetWindow(pNext);
-		pNext->SetState(STATE_START);
+		SetWindow(next);
+		this->SetState(STATE_START);
 	}
 }
 
 void LcdUi::GetPrevUIWindow()
 {
-	Window *pPrev = this->GetParentWindow(this->pCurrentWindow);
-	if (pPrev != 0)
+	byte prev = this->GetParentWindow(this->CurrentWindow);
+	if (prev != 255)
 	{
-		WindowChoice *pChoice = (WindowChoice *) pPrev;
-		if (pChoice != 0 && this->pCurrentWindow->GetState() == STATE_ABORTED)
+		WindowChoice *pChoice = (WindowChoice *) this->pWindows[prev];
+		if (pChoice != 0 && this->GetState() == STATE_ABORTED)
 		{
 			byte escapeWindow = pChoice->GetChoiceEscapeWindow();
 			if (escapeWindow != 255)
 			{
-				Interrupt((WindowInterrupt *) this->GetWindow(escapeWindow));
+				this->Interrupt(this->GetWindowById(escapeWindow));
 				return;
 			}
 		}
@@ -298,76 +308,87 @@ void LcdUi::GetPrevUIWindow()
 	else
 	{
 		// If no parent : look for the previous sibling window...
-		pPrev = this->GetPrevSiblingWindow(this->pCurrentWindow);
-		if (pPrev == 0)
-			this->pCurrentWindow->SetState(STATE_NONE);
+		prev = this->GetPrevSiblingWindow(this->CurrentWindow);
+		if (prev == 255)
+			this->SetState(STATE_NONE);
 	}
 
-	if(pPrev != 0)
+	if(prev != 255)
 	{
-		SetWindow(pPrev);
-		pPrev->SetState(STATE_START);
+		this->SetWindow(prev);
+		this->SetState(STATE_START);
 	}
 }
 
-Window *LcdUi::GetWindow(byte inId)
+byte LcdUi::GetWindowById(byte inId) const
 {
 	for (int ref1 = 0; ref1 < this->windowAddcounter; ref1++)
 		if (pWindows[ref1]->GetWindowId() == inId)
-			return pWindows[ref1];
+			return ref1;
 
-	return 0;
+#ifdef DEBUG_MODE
+	Serial.println(F("Window id not found !"));
+#endif
+	return 255;
 }
 
 bool LcdUi::Loop(byte inEvent)
 {
-	if (inEvent == EVENT_NONE && this->GetState() == STATE_NONE && this->GetCurrentWindow()->GetType() != WINDOWTYPE_SPLASH)
+	if (inEvent == EVENT_NONE && this->GetState() == STATE_NONE && this->GetType() != WINDOWTYPE_SPLASH)
 		return false;
 
-	if (this->pWindowInterrupt != 0)
+	if (this->WindowInterrupt != 255)
 	{
-		this->pWindowInterrupt->Event(inEvent, this);
-		if (this->pWindowInterrupt->GetState() == STATE_POSTCONFIRMED)
+		this->pWindows[this->WindowInterrupt]->Event(inEvent, this);
+		if (this->GetState() == STATE_POSTCONFIRMED)
 		{
-			if (this->pWindowInterrupt != 0 && this->pWindowInterrupt->GetType() == WINDOWTYPE_CONFIRM)
+#ifdef DEBUG_MODE
+			Serial.println(F("Interrupted"));
+#endif
+			if (this->WindowInterrupt != 255 && this->GetType() == WINDOWTYPE_CONFIRM)
 			{
-				Window *pPrev = this->GetParentWindow(this->pCurrentWindow);
-				this->SetWindow(pPrev);
+				byte prev = this->GetParentWindow(this->CurrentWindow);
+				this->SetWindow(prev);
 			}
 			InterruptEnd();
 		}
 		else
-			if (this->pWindowInterrupt->GetState() == STATE_ABORTED)
+			if (this->GetState() == STATE_ABORTED)
+			{
 				InterruptEnd();
+#ifdef DEBUG_MODE
+				Serial.println(F("Interrupt aborted"));
+#endif
+			}
 		return true;
 	}
 
-	this->pCurrentWindow->Event(inEvent, this);
+	this->pWindows[this->CurrentWindow]->Event(inEvent, this);
 
-	if (this->pCurrentWindow->GetState() == STATE_POSTCONFIRMED)
+	if (this->GetState() == STATE_POSTCONFIRMED)
 	{
-		Window *pCurr = this->pCurrentWindow;
+		byte curr = this->CurrentWindow;
 		GetNextUIWindow();
-		if (pCurr == this->pCurrentWindow)
+		if (curr == this->CurrentWindow)
 			GetPrevUIWindow();
 	}
 
-	if (this->pCurrentWindow->GetState() == STATE_ABORTED)
+	if (this->GetState() == STATE_ABORTED)
 		GetPrevUIWindow();
 
 	return true;
 }
 
-void LcdUi::Interrupt(WindowInterrupt *inpWindow)
+void LcdUi::Interrupt(byte inWindow)
 {
-	this->pWindowInterrupt = inpWindow;
-	this->pWindowInterrupt->SetState(STATE_START);
-	this->pWindowInterrupt->Event(EVENT_NONE, this);
+	this->WindowInterrupt = inWindow;
+	this->SetState(STATE_START);
+	this->pWindows[this->WindowInterrupt]->Event(EVENT_NONE, this);
 }
 
 void LcdUi::InterruptEnd()
 {
-	this->pWindowInterrupt = 0;
-	this->pCurrentWindow->SetState(STATE_START);
-	this->pCurrentWindow->Event(EVENT_NONE, this);
+	this->WindowInterrupt = 255;
+	this->SetState(STATE_START);
+	this->pWindows[this->CurrentWindow]->Event(EVENT_NONE, this);
 }

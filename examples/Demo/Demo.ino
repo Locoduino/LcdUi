@@ -192,13 +192,13 @@ void loop()
         switch (lcd.GetWindowId())
         {
           case STR_INCCFG:
-            lcd.GetCurrentWindow()->SetValue(incValue);
+            lcd.SetValue(incValue);
             break;
           case STR_NAMECFG:
-            lcd.GetCurrentWindow()->SetValue(name);
+            lcd.SetValue(name);
             break;
           case STR_BACKLIGHTCFG:
-            lcd.GetCurrentWindow()->SetChoiceValue(backlight ? Screen::YesMsg : Screen::NoMsg);
+            lcd.SetChoiceValue(backlight ? Screen::YesMsg : Screen::NoMsg);
             break;
         }
         break;
@@ -208,13 +208,13 @@ void loop()
         switch (lcd.GetWindowId())
         {
           case STR_INCCFG:
-            incValue = lcd.GetCurrentWindow()->GetIntValue();
+            incValue = lcd.GetIntValue();
             break;
           case STR_NAMECFG:
-            strcpy(name, lcd.GetCurrentWindow()->GetTextValue());
+            strcpy(name, lcd.GetTextValue());
             break;
           case STR_BACKLIGHTCFG:
-            backlight = lcd.GetCurrentWindow()->GetChoiceValue() == Screen::YesMsg;
+            backlight = lcd.GetChoiceValue() == Screen::YesMsg;
             break;
         }
         lcd.SetState(STATE_POSTCONFIRMED);

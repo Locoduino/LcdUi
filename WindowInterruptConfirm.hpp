@@ -10,7 +10,7 @@
 class WindowInterruptConfirm : public WindowInterrupt
 {
 public:
-	WindowInterruptConfirm(byte inFirstLine, byte prefix);
+	WindowInterruptConfirm(byte inFirstLine, byte prefix, int inTag = 0);
 
 	inline byte GetType() const { return WINDOWTYPE_CONFIRM; }
 

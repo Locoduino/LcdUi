@@ -22,7 +22,7 @@ private:
 	char textValue[WINDOW_MAXTEXTVALUESIZE + 1];
 
 public:
-	WindowText(byte inFirstLine, byte inMaxLengthValue = WINDOW_MAXTEXTVALUESIZE);
+	WindowText(byte inFirstLine, byte inMaxLengthValue = WINDOW_MAXTEXTVALUESIZE, int inTag = 0);
 
 	inline byte GetType() const { return WINDOWTYPE_TEXT; }
 	inline byte GetMaxTextValueLength() const { return this->maxTextValueLength; }

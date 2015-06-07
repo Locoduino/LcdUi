@@ -19,7 +19,7 @@ private:
 	byte escapeWindows[WINDOW_MAXCHOICES];
 
 public:
-	WindowChoice(byte inFirstLine);
+	WindowChoice(byte inFirstLine, int inTag = 0);
 
 	inline byte GetType() const { return WINDOWTYPE_CHOICE; }
 	byte GetChoiceIndex() const;

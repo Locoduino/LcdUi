@@ -10,7 +10,7 @@
 class WindowYesNo : public Window
 {
 public:
-	WindowYesNo(byte inFirstLine) : Window(inFirstLine) { }
+	WindowYesNo(byte inFirstLine, int inTag = 0) : Window(inFirstLine, inTag) { }
 
 	inline byte GetType() const { return WINDOWTYPE_YESNO; }
 

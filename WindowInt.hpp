@@ -17,7 +17,7 @@ private:
 	int intValue;
 
 public:
-	WindowInt(byte inFirstLine, int inMaxIntValue = 999999, int inMinIntValue = 0);
+	WindowInt(byte inFirstLine, int inMaxIntValue = 999999, int inMinIntValue = 0, int inTag = 0);
 
 	inline byte GetType() const { return WINDOWTYPE_INT; }
 	inline int GetMaxIntValue() const { return this->maxIntValue; }

@@ -15,7 +15,7 @@ protected:
 	unsigned long startingDate;
 
 public:
-	WindowSplash(byte inFirstLine, byte inSecondLine, unsigned long inDelay = 2000);
+	WindowSplash(byte inFirstLine, byte inSecondLine, unsigned long inDelay = 2000, int inTag = 0);
 
 	inline byte GetType() const { return WINDOWTYPE_SPLASH; }
 

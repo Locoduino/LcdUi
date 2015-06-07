@@ -101,16 +101,14 @@ private:
 	int *pNodeFather;
 	int windowSize;
 	int windowAddcounter;
-	Window *pCurrentWindow;
-	WindowInterrupt *pWindowInterrupt;
+	byte CurrentWindow;
+	byte WindowInterrupt;
 	
 	// functions to move in the windows list
-	int GetWindowIndex(Window *inpRef);
-	Window *GetWindow(byte inId);
-	Window *GetParentWindow(Window *inpRef);
-	Window *GetChildWindow(Window *inpRef, byte inChoice = 255);
-	Window *GetNextChildWindow(Window *inpRef);
-	Window *GetPrevSiblingWindow(Window *inpRef);
+	byte GetParentWindow(byte inRef);
+	byte GetChildWindow(byte inRef, byte inChoice = 255);
+	byte GetNextChildWindow(byte inRef);
+	byte GetPrevSiblingWindow(byte inRef);
 
 	// Functions used by interactive mode to evolute in the UI
 	void GetNextUIWindow();
@@ -122,30 +120,40 @@ public:
 	void Setup(Screen *inpScreen, int inNbWindows = 0);
 	void SetWindowsNumber(int inNbWindows);
 	Window *AddWindow(Window *inpWindow, Window *inpFatherWindow = 0, byte inChoiceNumber = 255);
-	inline void SetWindow(Window *inpWindow) { this->pCurrentWindow = inpWindow; }
+	inline void SetWindow(byte inWindow) { this->CurrentWindow = inWindow; }
 
 	static void StartSetup();
 	static void EndSetup();
 
 	bool Loop(byte inEvent);
-	void Interrupt(WindowInterrupt *pInterrupt);
+	void Interrupt(byte inInterrupt);
 	void InterruptEnd();
-	inline Window *GetCurrentWindow() { return this->pCurrentWindow; }
-	inline WindowInterrupt *GetWindowInterrupt() { return this->pWindowInterrupt; }
+	inline byte GetCurrentWindow() const { return this->CurrentWindow; }
+	inline byte GetWindowInterrupt() { return this->WindowInterrupt; }
+	inline Window *GetGlobalCurrentWindow() const { return this->WindowInterrupt != 255 ? this->pWindows[this->WindowInterrupt] : this->pWindows[this->CurrentWindow]; }
 	inline Screen *GetScreen() const { return this->pScreen; }
 
-	inline Window *GetFather(Window *pWindow) { return GetFather(GetWindowIndex(pWindow)); }
-	inline Window *GetFather(int inChildIndex) { return (pNodeFather[inChildIndex] / 100) == 0 ? 0 : pWindows[(pNodeFather[inChildIndex] / 100) - 1]; }
-	inline byte GetFatherChoice(Window *pWindow) { return GetFatherChoice(GetWindowIndex(pWindow)); }
-	inline byte GetFatherChoice(int inChildIndex) { return (pNodeFather[inChildIndex] % 100) == 0 ? 0 : (pNodeFather[inChildIndex] % 100) - 1; }
-	inline byte GetWindowId() { return this->pWindowInterrupt != 0 ? this->pWindowInterrupt->GetWindowId() : this->pCurrentWindow->GetWindowId(); }
-	inline byte GetState() const { return this->pWindowInterrupt != 0 ? this->pWindowInterrupt->GetState() : this->pCurrentWindow->GetState(); }
-	inline void SetState(byte inState) { if (this->pWindowInterrupt != 0) this->pWindowInterrupt->SetState(inState); else this->pCurrentWindow->SetState(inState); }
+	byte GetWindowIndex(Window *inpWindow) const;
+	byte GetWindowById(byte inId) const;
+	inline byte GetFather(int inChildIndex) const { return (pNodeFather[inChildIndex] / 100) == 0 ? 255 : (pNodeFather[inChildIndex] / 100) - 1; }
+	inline byte GetFatherChoice(int inChildIndex) const { return (pNodeFather[inChildIndex] % 100) == 0 ? 255 : (pNodeFather[inChildIndex] % 100) - 1; }
+	inline byte GetWindowId() const { return this->GetGlobalCurrentWindow()->GetWindowId(); }
+	inline byte GetState() const { return this->GetGlobalCurrentWindow()->GetState(); }
+	inline void SetState(byte inState) { this->GetGlobalCurrentWindow()->SetState(inState); }
+	inline byte GetType() const { return this->GetGlobalCurrentWindow()->GetType(); }
+
+	inline byte GetChoiceValue() const { return this->GetGlobalCurrentWindow()->GetChoiceValue(); }
+	inline void SetChoiceValue(byte inValue) { this->GetGlobalCurrentWindow()->SetChoiceValue(inValue); }
+	inline int GetIntValue() const { return this->GetGlobalCurrentWindow()->GetIntValue(); }
+	inline const char *GetTextValue() const { return this->GetGlobalCurrentWindow()->GetTextValue(); }
+	inline void SetValue(int inValue) { this->GetGlobalCurrentWindow()->SetValue(inValue); }
+	inline void SetValue(const char *inValue) { this->GetGlobalCurrentWindow()->SetValue(inValue); }
 
 #ifdef DEBUG_MODE
 public:
 	void CheckAddIndex(int inIndex, const __FlashStringHelper *infunc);
 	void CheckIndex(int inIndex, const __FlashStringHelper *infunc);
+	static void printEvent(byte inEvent, const __FlashStringHelper *inFunc);
 #endif
 };
 

@@ -56,9 +56,10 @@ protected:
 	byte firstLine;
 	byte state;
 	byte choiceValue;	// string number as stored in 'choices', not the index !
+	int tag;			// User data...
 
 public:
-	Window(byte inFirstLine);
+	Window(byte inFirstLine, int inTag = 0);
 
 	inline byte GetWindowId() { return this->GetFirstLine(); }
 	inline byte GetFirstLine() const { return this->firstLine; }
@@ -68,6 +69,7 @@ public:
 
 	inline virtual byte GetChoiceValue() const { return this->choiceValue; }
 	inline virtual void SetChoiceValue(byte inValue) { this->choiceValue = inValue; }
+	inline virtual int GetTag() const { return this->tag; }
 	inline virtual int GetIntValue() const { return 0; }
 	inline virtual void SetValue(int inValue) { }
 	inline virtual const char *GetTextValue() const { return 0; }
@@ -75,6 +77,10 @@ public:
 
 	inline virtual byte GetType() const { return 255; }
 	inline virtual void Event(byte inEventType, LcdUi *inpLcd) {}
+
+#ifdef DEBUG_MODE
+	static void printState(byte inState, const __FlashStringHelper *inFunc);
+#endif
 };
 
 //-------------------------------------------------------------------

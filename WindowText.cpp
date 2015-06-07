@@ -9,7 +9,7 @@ description: <Class for a basic screen>
 
 // char table : 32-127
 
-WindowText::WindowText(byte inFirstLine, byte inMaxLengthValue) : Window(inFirstLine)
+WindowText::WindowText(byte inFirstLine, byte inMaxLengthValue, int inTag) : Window(inFirstLine, inTag)
 { 
 	this->maxTextValueLength = inMaxLengthValue;
 	this->currentCharPos = 0;

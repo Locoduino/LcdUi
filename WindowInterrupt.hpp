@@ -13,7 +13,7 @@ protected:
 	byte secondLine;
 
 public:
-	WindowInterrupt(byte inFirstLine, byte inSecondLine);
+	WindowInterrupt(byte inFirstLine, byte inSecondLine, int inTag = 0);
 
 	inline byte GetType() const { return WINDOWTYPE_INTERRUPT; }
 

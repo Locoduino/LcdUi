@@ -7,7 +7,7 @@ description: <Class for a basic screen>
 #include "LcdUi.h"
 #include "WindowConfirm.hpp"
 
-WindowConfirm::WindowConfirm(byte inFirstLine, byte inPrefix) : Window(inFirstLine)
+WindowConfirm::WindowConfirm(byte inFirstLine, byte inPrefix, int inTag) : Window(inFirstLine, inTag)
 { 
 	this->prefix = inPrefix;
 }

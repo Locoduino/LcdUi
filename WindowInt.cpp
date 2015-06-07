@@ -7,7 +7,7 @@ description: <Class for a basic screen>
 #include "LcdUi.h"
 #include "WindowInt.hpp"
 
-WindowInt::WindowInt(byte inFirstLine, int inMaxIntValue, int inMinIntValue) : Window(inFirstLine)
+WindowInt::WindowInt(byte inFirstLine, int inMaxIntValue, int inMinIntValue, int inTag) : Window(inFirstLine, inTag)
 {
 	this->maxIntValue = inMaxIntValue;
 	this->minIntValue = inMinIntValue;
