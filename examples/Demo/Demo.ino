@@ -4,7 +4,7 @@ author: <Thierry PARIS>
 description: <LCD UI demo>
 *************************************************************/
 
-#include "LcdUI.h"
+#include "LcdUi.h"
 
 
 // Strings declaration
