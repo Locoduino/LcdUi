@@ -54,6 +54,7 @@ public:
 	static byte GetChar(int inPos);
 
 	char *GetString(int inString);
+	char *GetChoiceString(int inString);
 
 	inline virtual void DisplayHeader(int inHeader) {}
 	inline virtual void DisplayChoice(int inCurrentChoice) {}

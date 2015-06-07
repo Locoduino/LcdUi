@@ -123,6 +123,21 @@ char *Screen::GetString(int inString)
 	return buffer;
 }
 
+char *Screen::GetChoiceString(int inString)
+{
+	buffer[0] = '>';
+#ifdef VISUALSTUDIO
+	strcpy_s(buffer + 1, 40, this->pStringTable[inString]);
+#else
+	strcpy_P(buffer+1, (char*)pgm_read_word(&this->pStringTable[inString]));
+#endif
+	int len = strlen(buffer);
+	buffer[len] = '<';
+	buffer[len+1] = 0;
+
+	return buffer;
+}
+
 byte Screen::GetChar(int inPos)
 {
 	if (inPos < 0 || inPos > 127)

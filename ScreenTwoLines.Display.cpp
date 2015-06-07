@@ -15,28 +15,25 @@ void ScreenTwoLines::DisplayHeader(int inHeader)
 
 void ScreenTwoLines::DisplayChoice(int inCurrentChoice)
 {
-	this->GetString(inCurrentChoice);
+	this->GetChoiceString(inCurrentChoice);
 	DisplayChoice(Screen::buffer);
 }
 
 void ScreenTwoLines::DisplayChoice(const char *inChoice)
 {
-	//this->clearLine(1);
+	byte pos = (this->sizex / 2) - (strlen(inChoice) / 2);
+	if (strlen(inChoice) > this->sizex)
+		pos = 0;
 
-	byte pos = (this->sizex / 2) - (strlen(inChoice) / 2) - 1;
 	for (int i = 0; i < pos; i++)
 	{
 		this->setCursor(i, 1);
 		this->write(' ');
 	}
 	this->setCursor(pos, 1);
-	this->write('>');
-
-	this->setCursor(pos + 1, 1);
 	this->print(inChoice);
 
 	this->setCursor(pos + 1 + strlen(inChoice), 1);
-	this->write('<');
 	for (int i = pos + 1 + strlen(inChoice) + 1; i < this->sizex; i++)
 	{
 		this->setCursor(i, 1);
@@ -48,16 +45,12 @@ void ScreenTwoLines::DisplayInt(int inValue)
 {
 	this->clearLine(1);
 
-	this->BuildString(inValue, Screen::buffer);
-	byte pos = (this->sizex / 2) - (strlen(Screen::buffer) / 2) - 1;
-	this->setCursor(pos, 1);
-	this->write('>');
-
-	this->setCursor(pos + 1, 1);
-	this->print(Screen::buffer);
-
-	this->setCursor(pos + 1 + strlen(Screen::buffer), 1);
-	this->write('<');
+	this->BuildString(inValue, Screen::buffer+1);
+	Screen::buffer[0] = '>';
+	DisplayChoice(Screen::buffer);
+	int len = strlen(buffer);
+	buffer[len] = '<';
+	buffer[len + 1] = 0;
 }
 
 void ScreenTwoLines::DisplayYesNo(byte inChoiceValue, int inPrefixString)
@@ -65,7 +58,7 @@ void ScreenTwoLines::DisplayYesNo(byte inChoiceValue, int inPrefixString)
 	this->clearLine(1);
 
 	byte pos = 0;
-	if (inPrefixString != 0)
+	if (inPrefixString != 255)
 	{
 		this->GetString(inPrefixString);
 		this->setCursor(0, 1);
@@ -73,41 +66,25 @@ void ScreenTwoLines::DisplayYesNo(byte inChoiceValue, int inPrefixString)
 		pos = strlen(Screen::buffer);
 	}
 
-	this->GetString(Screen::YesMsg);
-	if (inChoiceValue != Screen::NoMsg)
-	{
-		this->setCursor(pos, 1);
-		this->write('>');
-	}
+	if (inChoiceValue == Screen::YesMsg)
+		this->GetChoiceString(Screen::YesMsg);
+	else
+		this->GetString(Screen::YesMsg);
 
 	this->setCursor(pos + 1, 1);
 	this->print(Screen::buffer);
 
-	if (inChoiceValue != Screen::NoMsg)
-	{
-		this->setCursor(pos + 1 + strlen(Screen::buffer), 1);
-		this->write('<');
-	}
+	if (inChoiceValue == Screen::NoMsg)
+		this->GetChoiceString(Screen::NoMsg);
+	else
+		this->GetString(Screen::NoMsg);
 
 	pos = pos + 1 + strlen(Screen::buffer) + 1;
 
-	this->GetString(Screen::NoMsg);
-
 	pos++;
-	if (inChoiceValue == Screen::NoMsg)
-	{
-		this->setCursor(pos, 1);
-		this->write('>');
-	}
 
 	this->setCursor(pos + 1, 1);
 	this->print(Screen::buffer);
-
-	if (inChoiceValue == Screen::NoMsg)
-	{
-		this->setCursor(pos + 1 + strlen(Screen::buffer), 1);
-		this->write('<');
-	}
 }
 
 void ScreenTwoLines::DisplayTextResult(const char *inTextValue, byte inLength, byte inEditedChar)

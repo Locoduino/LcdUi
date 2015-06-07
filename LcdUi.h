@@ -5,7 +5,7 @@
 ////////////////////////////////////////////////////////
 // Add a '//' at the beginning of the line to be in 
 // release mode.
-//#define DEBUG_MODE
+#define DEBUG_MODE
 
 ///////////////////////////////////////////////////////
 // Verbose mode lets you see all actions done by the 
@@ -39,37 +39,9 @@
 #define STR_LCDCOPYRIGHT	F("Developed by Thierry Paris.")
 #endif
 
-//////////////////////////////////////////
-//  Exclusion area
-//
-// You can exclude some parts of library here, to avoid losing program and data memory
-// on parts you dont use.
-// For example, if you dont want buttons commander
-// just uncomment the line #define NO_BUTTONSCOMMANDER by removing // at the beggining.
-//
-// Arduino IDE build of list of the files to compile from the content of the library directory
-// in a makefile and give it to Gcc. So Gcc compiles all the files of the directory
-// even if its content is not used. The result is, if an unused source file contains
-// static declarations, these statics will be allocated a this memory will be lost.
-// The only solution I have found is to rename the source files to something IDE and Gcc dont know...
-//
-// So if you want to lose less memory, you can rename the linked files
-// from .cpp to .cpp.ori, and from .hpp to .hpp.ori.
-// See below the file names related to each exclusion:
-//
-
-
 /////////////////////////////////////
 
 #include "Window.hpp"
-#include "WindowChoice.hpp"
-#include "WindowConfirm.hpp"
-#include "WindowInt.hpp"
-#include "WindowText.hpp"
-#include "WindowYesNo.hpp"
-#include "WindowInterrupt.hpp"
-#include "WindowInterruptConfirm.hpp"
-#include "WindowSplash.hpp"
 
 #include "Screen.hpp"
 #include "ScreenTwoLines.hpp"
@@ -83,13 +55,45 @@
 #define EVENT_START		6
 #define EVENT_END		7
 
+#define WINDOW_MAXCHOICES		10
+#define WINDOW_MAXTEXTVALUESIZE	20
+
 class LcdUi
 {
+public:
+	struct WindowItem
+	{
+		byte type;
+		byte first;
+		byte second;
+		byte state;
+
+		// Choices
+		byte choiceValue_currentCharPos;
+		byte choiceAddCounter_currentCharEdited;
+
+		// strings for choice mode.
+		byte *choices;// [WINDOW_MAXCHOICES];
+		byte *escapeWindows;// [WINDOW_MAXCHOICES];
+
+		// Text
+		char *textValue; //[WINDOW_MAXTEXTVALUESIZE + 1];
+
+		// values for edition modes
+		int intValue_maxTextValueLength;
+
+		// Splash + Int
+		unsigned long delay_maxIntValue;
+		unsigned long startingDate_minIntValue;
+
+		Window *pCustom;
+	};
+
 private:
 	Screen *pScreen;
-	Window* *pWindows;
+	WindowItem *pWindows;
 	/* (Index of the father Window in the Window list + 1) * 100 + (Choice number + 1 or 0)
-									NodeFather			Comment
+	NodeFather			Comment
 	0	Win A						0					no father...
 	1		Win B choices 0,1,2		100					Win A (index 0+1) is the father.
 	2			Win C				201					Win B/Choice 0 if the father (Index 1+1 * 100) + Choice (0+1)
@@ -103,10 +107,13 @@ private:
 	int windowAddcounter;
 	byte CurrentWindow;
 	byte WindowInterrupt;
-	
+
 	// functions to move in the windows list
+	byte GetWindow(byte inId);
 	byte GetParentWindow(byte inRef);
+	byte GetChildWindow(byte inRef, byte inChoice = 255);
 	byte GetNextChildWindow(byte inRef);
+	byte GetPrevSiblingWindow(byte inpRef);
 
 	// Functions used by interactive mode to evolute in the UI
 	void GetNextUIWindow();
@@ -117,54 +124,97 @@ public:
 
 	void Setup(Screen *inpScreen, int inNbWindows = 0);
 	void SetWindowsNumber(int inNbWindows);
-	Window *AddWindow(Window *inpWindow, Window *inpFatherWindow = 0, byte inChoiceNumber = 255);
-	inline void SetWindow(byte inWindow) { this->CurrentWindow = inWindow; }
+
+	//Window *AddWindow(Window *inpWindow, Window *inpFatherWindow = 0, byte inChoiceNumber = 255);
+
+	byte AddWindow(byte inType, byte infirst, byte inSecond, int inMax, int inMin, byte inMaxLength,
+		unsigned long inDelay, byte inFatherWindow, byte inChoiceNumber);
+
+	inline byte AddWindowChoice(byte inFirst, byte inFatherWindow = 255, byte inChoiceNumber = 255)
+	{
+		return AddWindow(WINDOWTYPE_CHOICE, inFirst, 255, 9999, 0, 0, 0, inFatherWindow, inChoiceNumber);
+	}
+	inline byte AddWindowConfirm(byte inFirst, byte prefix, byte inFatherWindow = 255, byte inChoiceNumber = 255)
+	{
+		return AddWindow(WINDOWTYPE_CONFIRM, inFirst, prefix, 9999, 0, 0, 0, inFatherWindow, inChoiceNumber);
+	}
+	inline byte AddWindowInt(byte inFirst, int inMax = 9999, int inMin = 0, byte inFatherWindow = 255, byte inChoiceNumber = 255)
+	{
+		return AddWindow(WINDOWTYPE_INT, inFirst, 255, inMax, inMin, 0, 0, inFatherWindow, inChoiceNumber);
+	}
+	inline byte AddWindowSplash(byte inFirst, byte inSecond, unsigned long delay = 0, byte inFatherWindow = 255, byte inChoiceNumber = 255)
+	{
+		return AddWindow(WINDOWTYPE_SPLASH, inFirst, inSecond, 9999, 0, 0, delay, inFatherWindow, inChoiceNumber);
+	}
+	inline byte AddWindowText(byte inFirst, byte length = WINDOW_MAXTEXTVALUESIZE, byte inFatherWindow = 255, byte inChoiceNumber = 255)
+	{
+		return AddWindow(WINDOWTYPE_TEXT, inFirst, 255, 9999, 0, length, 0, inFatherWindow, inChoiceNumber);
+	}
+	inline byte AddWindowYesNo(byte inFirst, byte inFatherWindow = 255, byte inChoiceNumber = 255)
+	{
+		return AddWindow(WINDOWTYPE_YESNO, inFirst, 255, 9999, 0, 0, 0, inFatherWindow, inChoiceNumber);
+	}
+	inline byte AddWindowInterrupt(byte inFirst, byte inSecond)
+	{
+		return AddWindow(WINDOWTYPE_INTERRUPT, inFirst, inSecond, 9999, 0, 0, 0, 255, 255);
+	}
+
+	byte AddWindowCustom(Window *inpCustom, byte inFatherWindow = 255, byte inChoiceNumber = 255);
+
+	inline void SetWindow(byte inItem) { this->CurrentWindow = inItem; }
 
 	static void StartSetup();
 	static void EndSetup();
 
 	bool Loop(byte inEvent);
+	void Event(byte inEvent);
 	void Interrupt(byte inInterrupt);
 	void InterruptEnd();
-	inline byte GetCurrentWindow() const { return this->CurrentWindow; }
+	inline WindowItem &GetCurrentWindowItem() const { return this->pWindows[this->CurrentWindow]; }
+	inline byte GetCurrentWindow() { return this->CurrentWindow; }
 	inline byte GetWindowInterrupt() { return this->WindowInterrupt; }
-	inline Window *GetGlobalCurrentWindow() const { return this->WindowInterrupt != 255 ? this->pWindows[this->WindowInterrupt] : this->pWindows[this->CurrentWindow]; }
 	inline Screen *GetScreen() const { return this->pScreen; }
 
-	byte GetWindowIndex(Window *inpWindow) const;
-	byte GetWindowById(byte inId) const;
-	inline byte GetFather(int inChildIndex) const { return (pNodeFather[inChildIndex] / 100) == 0 ? 255 : (pNodeFather[inChildIndex] / 100) - 1; }
-	inline byte GetFatherChoice(int inChildIndex) const { return (pNodeFather[inChildIndex] % 100) == 0 ? 255 : (pNodeFather[inChildIndex] % 100) - 1; }
-	inline byte GetWindowId() const { return this->GetGlobalCurrentWindow()->GetWindowId(); }
-	inline byte GetState() const { return this->GetGlobalCurrentWindow()->GetState(); }
-	inline void SetState(byte inState) { this->GetGlobalCurrentWindow()->SetState(inState); }
-	inline byte GetType() const { return this->GetGlobalCurrentWindow()->GetType(); }
+	inline byte GetFather(byte inChildIndex) const { return (pNodeFather[inChildIndex] / 100) == 0 ? 0 : (pNodeFather[inChildIndex] / 100) - 1; }
+	inline byte GetFatherChoice(byte inChildIndex) const { return (pNodeFather[inChildIndex] % 100) == 0 ? 0 : (pNodeFather[inChildIndex] % 100) - 1; }
+	inline byte GetWindowId() const { return this->WindowInterrupt != 255 ? this->pWindows[this->WindowInterrupt].first : this->GetCurrentWindowItem().first; }
+	inline byte GetState() const { return this->WindowInterrupt != 255 ? this->pWindows[this->WindowInterrupt].state : this->GetCurrentWindowItem().state; }
+	inline byte GetType() const { return this->WindowInterrupt != 255 ? this->pWindows[this->WindowInterrupt].type : this->GetCurrentWindowItem().type; }
+	inline void SetState(byte inState) { if (this->WindowInterrupt != 255) this->pWindows[this->WindowInterrupt].state = inState; else this->GetCurrentWindowItem().state = inState; }
 
-	inline byte GetChoiceValue() const { return this->GetGlobalCurrentWindow()->GetChoiceValue(); }
-	inline void SetChoiceValue(byte inValue) { this->GetGlobalCurrentWindow()->SetChoiceValue(inValue); }
-	inline int GetIntValue() const { return this->GetGlobalCurrentWindow()->GetIntValue(); }
-	inline const char *GetTextValue() const { return this->GetGlobalCurrentWindow()->GetTextValue(); }
-	inline void SetValue(int inValue) { this->GetGlobalCurrentWindow()->SetValue(inValue); }
-	inline void SetValue(const char *inValue) { this->GetGlobalCurrentWindow()->SetValue(inValue); }
+	/// Choice part
+	byte GetChoiceIndex() const;
+	inline byte *GetChoices() { return this->GetCurrentWindowItem().choices; }
+	void MoveNextChoice();
+	void MovePreviousChoice();
+	void AddChoice(byte inOwner, byte inStringIndex, byte inInterruptOnEscape = 255);
+
+	// Updating value
+	inline byte GetChoiceValue() const { return this->GetCurrentWindowItem().choiceValue_currentCharPos; }
+	inline void SetChoiceValue(byte inValue) { this->GetCurrentWindowItem().choiceValue_currentCharPos = inValue; }
+	inline int GetIntValue() const { return this->GetCurrentWindowItem().intValue_maxTextValueLength; }
+	inline void SetValue(int inValue) { this->GetCurrentWindowItem().intValue_maxTextValueLength = inValue; }
+	inline const char *GetTextValue() const { return this->GetCurrentWindowItem().textValue; }
+	inline void SetValue(const char *inValue) { STRNCPY(this->GetCurrentWindowItem().textValue, WINDOW_MAXTEXTVALUESIZE, inValue); }
 
 #ifdef DEBUG_MODE
 public:
 	void CheckAddIndex(int inIndex, const __FlashStringHelper *infunc);
 	void CheckIndex(int inIndex, const __FlashStringHelper *infunc);
-	static void printEvent(byte inEvent, const __FlashStringHelper *inFunc);
 #endif
 };
 
+#define CURRWIN(lui)								lui.GetCurrentWindowItem()
+
 #define BEGIN_UI(lui, screen, nb)					LcdUi *plui = &lui;	plui->Setup(&screen, nb);
-#define WIN											Window *
-#define WINDOWCHOICE(first, ...)					plui->AddWindow(new WindowChoice(first), ##__VA_ARGS__);
-#define ADDCHOICE(win, text, ...)					((WindowChoice *)win)->AddChoice(text);
-#define WINDOWCONFIRM(first, prefix, ...)			plui->AddWindow(new WindowConfirm(first, prefix), ##__VA_ARGS__)
-#define WINDOWINT(first, max, min, ...)				plui->AddWindow(new WindowInt(first, max, min), ##__VA_ARGS__)
-#define WINDOWINTERRUPT(first, second, ...)			plui->AddWindow(new WindowInterrupt(first, second), ##__VA_ARGS__)
-#define WINDOWINTERRUPTCONFIRM(first, prefix, ...)	plui->AddWindow(new WindowInterruptConfirm(first, prefix), ##__VA_ARGS__)
-#define WINDOWSPLASH(first, second, delay, ...)		plui->AddWindow(new WindowSplash(first, second, delay), ##__VA_ARGS__)
-#define WINDOWTEXT(first, len, ...)					plui->AddWindow(new WindowText(first, len), ##__VA_ARGS__)
-#define WINDOWYESNO(first, ...)						plui->AddWindow(new WindowYesNo(first), ##__VA_ARGS__)
-#define WINDOWCUSTOM(win, ...)						plui->AddWindow(win, ##__VA_ARGS__)
+#define WIN											byte
+#define WINDOWCHOICE(first, ...)					plui->AddWindowChoice(first, ##__VA_ARGS__);
+#define ADDCHOICE(win, text, ...)					plui->AddChoice(win, text);
+#define WINDOWCONFIRM(first, prefix, ...)			plui->AddWindowConfirm(first, prefix, ##__VA_ARGS__)
+#define WINDOWINT(first, ...)						plui->AddWindowInt(first, ##__VA_ARGS__)
+#define WINDOWINTERRUPT(first, second, ...)			plui->AddWindowInterrupt(first, second, ##__VA_ARGS__)
+#define WINDOWSPLASH(first, second, ...)			plui->AddWindowSplash(first, second, ##__VA_ARGS__)
+#define WINDOWTEXT(first, ...)						plui->AddWindowText(first, ##__VA_ARGS__)
+#define WINDOWYESNO(first, ...)						plui->AddWindowYesNo(first, ##__VA_ARGS__)
+#define WINDOWCUSTOM(win, ...)						plui->AddWindowCustom(win, ##__VA_ARGS__)
 #define END_UI()
