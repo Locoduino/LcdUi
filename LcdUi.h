@@ -5,7 +5,7 @@
 ////////////////////////////////////////////////////////
 // Add a '//' at the beginning of the line to be in 
 // release mode.
-#define DEBUG_MODE
+//#define DEBUG_MODE
 
 ///////////////////////////////////////////////////////
 // Verbose mode lets you see all actions done by the 
@@ -63,10 +63,10 @@ class LcdUi
 public:
 	struct WindowItem
 	{
-		byte type;
+		byte type:4;
+		byte state:4;
 		byte first;
 		byte second;
-		byte state;
 
 		// Choices
 		byte choiceValue_currentCharPos;
@@ -92,6 +92,7 @@ public:
 private:
 	Screen *pScreen;
 	WindowItem *pWindows;
+
 	/* (Index of the father Window in the Window list + 1) * 100 + (Choice number + 1 or 0)
 	NodeFather			Comment
 	0	Win A						0					no father...
@@ -183,7 +184,7 @@ public:
 	inline void SetState(byte inState) { if (this->WindowInterrupt != 255) this->pWindows[this->WindowInterrupt].state = inState; else this->GetCurrentWindowItem().state = inState; }
 
 	/// Choice part
-	byte GetChoiceIndex() const;
+	byte GetChoiceIndex(byte inWindow = 255) const;
 	inline byte *GetChoices() { return this->GetCurrentWindowItem().choices; }
 	void MoveNextChoice();
 	void MovePreviousChoice();

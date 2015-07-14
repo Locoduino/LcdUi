@@ -314,7 +314,7 @@ void LcdUi::GetPrevUIWindow()
 	{
 		if (this->pWindows[prev].type == WINDOWTYPE_CHOICE && this->GetState() == STATE_ABORTED)
 		{
-			byte escapeWindow = this->pWindows[prev].escapeWindows[this->GetChoiceIndex()];
+			byte escapeWindow = this->pWindows[prev].escapeWindows[this->GetChoiceIndex(prev)];
 			if (escapeWindow != 255)
 			{
 				Interrupt(escapeWindow);
@@ -412,10 +412,13 @@ void LcdUi::AddChoice(byte inOwner, byte inStringNumber, byte inInterruptOnEscap
 	}
 }
 
-byte LcdUi::GetChoiceIndex() const
+byte LcdUi::GetChoiceIndex(byte inWindow) const
 {
-	for (byte i = 0; i < CURR.choiceAddCounter_currentCharEdited; i++)
-		if (CURR.choices[i] == CURR.choiceValue_currentCharPos)
+	byte win = inWindow;
+	if (win == 255)
+		win = this->CurrentWindow;
+	for (byte i = 0; i < this->pWindows[win].choiceAddCounter_currentCharEdited; i++)
+		if (this->pWindows[win].choices[i] == this->pWindows[win].choiceValue_currentCharPos)
 			return i;
 
 	return 255;

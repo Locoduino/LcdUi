@@ -13,6 +13,8 @@
 
 #define MAXSTRINGVALUE	20
 
+// Type is stored in 4 bits : value can be 0 to 15 !
+
 #define WINDOWTYPE_YESNO		0
 #define WINDOWTYPE_CONFIRM		1
 #define WINDOWTYPE_CHOICE		2
@@ -35,6 +37,8 @@ Steps of the life :
 					STATE_POSTCONFIRMED	Go to the next window
 
 */
+
+// Type is stored in 4 bits : value can be 0 to 15 !
 
 #define STATE_NONE				0
 #define STATE_START				1

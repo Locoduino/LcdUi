@@ -28,7 +28,6 @@ public:
 	// LCD API
 	//LibraryName
 	inline void init() { clearVS(); }
-	inline void setDelay(int inCmdDelay, int inCharDelay) {}
 	void print(const char *inString);
 	void print(int inValue, char inType);	// DEC, HEX, BIN ...
 	void write(char inValue);
