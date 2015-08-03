@@ -15,13 +15,14 @@
 
 // Type is stored in 4 bits : value can be 0 to 15 !
 
-#define WINDOWTYPE_YESNO		0
-#define WINDOWTYPE_CONFIRM		1
-#define WINDOWTYPE_CHOICE		2
-#define WINDOWTYPE_INT			3
-#define WINDOWTYPE_TEXT			4
-#define WINDOWTYPE_INTERRUPT	5
-#define WINDOWTYPE_SPLASH		6
+#define WINDOWTYPE_YESNO			0
+#define WINDOWTYPE_CONFIRM			1
+#define WINDOWTYPE_CHOICE			2
+#define WINDOWTYPE_INT				3
+#define WINDOWTYPE_TEXT				4
+#define WINDOWTYPE_INTERRUPT		5
+#define WINDOWTYPE_SPLASH			6
+#define WINDOWTYPE_INTERRUPTCONFIRM	7
 
 /*
 Steps of the life :

@@ -24,7 +24,7 @@ void Screen::Setup(byte inSizeX, byte inSizeY, const char * const *inpStringTabl
 
 void Screen::clearLine(int posy)
 {
-	memset(Screen::buffer, 32, this->sizex);
+	memset(Screen::buffer, ' ', this->sizex);
 	Screen::buffer[this->sizex] = 0;
 
 	this->setCursor(0, posy);
@@ -115,7 +115,7 @@ byte Screen::BuildStringLeft(const char *inString, byte inSizeMax, char *outStri
 char *Screen::GetString(int inString)
 {
 #ifdef VISUALSTUDIO
-	strcpy_s(buffer, 40, this->pStringTable[inString]);
+	strcpy_s(buffer, BUFFER_SIZE, this->pStringTable[inString]);
 #else
 	strcpy_P(buffer, (char*)pgm_read_word(&this->pStringTable[inString]));
 #endif
@@ -127,7 +127,7 @@ char *Screen::GetChoiceString(int inString)
 {
 	buffer[0] = '>';
 #ifdef VISUALSTUDIO
-	strcpy_s(buffer + 1, 40, this->pStringTable[inString]);
+	strcpy_s(buffer + 1, BUFFER_SIZE-1, this->pStringTable[inString]);
 #else
 	strcpy_P(buffer+1, (char*)pgm_read_word(&this->pStringTable[inString]));
 #endif

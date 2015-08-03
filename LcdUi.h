@@ -106,8 +106,8 @@ private:
 	int *pNodeFather;
 	int windowSize;
 	int windowAddcounter;
-	byte CurrentWindow;
-	byte WindowInterrupt;
+	byte CurrentWindow;		// Index of the current window ni pWindows
+	byte WindowInterrupt;	// index of the interrupt window in pWindows
 
 	// functions to move in the windows list
 	byte GetWindow(byte inId);
@@ -159,6 +159,10 @@ public:
 	{
 		return AddWindow(WINDOWTYPE_INTERRUPT, inFirst, inSecond, 9999, 0, 0, 0, 255, 255);
 	}
+	inline byte AddWindowInterruptConfirm(byte inFirst)
+	{
+		return AddWindow(WINDOWTYPE_INTERRUPTCONFIRM, inFirst, 255, 9999, 0, 0, 0, 255, 255);
+	}
 
 	byte AddWindowCustom(Window *inpCustom, byte inFatherWindow = 255, byte inChoiceNumber = 255);
 
@@ -178,10 +182,10 @@ public:
 
 	inline byte GetFather(byte inChildIndex) const { return (pNodeFather[inChildIndex] / 100) == 0 ? 0 : (pNodeFather[inChildIndex] / 100) - 1; }
 	inline byte GetFatherChoice(byte inChildIndex) const { return (pNodeFather[inChildIndex] % 100) == 0 ? 0 : (pNodeFather[inChildIndex] % 100) - 1; }
-	inline byte GetWindowId() const { return this->WindowInterrupt != 255 ? this->pWindows[this->WindowInterrupt].first : this->GetCurrentWindowItem().first; }
-	inline byte GetState() const { return this->WindowInterrupt != 255 ? this->pWindows[this->WindowInterrupt].state : this->GetCurrentWindowItem().state; }
-	inline byte GetType() const { return this->WindowInterrupt != 255 ? this->pWindows[this->WindowInterrupt].type : this->GetCurrentWindowItem().type; }
-	inline void SetState(byte inState) { if (this->WindowInterrupt != 255) this->pWindows[this->WindowInterrupt].state = inState; else this->GetCurrentWindowItem().state = inState; }
+	byte GetWindowId() const;
+	byte GetState() const;
+	byte GetType() const;
+	void SetState(byte inState);
 
 	/// Choice part
 	byte GetChoiceIndex(byte inWindow = 255) const;

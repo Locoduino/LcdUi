@@ -74,12 +74,12 @@ void ScreenTwoLines::DisplayYesNo(byte inChoiceValue, int inPrefixString)
 	this->setCursor(pos + 1, 1);
 	this->print(Screen::buffer);
 
+	pos = pos + 1 + strlen(Screen::buffer) + 1;
+
 	if (inChoiceValue == Screen::NoMsg)
 		this->GetChoiceString(Screen::NoMsg);
 	else
 		this->GetString(Screen::NoMsg);
-
-	pos = pos + 1 + strlen(Screen::buffer) + 1;
 
 	pos++;
 

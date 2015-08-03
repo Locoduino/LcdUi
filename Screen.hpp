@@ -5,6 +5,8 @@
 
 class ScreenVS;
 
+#define BUFFER_SIZE	40
+
 //-------------------------------------------------------------------
 
 class Screen
@@ -14,7 +16,7 @@ protected:
 	byte sizex, sizey;
 
 public:
-	static char buffer[40];
+	static char buffer[BUFFER_SIZE];
 	static int YesMsg;
 	static int NoMsg;
 

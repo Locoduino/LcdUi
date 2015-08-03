@@ -346,18 +346,50 @@ byte LcdUi::GetWindow(byte inId)
 	return 255;
 }
 
+byte LcdUi::GetWindowId() const
+{
+	return this->WindowInterrupt != 255 ? this->pWindows[this->WindowInterrupt].first :
+		(this->GetCurrentWindowItem().pCustom == 0 ? this->GetCurrentWindowItem().first : this->GetCurrentWindowItem().pCustom->GetFirstLine());
+}
+
+byte LcdUi::GetState() const
+{
+	return this->WindowInterrupt != 255 ? this->pWindows[this->WindowInterrupt].state :
+		(this->GetCurrentWindowItem().pCustom == 0 ? this->GetCurrentWindowItem().state : this->GetCurrentWindowItem().pCustom->GetState());
+}
+
+byte LcdUi::GetType() const
+{
+	return this->WindowInterrupt != 255 ? this->pWindows[this->WindowInterrupt].type :
+		(this->GetCurrentWindowItem().pCustom == 0 ? this->GetCurrentWindowItem().type : this->GetCurrentWindowItem().pCustom->GetType());
+}
+
+void LcdUi::SetState(byte inState)
+{
+	if (this->WindowInterrupt != 255)
+		this->pWindows[this->WindowInterrupt].state = inState;
+	else
+		if (this->GetCurrentWindowItem().pCustom == 0)
+			this->GetCurrentWindowItem().state = inState;
+		else
+			this->GetCurrentWindowItem().pCustom->SetState(inState);
+}
+
 bool LcdUi::Loop(byte inEvent)
 {
 	if (inEvent == EVENT_NONE && this->GetState() == STATE_NONE && this->GetType() != WINDOWTYPE_SPLASH)
 		return false;
 
-	Event(inEvent);
+	if (CURR.pCustom != 0)
+		CURR.pCustom->Event(inEvent, this);
+	else
+		Event(inEvent);
 
 	if (this->WindowInterrupt != 255)
 	{
 		if (this->GetState() == STATE_POSTCONFIRMED)
 		{
-			if (this->GetType() == WINDOWTYPE_CONFIRM)
+			if (this->GetType() == WINDOWTYPE_INTERRUPTCONFIRM)
 			{
 				byte prev = this->GetParentWindow(this->CurrentWindow);
 				this->SetWindow(prev);
@@ -386,7 +418,7 @@ bool LcdUi::Loop(byte inEvent)
 
 void LcdUi::Interrupt(byte inWindow)
 {
-	this->WindowInterrupt = inWindow;
+	this->WindowInterrupt = this->GetWindow(inWindow);
 	this->SetState(STATE_START);
 	this->Event(EVENT_NONE);
 }
@@ -462,7 +494,10 @@ void LcdUi::Event(byte inEvent)
 		curr.state = STATE_NONE;
 		switch (curr.type)
 		{
-		case WINDOWTYPE_YESNO:			curr.choiceValue_currentCharPos = Screen::NoMsg;	break;
+			case WINDOWTYPE_INTERRUPTCONFIRM:
+			case WINDOWTYPE_YESNO:
+				curr.choiceValue_currentCharPos = Screen::NoMsg;	
+				break;
 			case WINDOWTYPE_INT:
 				if (curr.intValue_maxTextValueLength > (int)curr.delay_maxIntValue)
 					curr.intValue_maxTextValueLength = (int)curr.delay_maxIntValue;
@@ -486,9 +521,9 @@ void LcdUi::Event(byte inEvent)
 
 		switch (curr.type)
 		{
-		case WINDOWTYPE_CHOICE:		curr.choiceValue_currentCharPos = curr.choices[0];	break;
-		case WINDOWTYPE_INT:		curr.intValue_maxTextValueLength = 0;					break;
-		case WINDOWTYPE_SPLASH:		curr.startingDate_minIntValue = millis();		break;
+			case WINDOWTYPE_CHOICE:		curr.choiceValue_currentCharPos = curr.choices[0];	break;
+			case WINDOWTYPE_INT:		curr.intValue_maxTextValueLength = 0;					break;
+			case WINDOWTYPE_SPLASH:		curr.startingDate_minIntValue = millis();		break;
 		}
 		curr.state = STATE_INITIALIZE;
 	}
@@ -515,6 +550,7 @@ void LcdUi::Event(byte inEvent)
 		{
 			case WINDOWTYPE_CHOICE:		this->MoveNextChoice();	break;
 			case WINDOWTYPE_YESNO:
+			case WINDOWTYPE_INTERRUPTCONFIRM:
 			case WINDOWTYPE_CONFIRM:	curr.choiceValue_currentCharPos = curr.choiceValue_currentCharPos == Screen::YesMsg ? Screen::NoMsg : Screen::YesMsg;	break;
 			case WINDOWTYPE_INT:		newValue++;	if (newValue <= (int)curr.delay_maxIntValue)	curr.intValue_maxTextValueLength = (unsigned long)newValue;	break;
 		}
@@ -525,6 +561,7 @@ void LcdUi::Event(byte inEvent)
 		{
 			case WINDOWTYPE_CHOICE:		this->MovePreviousChoice();	break;
 			case WINDOWTYPE_YESNO:
+			case WINDOWTYPE_INTERRUPTCONFIRM:
 			case WINDOWTYPE_CONFIRM:	curr.choiceValue_currentCharPos = curr.choiceValue_currentCharPos == Screen::YesMsg ? Screen::NoMsg : Screen::YesMsg;	break;
 			case WINDOWTYPE_INT:		newValue--;	if (newValue >= (int)curr.startingDate_minIntValue)	curr.intValue_maxTextValueLength = (unsigned long)newValue; break;
 		}
@@ -541,8 +578,11 @@ void LcdUi::Event(byte inEvent)
 	{
 		switch (curr.type)
 		{
-		case WINDOWTYPE_CHOICE:		this->pScreen->DisplayChoice(curr.choiceValue_currentCharPos);	break;
+			case WINDOWTYPE_CHOICE:		
+				this->pScreen->DisplayChoice(curr.choiceValue_currentCharPos);	
+				break;
 			case WINDOWTYPE_YESNO:
+			case WINDOWTYPE_INTERRUPTCONFIRM:
 			case WINDOWTYPE_CONFIRM:	this->pScreen->DisplayYesNo(curr.choiceValue_currentCharPos, curr.second);	break;
 			case WINDOWTYPE_INT:		this->pScreen->DisplayInt(curr.intValue_maxTextValueLength);
 		}		
