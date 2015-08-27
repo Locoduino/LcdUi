@@ -1,10 +1,10 @@
 /*************************************************************
-project: <LcdUI>
+project: <LcdUi>
 author: <Thierry PARIS>
 description: <Class for a splash screen (time limited info)>
 *************************************************************/
 
-#include "LcdUI.h"
+#include "LcdUi.h"
 
 WindowSplash::WindowSplash(byte inFirstLine, byte inSecondLine, unsigned long inDelay, int inTag) : Window(inFirstLine, inTag)
 { 

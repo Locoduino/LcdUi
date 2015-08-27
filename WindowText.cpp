@@ -1,10 +1,10 @@
 /*************************************************************
-project: <LcdUI>
+project: <LcdUi>
 author: <Thierry PARIS>
 description: <Class for a basic screen>
 *************************************************************/
 
-#include "LcdUI.h"
+#include "LcdUi.h"
 #include "WindowText.hpp"
 
 // char table : 32-127

@@ -6,7 +6,7 @@ description: <Class for a 2 lines parallel screen>
 
 #include "LCDUI_VStudioMfcDlg.h"
 
-#include "LcdUI.h"
+#include "LcdUi.h"
 #include "ScreenVS.hpp"
 
 void ScreenVS::Setup(byte sizex, byte sizey)

@@ -28,7 +28,7 @@ public:
 	void MoveNextChoice();
 	void MovePreviousChoice();
 
-	void AddChoice(byte inStringIndex, byte inInterruptOnEscape = 255);
+	byte AddChoice(byte inStringIndex, byte inInterruptOnEscape = 255);
 
 	void Event(byte inEventType, LcdUi *inpLcd);
 };

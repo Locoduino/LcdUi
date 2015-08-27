@@ -1,10 +1,10 @@
 /*************************************************************
-project: <LcdUI>
+project: <LcdUi>
 author: <Thierry PARIS>
 description: <Class for a basic screen>
 *************************************************************/
 
-#include "LcdUI.h"
+#include "LcdUi.h"
 #include "WindowChoice.hpp"
 
 WindowChoice::WindowChoice(byte inFirstLine, int inNumberOfChoices, bool inEscapeWindows, int inTag) : Window(inFirstLine, inTag)
@@ -17,7 +17,7 @@ WindowChoice::WindowChoice(byte inFirstLine, int inNumberOfChoices, bool inEscap
 		this->pEscapeWindows = 0;
 }
 
-void WindowChoice::AddChoice(byte inStringNumber, byte inInterruptOnEscape)
+byte WindowChoice::AddChoice(byte inStringNumber, byte inInterruptOnEscape)
 {
 	if (this->choiceAddCounter < WINDOW_MAXCHOICES)
 	{
@@ -29,7 +29,11 @@ void WindowChoice::AddChoice(byte inStringNumber, byte inInterruptOnEscape)
 		// Set the initial value to the first choice.
 		if (this->choiceAddCounter == 1)
 			this->choiceValue = inStringNumber;
+
+		return this->choiceAddCounter - 1;
 	}
+
+	return 255;
 }
 
 byte WindowChoice::GetChoiceIndex() const

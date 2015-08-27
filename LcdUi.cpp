@@ -1,10 +1,10 @@
 /*************************************************************
-project: <LcdUI>
+project: <LcdUi>
 author: <Thierry PARIS>
 description: <Base functions of the library>
 *************************************************************/
 
-#include "LcdUI.h"
+#include "LcdUi.h"
 
 #ifndef VISUALSTUDIO
 #include "arduino.h"
@@ -150,14 +150,14 @@ void LcdUi::StartSetup()
 	Serial.println(STR_LCDCOPYRIGHT);
 	Serial.println(F(""));
 
-	Serial.println(F("*** Setup LcdUI started."));
+	Serial.println(F("*** Setup LcdUi started."));
 #endif
 }
 
 void LcdUi::EndSetup()
 {	
 #ifdef DEBUG_MODE
-	Serial.println(F("*** Setup LcdUI Finished."));
+	Serial.println(F("*** Setup LcdUi Finished."));
 #endif
 }
 
@@ -181,7 +181,7 @@ Window *LcdUi::AddWindow(Window *inpWindow, Window *inpFatherWindow, byte inChoi
 	this->pWindows[this->windowAddcounter] = inpWindow;
 	byte index = 255;
 	if (inpFatherWindow != 0)
-		this->GetWindowIndex(inpFatherWindow);
+		index = this->GetWindowIndex(inpFatherWindow);
 	if (index == 255)
 		this->pNodeFather[this->windowAddcounter] = 0;
 	else

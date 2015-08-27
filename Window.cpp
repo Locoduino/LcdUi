@@ -1,10 +1,10 @@
 /*************************************************************
-project: <LcdUI>
+project: <LcdUi>
 author: <Thierry PARIS>
 description: <Class for a basic screen>
 *************************************************************/
 
-#include "LcdUI.h"
+#include "LcdUi.h"
 #include "Window.hpp"
 
 #ifdef DEBUG_MODE

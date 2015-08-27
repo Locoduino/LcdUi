@@ -1,10 +1,10 @@
 /*************************************************************
-project: <LcdUI>
+project: <LcdUi>
 author: <Thierry PARIS>
 description: <Class for a confirm dialog in interrupt context>
 *************************************************************/
 
-#include "LcdUI.h"
+#include "LcdUi.h"
 #include "WindowInterruptConfirm.hpp"
 
 WindowInterruptConfirm::WindowInterruptConfirm(byte inFirstLine, byte inPrefix, int inTag) : WindowInterrupt(inFirstLine, inPrefix, inTag)

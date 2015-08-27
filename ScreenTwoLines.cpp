@@ -1,10 +1,10 @@
 /*************************************************************
-project: <LcdUI>
+project: <LcdUi>
 author: <Thierry PARIS>
 description: <Class for a 2 lines parallel screen>
 *************************************************************/
 
-#include "LcdUI.h"
+#include "LcdUi.h"
 
 #ifdef VISUALSTUDIO
 #include "Serial.hpp"
