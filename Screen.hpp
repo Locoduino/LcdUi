@@ -35,14 +35,14 @@ public:
 	//LibraryName
 	inline virtual void init() { }
 #ifndef VISUALSTUDIO
-	inline virtual void print(const __FlashStringHelper *inString) {}
+	inline virtual void print(const __FlashStringHelper *) {}
 #endif
-	inline virtual void print(const char *inString) {}
-	inline virtual void print(int inValue, char inType) {}	// DEC, HEX, BIN ...
-	inline virtual void write(char inValue) {}
+	inline virtual void print(const char *) {}
+	inline virtual void print(int , char ) {}	// DEC, HEX, BIN ...
+	inline virtual void write(char ) {}
 	inline virtual void clear() {}
 	inline virtual void home() {}
-	inline virtual void setCursor(byte Col, byte Row) {}
+	inline virtual void setCursor(byte , byte ) {}
 	inline virtual void cursor_on() {}
 	inline virtual void cursor_off() {}
 	inline virtual void blink_on() {}
@@ -60,13 +60,13 @@ public:
 	char *GetChoiceString(int inString);
 
 	// Display string in contexts
-	inline virtual void DisplayHeader(int inHeader) {}
-	inline virtual void DisplayChoice(int inCurrentChoice) {}
-	inline virtual void DisplayChoice(const char *inChoice) {}
-	inline virtual void DisplayInt(int inValue) {}
-	inline virtual void DisplayTextResult(const char *inTextValue, byte inLength, byte inEditedChar) {}
-	inline virtual void DisplayTextChoice(byte inPos, byte inEditedChar) {}
-	inline virtual void DisplayYesNo(byte inChoiceValue, int prefixString = 0) {}
+	inline virtual void DisplayHeader(int) {}
+	inline virtual void DisplayChoice(int) {}
+	inline virtual void DisplayChoice(const char *) {}
+	inline virtual void DisplayInt(int ) {}
+	inline virtual void DisplayTextResult(const char *, byte , byte ) {}
+	inline virtual void DisplayTextChoice(byte , byte ) {}
+	inline virtual void DisplayYesNo(byte , int = 0) {}
 };
 
 //-------------------------------------------------------------------

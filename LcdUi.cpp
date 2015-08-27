@@ -11,8 +11,6 @@ description: <Base functions of the library>
 #include <avr/pgmspace.h>
 #endif
 
-static int freemem = 0;
-
 #ifdef DEBUG_MODE
 void static CheckPinNb(int inPin, const __FlashStringHelper *inFunc)
 {
@@ -78,13 +76,15 @@ LcdUi::LcdUi()
 void FillBuffer(const __FlashStringHelper *str)
 {
 #ifdef VISUALSTUDIO
-	strcpy_s(Screen::buffer, 40, str);
+	strcpy_s(Screen::buffer, BUFFER_SIZE, str);
 #else
 	const char *p = (const char *)str;
 	int k;
-	for (k = 0; k < pgm_read_byte(p + k) != 0x00; k++)
+	for (k = 0; k < BUFFER_SIZE; k++)
 	{
 		char myChar = pgm_read_byte_near(p + k);
+		if (myChar == 0)
+			break;
 		Screen::buffer[k] = myChar;
 	}
 	Screen::buffer[k] = 0;
@@ -123,8 +123,8 @@ void LcdUi::Setup(Screen *inpScreen, int inNbWindows)
 
 void LcdUi::StartSetup()
 {
-#ifdef DEBUG_MODE
 	Serial.begin(115200);
+#ifdef DEBUG_MODE
 #ifndef VISUALSTUDIO
 	//while (!Serial);
 #endif
@@ -263,7 +263,7 @@ byte LcdUi::GetNextChildWindow(byte inRef)
 
 byte LcdUi::GetPrevSiblingWindow(byte inRef)
 {
-	byte actualChoice = this->GetFatherChoice(inRef);
+	//byte actualChoice = this->GetFatherChoice(inRef);
 
 	for (int ref1 = inRef - 1; ref1 >= 0; ref1--)
 		if (this->GetFather(ref1) == this->GetFather(inRef))
@@ -530,8 +530,6 @@ void LcdUi::Event(byte inEvent)
 
 	if (curr.type == WINDOWTYPE_SPLASH)
 	{
-		unsigned long val = millis();
-
 		if (millis() - curr.startingDate_minIntValue > curr.delay_maxIntValue)
 		{
 			curr.startingDate_minIntValue = 0;

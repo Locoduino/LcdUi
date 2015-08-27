@@ -54,7 +54,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions);VISUALSTUDIO;ARDUINO=105;DCDCCCONTROLER;DEBUG_MODE</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions);VISUALSTUDIO;ARDUINO=105;NODCDCCCONTROLER;DEBUG_MODE</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(MsBuildProjectDirectory);$(MsBuildProjectDirectory)\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
@@ -148,14 +148,6 @@
   <ItemGroup>
     <Text Include="..\readme.txt" />
     <Text Include="..\WhatsNew.TXT" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\DcDccControler\VStudioLcdUI\DcDccControler\DcDccControler.vcxproj">
-      <Project>{9b75e2f8-0209-4e7d-a6e6-fb2668039e76}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\EEPROMextent\VisualLibrary\VisualLibrary.vcxproj">
-      <Project>{36fb542c-bca7-4976-9fd0-2dc510d19851}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -76,12 +76,12 @@ public:
 	inline virtual void SetChoiceValue(byte inValue) { this->choiceValue = inValue; }
 	inline virtual int GetTag() const { return this->tag; }
 	inline virtual int GetIntValue() const { return 0; }
-	inline virtual void SetValue(int inValue) { }
+	inline virtual void SetValue(int ) { }
 	inline virtual const char *GetTextValue() const { return 0; }
-	inline virtual void SetValue(const char *inValue) { }
+	inline virtual void SetValue(const char *) { }
 
 	inline virtual byte GetType() const { return 255; }
-	inline virtual void Event(byte inEventType, LcdUi *inpLcd) {}
+	inline virtual void Event(byte , LcdUi *) {}
 
 #ifdef DEBUG_MODE
 	static void printState(byte inState, const __FlashStringHelper *inFunc);
