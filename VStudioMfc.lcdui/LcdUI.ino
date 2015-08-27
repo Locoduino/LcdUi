@@ -4,7 +4,7 @@ author: <Thierry PARIS>
 description: <LCD UI demo>
 *************************************************************/
 
-#include "LcdUi.h"
+#include "LcdUimaster.h"
 
 const char  str_dc[] PROGMEM = "Dc";
 const char  str_dcc[] PROGMEM = "Dcc";

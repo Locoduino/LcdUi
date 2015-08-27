@@ -4,7 +4,7 @@ author: <Thierry PARIS>
 description: <Class for a splash screen (time limited info)>
 *************************************************************/
 
-#include "LcdUi.h"
+#include "LcdUI.h"
 
 WindowSplash::WindowSplash(byte inFirstLine, byte inSecondLine, unsigned long inDelay, int inTag) : Window(inFirstLine, inTag)
 { 

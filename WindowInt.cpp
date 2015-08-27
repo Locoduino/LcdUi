@@ -4,7 +4,7 @@ author: <Thierry PARIS>
 description: <Class for a basic screen>
 *************************************************************/
 
-#include "LcdUi.h"
+#include "LcdUI.h"
 #include "WindowInt.hpp"
 
 WindowInt::WindowInt(byte inFirstLine, int inMaxIntValue, int inMinIntValue, int inTag) : Window(inFirstLine, inTag)

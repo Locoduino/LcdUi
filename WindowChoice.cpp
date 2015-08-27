@@ -4,20 +4,26 @@ author: <Thierry PARIS>
 description: <Class for a basic screen>
 *************************************************************/
 
-#include "LcdUi.h"
+#include "LcdUI.h"
 #include "WindowChoice.hpp"
 
-WindowChoice::WindowChoice(byte inFirstLine, int inTag) : Window(inFirstLine, inTag)
+WindowChoice::WindowChoice(byte inFirstLine, int inNumberOfChoices, bool inEscapeWindows, int inTag) : Window(inFirstLine, inTag)
 {
 	this->choiceAddCounter = 0;
+	this->pChoices = new byte[inNumberOfChoices];
+	if (inEscapeWindows)
+		this->pEscapeWindows = new byte[inNumberOfChoices];
+	else
+		this->pEscapeWindows = 0;
 }
 
 void WindowChoice::AddChoice(byte inStringNumber, byte inInterruptOnEscape)
 {
 	if (this->choiceAddCounter < WINDOW_MAXCHOICES)
 	{
-		this->choices[this->choiceAddCounter] = inStringNumber;
-		this->escapeWindows[this->choiceAddCounter] = inInterruptOnEscape;
+		this->pChoices[this->choiceAddCounter] = inStringNumber;
+		if (pEscapeWindows != 0)
+			this->pEscapeWindows[this->choiceAddCounter] = inInterruptOnEscape;
 		this->choiceAddCounter++;
 
 		// Set the initial value to the first choice.
@@ -29,7 +35,7 @@ void WindowChoice::AddChoice(byte inStringNumber, byte inInterruptOnEscape)
 byte WindowChoice::GetChoiceIndex() const
 {
 	for (byte i = 0; i < this->choiceAddCounter; i++)
-		if (choices[i] == this->choiceValue)
+		if (pChoices[i] == this->choiceValue)
 			return i;
 
 	return 255;
@@ -41,12 +47,12 @@ void WindowChoice::MoveNextChoice()
 	byte ind = GetChoiceIndex();
 
 	if (ind == 255)
-		this->choiceValue = choices[0];
+		this->choiceValue = pChoices[0];
 
 	ind++;
 	if (ind >= this->choiceAddCounter)
 		ind = 0;
-	this->choiceValue = this->choices[ind];
+	this->choiceValue = this->pChoices[ind];
 }
 
 // Get the previous choice value from choices, if the current selection is the first one, go to the last...
@@ -55,11 +61,11 @@ void WindowChoice::MovePreviousChoice()
 	byte ind = GetChoiceIndex();
 
 	if (ind == 255)
-		this->choiceValue = choices[0];
+		this->choiceValue = pChoices[0];
 
 	if (ind == 0)
 		ind = this->choiceAddCounter;
-	this->choiceValue = this->choices[--ind];
+	this->choiceValue = this->pChoices[--ind];
 }
 
 void WindowChoice::Event(byte inEventType, LcdUi *inpLcd)

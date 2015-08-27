@@ -63,17 +63,17 @@ public:
 
 	inline byte GetWindowId() { return this->GetFirstLine(); }
 	inline byte GetFirstLine() const { return this->firstLine; }
-	inline byte GetState() { return this->state; }
+	inline byte GetState() const { return this->state; }
+	inline int GetTag() const { return this->tag; }
 	inline void SetFirstLine(byte inLine) { this->firstLine = inLine; }
 	inline void SetState(byte inState) { this->state = inState; }
 
 	inline virtual byte GetChoiceValue() const { return this->choiceValue; }
 	inline virtual void SetChoiceValue(byte inValue) { this->choiceValue = inValue; }
-	inline virtual int GetTag() const { return this->tag; }
-	inline virtual int GetIntValue() const { return 0; }
-	inline virtual void SetValue(int inValue) { }
-	inline virtual const char *GetTextValue() const { return 0; }
-	inline virtual void SetValue(const char *inValue) { }
+	//inline virtual int GetIntValue() const { return 0; }
+	//inline virtual void SetValue(int inValue) { }
+	//inline virtual const char *GetTextValue() const { return 0; }
+	//inline virtual void SetValue(const char *inValue) { }
 
 	inline virtual byte GetType() const { return 255; }
 	inline virtual void Event(byte inEventType, LcdUi *inpLcd) {}

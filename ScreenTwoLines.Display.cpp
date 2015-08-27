@@ -4,7 +4,7 @@ author: <Thierry PARIS>
 description: <Class for a 2 lines parallel screen>
 *************************************************************/
 
-#include "LcdUi.h"
+#include "LcdUI.h"
 
 void ScreenTwoLines::DisplayHeader(int inHeader)
 {

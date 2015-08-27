@@ -116,21 +116,23 @@ BOOL CLCDUI_VStudioMfcApp::ProcessMessageFilter(int code, LPMSG lpMsg)
 //-----------------------------------------
 //			ino PART
 //-----------------------------------------
+#include <LcdUimaster.h>
+
+
 /*************************************************************
 project: <LCD User Interface>
 author: <Thierry PARIS>
 description: <LCD UI demo>
 *************************************************************/
 
-#include "LcdUi.h"
-
+// Strings declaration
 const char  str_dc[] PROGMEM = "Dc";
 const char  str_dcc[] PROGMEM = "Dcc";
 const char  str_cv[] PROGMEM = "Cv";
 const char  str_stop[] PROGMEM = "Arret Alim";
 const char  str_stop2[] PROGMEM = "Appuyer Rouge";
 const char  str_dcdcc[] PROGMEM = "Change DC/DCC";
-const char  str_dcdcc2[] PROGMEM = "Redémarrer/annul";
+const char  str_dcdcc2[] PROGMEM = "Redemarrer/annul";
 const char  str_modemodechoice[] PROGMEM = "Choix du mode :";
 const char  str_modelococtrl[] PROGMEM = "Controle loco";
 const char  str_modelocoedit[] PROGMEM = "Edition loco";
@@ -143,15 +145,16 @@ const char  str_resetconfig[] PROGMEM = "Reset Config";
 const char  str_yes[] PROGMEM = "oui";
 const char  str_no[] PROGMEM = "non";
 const char  str_confirm[] PROGMEM = "Sur ?";
-const char  str_bkltconfig[] PROGMEM = "Rétro éclairage";
-const char  str_incconfig[] PROGMEM = "Vit Incrément";
+const char  str_bkltconfig[] PROGMEM = "Retro eclairage";
+const char  str_incconfig[] PROGMEM = "Vit Increment";
 const char  str_nameconfig[] PROGMEM = "Nom";
 const char  str_loconew[] PROGMEM = "Nouvelle Loco";
 const char  str_locodel[] PROGMEM = "Supprimer loco";
 const char  str_locoedit[] PROGMEM = "Editer loco";
-const char	str_splash1[] PROGMEM = "LcdUI Demo 0.1";
-const char	str_splash2[] PROGMEM = "By ... you !";
+const char  str_splash1[] PROGMEM = "LcdUI Demo 0.1";
+const char  str_splash2[] PROGMEM = "By ... you !";
 
+// Array of declared strings
 const char * const string_table[] PROGMEM =
 {
 	str_dc,
@@ -183,13 +186,14 @@ const char * const string_table[] PROGMEM =
 	str_splash2
 };
 
-#define STR_DC		0
-#define STR_DCC		1
-#define STR_CV		2
-#define STR_STOP	3
-#define STR_STOP2	4
-#define STR_DCDCC	5
-#define STR_DCDCC2	6
+// Indexes of strings in the array !
+#define STR_DC				0
+#define STR_DCC				1
+#define STR_CV				2
+#define STR_STOP			3
+#define STR_STOP2			4
+#define STR_DCDCC			5
+#define STR_DCDCC2			6
 #define STR_MODEMODECHOICE	7
 #define STR_MODELOCOCTRL	8
 #define STR_MODELOCOEDIT	9
@@ -211,95 +215,122 @@ const char * const string_table[] PROGMEM =
 #define STR_SPLASH1			25
 #define STR_SPLASH2			26
 
+// Main object and its screen
 LcdUi lcd;
 ScreenTwoLines screen;
 
+// Local values the UI must be able to update...
 int incValue;
 bool backlight;
-char name[40];
+char name[80];
+
+// Buttons pins
+#define LESS	24
+#define MORE	26
+#define SELECT	28
+#define CANCEL	30
+
+// buttons state flags
+bool less_high, more_high, select_high, cancel_high;
 
 void setup()
 {
 	LcdUi::StartSetup();
 
-	screen.Setup(16, 2, string_table, 0, 1, 2, 3, 4, 5, 6);
-	Screen::YesMsg = 16;
-	Screen::NoMsg = 17;
-	/*
+	screen.Setup(16, 2, string_table, 8, -1, 9, 4, 5, 6, 7);
+	Screen::YesMsg = STR_YES;
+	Screen::NoMsg = STR_NO;
 	lcd.Setup(&screen, 10);
+	Serial.println("0");
 
-	lcd.AddWindow(new WindowSplash(STR_SPLASH1, STR_SPLASH2, 500));	// Splash screen
+	WindowSplash *pSplash = (WindowSplash *)lcd.AddWindow(new WindowSplash(STR_SPLASH1, STR_SPLASH2, 500));	// Splash screen
 	WindowChoice *pChoiceMain = (WindowChoice *)lcd.AddWindow(new WindowChoice(STR_MODEMODECHOICE));	// menu
+	Serial.println("1");
 	pChoiceMain->AddChoice(STR_MODECONFIG);
-		WindowChoice *pChoiceConfig = (WindowChoice *)lcd.AddWindow(new WindowChoice(STR_MODECONFIG), pChoiceMain, 0);	// config
-		pChoiceConfig->AddChoice(STR_INCCFG);
-			lcd.AddWindow(new WindowInt(STR_INCCFG), pChoiceConfig, 0);	// config incValue
-		pChoiceConfig->AddChoice(STR_NAMECFG);
-			lcd.AddWindow(new WindowText(STR_NAMECFG, 10), pChoiceConfig, 1);	// config name
-		pChoiceConfig->AddChoice(STR_BACKLIGHTCFG);
-			lcd.AddWindow(new WindowYesNo(STR_BACKLIGHTCFG), pChoiceConfig, 2);	// config backlight
-		pChoiceConfig->AddChoice(STR_RESETCONFIG);
-			lcd.AddWindow(new WindowConfirm(STR_RESETCONFIG, STR_CONFIRM), pChoiceConfig, 3);	// reset config 
+	WindowChoice *pChoiceConfig = (WindowChoice *)lcd.AddWindow(new WindowChoice(STR_MODECONFIG), pChoiceMain, 0);	// config
+	pChoiceConfig->AddChoice(STR_INCCFG);
+	lcd.AddWindow(new WindowInt(STR_INCCFG), pChoiceConfig, 0);	// config incValue
+	pChoiceConfig->AddChoice(STR_NAMECFG);
+	lcd.AddWindow(new WindowText(STR_NAMECFG, 10), pChoiceConfig, 1);	// config name
+	Serial.println("2");
+	pChoiceConfig->AddChoice(STR_BACKLIGHTCFG);
+	lcd.AddWindow(new WindowYesNo(STR_BACKLIGHTCFG), pChoiceConfig, 2);	// config backlight
+	pChoiceConfig->AddChoice(STR_RESETCONFIG);
+	lcd.AddWindow(new WindowConfirm(STR_RESETCONFIG, STR_CONFIRM), pChoiceConfig, 3);	// reset config
 	pChoiceMain->AddChoice(STR_MODELOCOCTRL);
-		lcd.AddWindow(new Window(STR_MODELOCOCTRL), pChoiceMain, 1); // run
+	Serial.println("3");
+	//lcd.AddWindow(new Window(STR_MODELOCOCTRL), pChoiceMain, 1); // run
 
 	lcd.AddWindow(new WindowInterrupt(STR_STOP, STR_STOP2)); // Emergency stop
-	*/
-	BEGIN_UI(lcd, screen, 10);
-	WINDOWSPLASH(STR_SPLASH1, STR_SPLASH2, 500);
-	WIN choice = WINDOWCHOICE(STR_MODEMODECHOICE);
-	ADDCHOICE(choice, STR_MODECONFIG);
-		WIN choice1 = WINDOWCHOICE(STR_MODECONFIG, choice, 0);
-		ADDCHOICE(choice1, STR_INCCFG);
-			WINDOWINT(STR_INCCFG, 200, 0, choice1, 0);
-		ADDCHOICE(choice1, STR_NAMECFG);
-			WINDOWTEXT(STR_NAMECFG, 10, choice1, 1);
-		ADDCHOICE(choice1, STR_BACKLIGHTCFG);
-		WINDOWYESNO(STR_BACKLIGHTCFG, choice1, 2);
-		ADDCHOICE(choice1, STR_RESETCONFIG);
-		WINDOWCONFIRM(STR_RESETCONFIG, STR_CONFIRM, choice1, 3);
-	ADDCHOICE(choice, STR_MODELOCOCTRL);
+	lcd.AddWindow(new WindowInterrupt(STR_DCDCC, STR_DCDCC2)); // Mode Dc/DCC change
 
-	WINDOWINTERRUPT(STR_STOP, STR_STOP2);
-	END_UI();
-	
+	Serial.println("4");
+	// Initial vaues of local variables.
 	incValue = 10;
 	backlight = false;
 	strcpy(name, "Test");
 
+	Serial.println("5");
+	/*
+	BEGIN_UI(lcd, screen, 10);
+	WINDOWSPLASH(STR_SPLASH1, STR_SPLASH2, 500);
+	WIN choice = WINDOWCHOICE(STR_MODEMODECHOICE);
+	ADDCHOICE(choice, STR_MODECONFIG);
+	WIN choice1 = WINDOWCHOICE(STR_MODECONFIG, choice, 0);
+	ADDCHOICE(choice1, STR_INCCFG);
+	WINDOWINT(STR_INCCFG, 200, 0, choice1, 0);
+	ADDCHOICE(choice1, STR_NAMECFG);
+	WINDOWTEXT(STR_NAMECFG, 10, choice1, 1);
+	ADDCHOICE(choice1, STR_BACKLIGHTCFG);
+	WINDOWYESNO(STR_BACKLIGHTCFG, choice1, 2);
+	ADDCHOICE(choice1, STR_RESETCONFIG);
+	WINDOWCONFIRM(STR_RESETCONFIG, STR_CONFIRM, choice1, 3);
+	ADDCHOICE(choice, STR_MODELOCOCTRL);
+
+	WINDOWINTERRUPT(STR_STOP, STR_STOP2);
+	END_UI();
+*/
 	LcdUi::EndSetup();
+
+	// buttons setup
+	pinMode(LESS, INPUT);
+	pinMode(MORE, INPUT);
+	pinMode(SELECT, INPUT);
+	pinMode(CANCEL, INPUT);
+	less_high = more_high = select_high = cancel_high = false;
 }
 
 void loop()
 {
 	int event = EVENT_NONE;
 
-#if VISUALSTUDIO
-	if (theApp.lastKeyPressed != 0)
-	{
-		switch (theApp.lastKeyPressed)
-		{
-		case '+':	event = EVENT_MORE; break;
-		case '-':	event = EVENT_LESS; break;
-		case '*':	event = EVENT_SELECT; break;
-		case '/':	event = EVENT_CANCEL; break;
-		}
+	// Mapping of buttons to EVENTs
+	bool new_high = digitalRead(LESS);
+	if (new_high != less_high && new_high == HIGH)
+		event = EVENT_LESS;
+	less_high = new_high;
 
-		Serial.print(F("Keyboard "));
-		char str[3];
-		str[0] = theApp.lastKeyPressed;
-		str[1] = 0;
-		Serial.print(str);
-		Serial.println(F(" pressed "));
+	new_high = digitalRead(MORE);
+	if (new_high != more_high && new_high == HIGH)
+		event = EVENT_MORE;
+	more_high = new_high;
 
-		theApp.lastKeyPressed = 0;
-	}
-#endif
+	new_high = digitalRead(SELECT);
+	if (new_high != select_high && new_high == HIGH)
+		event = EVENT_SELECT;
+	select_high = new_high;
 
+	new_high = digitalRead(CANCEL);
+	if (new_high != cancel_high && new_high == HIGH)
+		event = EVENT_CANCEL;
+	cancel_high = new_high;
+
+	// Use events to update the screen...
 	if (lcd.Loop(event))
 	{
 		switch (lcd.GetState())
 		{
+			// If the current window is almost opened...
 		case STATE_INITIALIZE:
 			switch (lcd.GetWindowId())
 			{
@@ -315,6 +346,7 @@ void loop()
 			}
 			break;
 
+			// If the current window is almost closed...
 		case STATE_CONFIRMED:
 			switch (lcd.GetWindowId())
 			{
@@ -330,7 +362,6 @@ void loop()
 			}
 			lcd.SetState(STATE_POSTCONFIRMED);
 			break;
-
 		}
 	}
 }

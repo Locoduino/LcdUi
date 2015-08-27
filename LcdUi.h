@@ -142,10 +142,10 @@ public:
 
 	inline byte GetChoiceValue() const { return this->GetGlobalCurrentWindow()->GetChoiceValue(); }
 	inline void SetChoiceValue(byte inValue) { this->GetGlobalCurrentWindow()->SetChoiceValue(inValue); }
-	inline int GetIntValue() const { return this->GetGlobalCurrentWindow()->GetIntValue(); }
-	inline const char *GetTextValue() const { return this->GetGlobalCurrentWindow()->GetTextValue(); }
-	inline void SetValue(int inValue) { this->GetGlobalCurrentWindow()->SetValue(inValue); }
-	inline void SetValue(const char *inValue) { this->GetGlobalCurrentWindow()->SetValue(inValue); }
+	//inline int GetIntValue() const { return this->GetGlobalCurrentWindow()->GetIntValue(); }
+	//inline const char *GetTextValue() const { return this->GetGlobalCurrentWindow()->GetTextValue(); }
+	//inline void SetValue(int inValue) { this->GetGlobalCurrentWindow()->SetValue(inValue); }
+	//inline void SetValue(const char *inValue) { this->GetGlobalCurrentWindow()->SetValue(inValue); }
 
 #ifdef DEBUG_MODE
 public:

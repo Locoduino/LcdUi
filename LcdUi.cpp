@@ -4,7 +4,7 @@ author: <Thierry PARIS>
 description: <Base functions of the library>
 *************************************************************/
 
-#include "LcdUi.h"
+#include "LcdUI.h"
 
 #ifndef VISUALSTUDIO
 #include "arduino.h"
@@ -179,7 +179,9 @@ Window *LcdUi::AddWindow(Window *inpWindow, Window *inpFatherWindow, byte inChoi
 {
 	CHECKADD(this->windowAddcounter, "AddWindow");
 	this->pWindows[this->windowAddcounter] = inpWindow;
-	byte index = this->GetWindowIndex(inpFatherWindow);
+	byte index = 255;
+	if (inpFatherWindow != 0)
+		this->GetWindowIndex(inpFatherWindow);
 	if (index == 255)
 		this->pNodeFather[this->windowAddcounter] = 0;
 	else
@@ -195,8 +197,10 @@ Window *LcdUi::AddWindow(Window *inpWindow, Window *inpFatherWindow, byte inChoi
 byte LcdUi::GetWindowIndex(Window *inpWindow) const
 {
 	for (int ref1 = 0; ref1 < this->windowAddcounter; ref1++)
+	{
 		if (this->pWindows[ref1] == inpWindow)
 			return ref1;
+	}
 
 #ifdef DEBUG_MODE
 	Serial.println(F("Window not found !"));
@@ -231,7 +235,7 @@ byte LcdUi::GetParentWindow(byte inRef)
 		return father;
 
 #ifdef DEBUG_MODE
-	Serial.println(F("Window parent not found !"));
+	//Serial.println(F("Window parent not found !"));
 #endif
 	return 255;
 }
@@ -263,22 +267,27 @@ void LcdUi::GetNextUIWindow()
 	{
 		byte actualChoice = this->GetFatherChoice(this->CurrentWindow);
 
-		for (int ref1 = this->CurrentWindow + 1; ref1 < this->windowAddcounter; ref1++)
-			if (this->GetFather(ref1) == this->GetFather(this->CurrentWindow))
+		if (actualChoice == 255)
+		{
+			for (int ref1 = this->CurrentWindow + 1; ref1 < this->windowAddcounter; ref1++)
 			{
-				if (pWindows[ref1]->GetType() == WINDOWTYPE_INTERRUPT)
-					continue;
-				byte choice = this->GetFatherChoice(ref1);
-				if (actualChoice == 255 || choice == actualChoice)
+				if (this->GetFather(ref1) == this->GetFather(this->CurrentWindow))
 				{
-					next = ref1;
-					break;
+					if (pWindows[ref1]->GetType() == WINDOWTYPE_INTERRUPT)
+						continue;
+					byte choice = this->GetFatherChoice(ref1);
+					if (actualChoice == 255 || choice == actualChoice)
+					{
+						next = ref1;
+						break;
+					}
 				}
 			}
 
 #ifdef DEBUG_MODE
-		Serial.println(F("Window next child not found !"));
+			Serial.println(F("Window next child not found !"));
 #endif
+		}
 	}
 
 	if (next != 255)
@@ -317,8 +326,8 @@ void LcdUi::GetPrevUIWindow()
 			}
 
 #ifdef DEBUG_MODE
-		if (prev == 255)
-			Serial.println(F("Window previous sibling not found !"));
+//		if (prev == 255)
+//			Serial.println(F("Window previous sibling not found !"));
 #endif
 		if (prev == 255)
 			this->GetGlobalCurrentWindow()->SetState(STATE_NONE);

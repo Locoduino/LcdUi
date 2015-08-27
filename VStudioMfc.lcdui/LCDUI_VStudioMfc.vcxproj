@@ -104,7 +104,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\LcdUI.h" />
+    <ClInclude Include="..\LcdUimaster.h" />
     <ClInclude Include="..\LiquidCrystalFast.hpp" />
     <ClInclude Include="..\Screen.hpp" />
     <ClInclude Include="..\ScreenTwoLines.hpp" />

@@ -12,3 +12,5 @@ VStudioMfc/LCDUI_VStudioMfc.vcxproj.user
 .gitignore
 VStudioMfc/ipch/lcdui_vstudiomfc-fc367587/vc120.ipch
 VStudioMfc/stdafx.pch
+VStudioMfc/.vs/
+.gitignore

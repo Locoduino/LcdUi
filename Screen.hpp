@@ -5,6 +5,8 @@
 
 class ScreenVS;
 
+#define BUFFER_SIZE	40
+
 //-------------------------------------------------------------------
 
 class Screen
@@ -14,7 +16,7 @@ protected:
 	byte sizex, sizey;
 
 public:
-	static char buffer[40];
+	static char buffer[BUFFER_SIZE];
 	static int YesMsg;
 	static int NoMsg;
 
@@ -48,13 +50,17 @@ public:
 	inline virtual void blink_off() {}
 	/////////////
 
+	// String building in global buffer
 	static void BuildString(int inValue, char *outString, int digits = 0);
 	static void BuildProgress(byte inValue, byte inMax, bool inFromLeftDir, byte inLengthString, char *outString);
 	static byte BuildStringLeft(const char *inString, byte inSizeMax, char *outString);
 	static byte GetChar(int inPos);
 
+	// Get real string from pStringTable.
 	char *GetString(int inString);
+	char *GetChoiceString(int inString);
 
+	// Display string in contexts
 	inline virtual void DisplayHeader(int inHeader) {}
 	inline virtual void DisplayChoice(int inCurrentChoice) {}
 	inline virtual void DisplayChoice(const char *inChoice) {}

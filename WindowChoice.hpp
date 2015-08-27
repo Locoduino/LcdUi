@@ -15,16 +15,16 @@ private:
 	byte choiceAddCounter;
 
 	// strings for choice mode.
-	byte choices[WINDOW_MAXCHOICES];
-	byte escapeWindows[WINDOW_MAXCHOICES];
+	byte *pChoices;
+	byte *pEscapeWindows;
 
 public:
-	WindowChoice(byte inFirstLine, int inTag = 0);
+	WindowChoice(byte inFirstLine, int inNumberOfChoices, bool inEscapeWindows, int inTag = 0);
 
 	inline byte GetType() const { return WINDOWTYPE_CHOICE; }
 	byte GetChoiceIndex() const;
-	inline byte *GetChoices() { return this->choices; }
-	inline byte GetChoiceEscapeWindow() { return this->escapeWindows[this->GetChoiceIndex()]; }
+	inline byte *GetChoices() { return this->pChoices; }
+	inline byte GetChoiceEscapeWindow() { return this->pEscapeWindows == 0 ? 255 : this->pEscapeWindows[this->GetChoiceIndex()]; }
 	void MoveNextChoice();
 	void MovePreviousChoice();
 

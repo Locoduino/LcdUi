@@ -4,7 +4,7 @@ author: <Thierry PARIS>
 description: <Class for a basic screen>
 *************************************************************/
 
-#include "LcdUi.h"
+#include "LcdUI.h"
 #include "Window.hpp"
 
 #ifdef DEBUG_MODE

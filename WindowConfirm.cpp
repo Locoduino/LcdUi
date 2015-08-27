@@ -4,7 +4,7 @@ author: <Thierry PARIS>
 description: <Class for a basic screen>
 *************************************************************/
 
-#include "LcdUi.h"
+#include "LcdUI.h"
 #include "WindowConfirm.hpp"
 
 WindowConfirm::WindowConfirm(byte inFirstLine, byte inPrefix, int inTag) : Window(inFirstLine, inTag)
