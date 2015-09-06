@@ -13,9 +13,17 @@ void ScreenTwoLines::DisplayHeader(int inHeader)
 	this->print(this->GetString(inHeader));
 }
 
-void ScreenTwoLines::DisplayChoice(int inCurrentChoice)
+void ScreenTwoLines::DisplayChoice(int inCurrentChoice, int inIndex)
 {
 	this->GetString(inCurrentChoice);
+	if (inIndex != -1)
+	{
+		char index[10];
+		this->BuildString(inIndex, index);
+		int len = strlen(Screen::buffer);
+		for (int i = 0; i <= strlen(index); i++)
+			Screen::buffer[len + i] = index[i];
+	}
 	DisplayChoice(Screen::buffer);
 }
 

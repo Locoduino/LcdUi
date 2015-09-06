@@ -110,6 +110,7 @@
     <ClInclude Include="..\ScreenTwoLines.hpp" />
     <ClInclude Include="..\Window.hpp" />
     <ClInclude Include="..\WindowChoice.hpp" />
+    <ClInclude Include="..\WindowChoiceText.hpp" />
     <ClInclude Include="..\WindowConfirm.hpp" />
     <ClInclude Include="..\WindowInterrupt.hpp" />
     <ClInclude Include="..\WindowInt.hpp" />
@@ -135,6 +136,7 @@
     <ClCompile Include="..\ScreenTwoLines.Display.cpp" />
     <ClCompile Include="..\Window.cpp" />
     <ClCompile Include="..\WindowChoice.cpp" />
+    <ClCompile Include="..\WindowChoiceText.cpp" />
     <ClCompile Include="..\WindowConfirm.cpp" />
     <ClCompile Include="..\WindowInterrupt.cpp" />
     <ClCompile Include="..\WindowInt.cpp" />

@@ -71,7 +71,7 @@ public:
 	/////////////
 
 	void DisplayHeader(int inHeader);
-	void DisplayChoice(int inCurrentChoice);
+	void DisplayChoice(int inCurrentChoice, int inIndex = -1);
 	void DisplayChoice(const char *inChoice);
 	void DisplayInt(int inValue);
 	void DisplayTextResult(const char *inTextValue, byte inLength, byte inEditedChar);

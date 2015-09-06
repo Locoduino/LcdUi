@@ -62,7 +62,7 @@ public:
 
 	// Display string in contexts
 	inline virtual void DisplayHeader(int inHeader) {}
-	inline virtual void DisplayChoice(int inCurrentChoice) {}
+	inline virtual void DisplayChoice(int inCurrentChoice, int inIndex = -1) {}
 	inline virtual void DisplayChoice(const char *inChoice) {}
 	inline virtual void DisplayInt(int inValue) {}
 	inline virtual void DisplayTextResult(const char *inTextValue, byte inLength, byte inEditedChar) {}

@@ -63,6 +63,7 @@
 
 #include "Window.hpp"
 #include "WindowChoice.hpp"
+#include "WindowChoiceText.hpp"
 #include "WindowConfirm.hpp"
 #include "WindowInt.hpp"
 #include "WindowText.hpp"
@@ -139,6 +140,8 @@ public:
 	inline byte GetState() const { return this->GetGlobalCurrentWindow()->GetState(); }
 	inline void SetState(byte inState) { this->GetGlobalCurrentWindow()->SetState(inState); }
 	inline byte GetType() const { return this->GetGlobalCurrentWindow()->GetType(); }
+	inline byte GetWindowNumber() const { return this->windowAddcounter; }
+	inline Window *GetWindow(byte inIndex) const { return this->pWindows[inIndex]; }
 
 	inline byte GetChoiceValue() const { return this->GetGlobalCurrentWindow()->GetChoiceValue(); }
 	inline void SetChoiceValue(byte inValue) { this->GetGlobalCurrentWindow()->SetChoiceValue(inValue); }

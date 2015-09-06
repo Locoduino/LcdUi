@@ -9,7 +9,7 @@
 
 class WindowInt : public Window
 {
-private:
+protected:
 	int maxIntValue;
 	int minIntValue;
 

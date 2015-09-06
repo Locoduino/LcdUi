@@ -73,9 +73,10 @@ int freeMemory()
 }
 
 
-int map(int, int, int, int, int)
+int map(int val, int xs, int ys, int xe, int ye)
 {
-	return 0;
+	double R = (ye - xe) / ((double)ys - xs);
+	return (int) ((val - xs) * R) + xe;
 }
 
 byte pgm_read_byte(const char *str)

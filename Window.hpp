@@ -20,6 +20,7 @@
 #define WINDOWTYPE_TEXT			4
 #define WINDOWTYPE_INTERRUPT	5
 #define WINDOWTYPE_SPLASH		6
+#define WINDOWTYPE_CHOICETEXT	7
 
 /*
 Steps of the life :
