@@ -16,3 +16,4 @@ VStudioMfc/.vs/
 .gitignore
 VStudioMfc/VStudioMfc.sdf
 VStudioMfc/*.opensdf
+VStudioMfc/VStudioMfc.opensdf
