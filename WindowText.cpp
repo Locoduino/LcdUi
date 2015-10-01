@@ -52,8 +52,6 @@ void WindowText::Event(byte inEventType, LcdUi *inpLcd)
 	}
 	showValue = true;
 	break;
-	case EVENT_MOVE:
-		break;
 	case EVENT_SELECT:
 		this->state = STATE_SELECTCHAR;
 		if (this->currentCharPos == 0)

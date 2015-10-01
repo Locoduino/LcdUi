@@ -51,8 +51,6 @@ void WindowInt::Event(byte inEventType, LcdUi *inpLcd)
 				this->intValue = newValue;
 			showValue = true;
 			break;
-		case EVENT_MOVE:
-			break;
 		case EVENT_SELECT:
 			this->state = STATE_CONFIRMED;
 			break;
