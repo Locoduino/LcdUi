@@ -15,3 +15,5 @@ VStudioMfc/stdafx.pch
 VStudioMfc/.vs/
 .gitignore
 VStudioMfc/VStudioMfc.sdf
+
+VStudioMfc/VStudioMfc.opensdf

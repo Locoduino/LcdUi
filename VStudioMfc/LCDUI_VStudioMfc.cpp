@@ -119,7 +119,7 @@ BOOL CLCDUI_VStudioMfcApp::ProcessMessageFilter(int code, LPMSG lpMsg)
 #ifdef DCDCCCONTROLER
 #include "..\DcDccControler\VStudioLcdUi\LcdUi_ino.hpp"
 #else
-#include "LcdUi.ino"
+#include "LcdUiIno.hpp"
 #endif
 //-----------------------------------------
 //			end ino PART

@@ -23,10 +23,10 @@ void ScreenVS::clearVS()
 
 void ScreenVS::printVS(int inPosy, const char *inString)
 {
-	char buffer[80];
+	char buffer[40];
 
 	if (inString == 0)
-		CLCDUI_VStudioMfcDlg::pMainDialog->getLine(inPosy, buffer, 80);
+		CLCDUI_VStudioMfcDlg::pMainDialog->getLine(inPosy, buffer, 40);
 	else
 		strcpy(buffer, inString);
 
@@ -55,9 +55,9 @@ void ScreenVS::delayVS(int inDelay)
 
 void ScreenVS::print(const char *inString)
 {
-	char buffer[80];
+	char buffer[40];
 
-	CLCDUI_VStudioMfcDlg::pMainDialog->getLine(this->posy, buffer, 80);
+	CLCDUI_VStudioMfcDlg::pMainDialog->getLine(this->posy, buffer, 40);
 	int i;
 	for (i = 0; i < (int) strlen(inString); i++)
 		buffer[this->posx + i] = inString[i];
@@ -70,7 +70,7 @@ void ScreenVS::print(const char *inString)
 
 void ScreenVS::print(int inValue, char inType)
 {
-	char buffer[80];
+	char buffer[40];
 	Screen::BuildString(inValue, buffer);
 
 	print(buffer);
@@ -78,9 +78,9 @@ void ScreenVS::print(int inValue, char inType)
 
 void ScreenVS::write(char inValue)
 {
-	char buffer[80];
+	char buffer[40];
 
-	CLCDUI_VStudioMfcDlg::pMainDialog->getLine(this->posy, buffer, 80);
+	CLCDUI_VStudioMfcDlg::pMainDialog->getLine(this->posy, buffer, 40);
 	if (this->posx < this->sizex)
 		buffer[this->posx] = inValue;
 	buffer[this->sizex] = 0;
