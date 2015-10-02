@@ -43,7 +43,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);..\..\DcDccControler;..\..\EEPROMextent</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);..\..\_DcDccControler;..\..\_EEPROMextent</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -119,6 +119,10 @@
     <ClInclude Include="..\WindowText.hpp" />
     <ClInclude Include="..\WindowYesNo.hpp" />
     <ClInclude Include="arduino.h" />
+    <ClInclude Include="ButtonsCommander.hpp" />
+    <ClInclude Include="ButtonsCommanderButton.hpp" />
+    <ClInclude Include="ButtonsCommanderKeyboard.hpp" />
+    <ClInclude Include="Commander.hpp" />
     <ClInclude Include="LCDUI_VStudioMfc.h" />
     <ClInclude Include="LCDUI_VStudioMfcDlg.h" />
     <ClInclude Include="LiquidCrystalFast.h" />
@@ -145,6 +149,10 @@
     <ClCompile Include="..\WindowText.cpp" />
     <ClCompile Include="..\WindowYesNo.cpp" />
     <ClCompile Include="Arduino.cpp" />
+    <ClCompile Include="ButtonsCommander.cpp" />
+    <ClCompile Include="ButtonsCommanderButton.cpp" />
+    <ClCompile Include="ButtonsCommanderKeyboard.cpp" />
+    <ClCompile Include="Commander.cpp" />
     <ClCompile Include="LCDUI_VStudioMfc.cpp" />
     <ClCompile Include="LCDUI_VStudioMfcDlg.cpp" />
     <ClCompile Include="ScreenVS.cpp" />
