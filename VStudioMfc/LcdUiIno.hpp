@@ -128,6 +128,9 @@ char name[80];
 // buttons state flags
 bool less_high, more_high, select_high, cancel_high;
 
+byte dcDccWindow;
+byte emergencyWindow;
+
 void setup()
 {
   LcdUi::StartSetup();
@@ -172,13 +175,13 @@ void setup()
   pChoiceMain->AddChoice(STR_MODELOCOCTRL);
 	 lcd.AddWindow(new Window(STR_MODELOCOCTRL), pChoiceMain, 1); // run
 
-  lcd.AddWindow(new WindowInterrupt(STR_STOP, STR_STOP2)); // Emergency stop
-  lcd.AddWindow(new WindowInterrupt(STR_DCDCC, STR_DCDCC2)); // Mode Dc/DCC change
+  emergencyWindow = lcd.AddWindowInterrupt(new WindowInterrupt(STR_STOP, STR_STOP2)); // Emergency stop
+  dcDccWindow = lcd.AddWindowInterrupt(new WindowInterrupt(STR_DCDCC, STR_DCDCC2)); // Mode Dc/DCC change
 
 // Initial vaues of local variables.
   incValue = 10;
   backlight = false;
-  strcpy(name, "Test");
+  strcpy(name, "Locoduino");
 
   LcdUi::EndSetup();
 
@@ -222,6 +225,26 @@ void loop()
   {
 	  event = EVENT_CANCEL;
 	  buttons[BUTTON_MODE]->UnselectLastLoop();
+  }
+
+  if (buttons[BUTTON_DCDCC]->IsSelectedLastLoop())
+  {
+	  if (lcd.GetWindowInterrupt() == 255)
+		  lcd.Interrupt(dcDccWindow); // DcDcc mode change
+	  else
+		  if (lcd.GetWindowInterrupt() == dcDccWindow)
+			lcd.InterruptEnd();
+	  buttons[BUTTON_DCDCC]->UnselectLastLoop();
+  }
+
+  if (buttons[BUTTON_PANIC]->IsSelectedLastLoop())
+  {
+	  if (lcd.GetWindowInterrupt() == 255)
+		  lcd.Interrupt(emergencyWindow); // Emergency
+	  else
+		  if (lcd.GetWindowInterrupt() == emergencyWindow)
+			  lcd.InterruptEnd();
+	  buttons[BUTTON_PANIC]->UnselectLastLoop();
   }
 
   // Mapping of buttons to EVENTs

@@ -103,7 +103,7 @@ private:
 	int windowSize;
 	int windowAddcounter;
 	byte CurrentWindow;
-	byte WindowInterrupt;
+	byte WindowInterruptIndex;
 	
 	// functions to move in the windows list
 	byte GetParentWindow(byte inRef);
@@ -119,6 +119,7 @@ public:
 	void Setup(Screen *inpScreen, int inNbWindows = 0);
 	void SetWindowsNumber(int inNbWindows);
 	Window *AddWindow(Window *inpWindow, Window *inpFatherWindow = 0, byte inChoiceNumber = 255);
+	byte AddWindowInterrupt(WindowInterrupt * inpWindow);
 	inline void SetWindow(byte inWindow) { this->CurrentWindow = inWindow; }
 
 	static void StartSetup();
@@ -128,8 +129,8 @@ public:
 	void Interrupt(byte inInterrupt);
 	void InterruptEnd();
 	inline byte GetCurrentWindow() const { return this->CurrentWindow; }
-	inline byte GetWindowInterrupt() { return this->WindowInterrupt; }
-	inline Window *GetGlobalCurrentWindow() const { return this->WindowInterrupt != 255 ? this->pWindows[this->WindowInterrupt] : this->pWindows[this->CurrentWindow]; }
+	inline byte GetWindowInterrupt() { return this->WindowInterruptIndex; }
+	inline Window *GetGlobalCurrentWindow() const { return this->WindowInterruptIndex != 255 ? this->pWindows[this->WindowInterruptIndex] : this->pWindows[this->CurrentWindow]; }
 	inline Screen *GetScreen() const { return this->pScreen; }
 
 	byte GetWindowIndex(Window *inpWindow) const;

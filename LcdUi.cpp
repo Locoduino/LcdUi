@@ -85,7 +85,7 @@ LcdUi::LcdUi()
 	this->windowSize = 0;
 	this->windowAddcounter = 0;
 	this->CurrentWindow = 255;
-	this->WindowInterrupt = 255;
+	this->WindowInterruptIndex = 255;
 }
 
 void FillBuffer(const __FlashStringHelper *str)
@@ -192,6 +192,11 @@ Window *LcdUi::AddWindow(Window *inpWindow, Window *inpFatherWindow, byte inChoi
 
 	this->windowAddcounter++;
 	return inpWindow;
+}
+
+byte LcdUi::AddWindowInterrupt(WindowInterrupt *inpWindow)
+{
+	return this->GetWindowIndex(this->AddWindow(inpWindow));
 }
 
 byte LcdUi::GetWindowIndex(Window *inpWindow) const
@@ -357,15 +362,15 @@ bool LcdUi::Loop(byte inEvent)
 	if (inEvent == EVENT_NONE && this->GetState() == STATE_NONE && this->GetType() != WINDOWTYPE_SPLASH)
 		return false;
 
-	if (this->WindowInterrupt != 255)
+	if (this->WindowInterruptIndex != 255)
 	{
-		this->pWindows[this->WindowInterrupt]->Event(inEvent, this);
+		this->pWindows[this->WindowInterruptIndex]->Event(inEvent, this);
 		if (this->GetState() == STATE_POSTCONFIRMED)
 		{
 #ifdef DEBUG_MODE
 			Serial.println(F("Interrupted"));
 #endif
-			if (this->WindowInterrupt != 255 && this->GetType() == WINDOWTYPE_CONFIRM)
+			if (this->WindowInterruptIndex != 255 && this->GetType() == WINDOWTYPE_CONFIRM)
 			{
 				byte prev = this->GetParentWindow(this->CurrentWindow);
 				this->SetWindow(prev);
@@ -401,14 +406,14 @@ bool LcdUi::Loop(byte inEvent)
 
 void LcdUi::Interrupt(byte inWindow)
 {
-	this->WindowInterrupt = inWindow;
+	this->WindowInterruptIndex = inWindow;
 	this->SetState(STATE_START);
-	this->pWindows[this->WindowInterrupt]->Event(EVENT_NONE, this);
+	this->pWindows[this->WindowInterruptIndex]->Event(EVENT_NONE, this);
 }
 
 void LcdUi::InterruptEnd()
 {
-	this->WindowInterrupt = 255;
+	this->WindowInterruptIndex = 255;
 	this->SetState(STATE_START);
 	this->pWindows[this->CurrentWindow]->Event(EVENT_NONE, this);
 }
