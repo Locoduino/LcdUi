@@ -111,9 +111,14 @@ char name[80];
 #define MORE	26
 #define SELECT	28
 #define CANCEL	30
+#define EMERGENCY	32
+#define DCDCC		34
 
 // buttons state flags
-bool less_high, more_high, select_high, cancel_high;
+bool less_high, more_high, select_high, cancel_high, emergency_high, dcdcc_high;
+
+byte dcDccWindow;
+byte emergencyWindow;
 
 void setup()
 {
@@ -139,8 +144,8 @@ void setup()
   pChoiceMain->AddChoice(STR_MODELOCOCTRL);
      lcd.AddWindow(new Window(STR_MODELOCOCTRL), pChoiceMain, 1); // run
 
-  lcd.AddWindow(new WindowInterrupt(STR_STOP, STR_STOP2)); // Emergency stop
-  lcd.AddWindow(new WindowInterrupt(STR_DCDCC, STR_DCDCC2)); // Mode Dc/DCC change
+  dcDccWindow = lcd.AddWindowInterrupt(new WindowInterrupt(STR_STOP, STR_STOP2)); // Emergency stop
+  emergencyWindow = lcd.AddWindowInterrupt(new WindowInterrupt(STR_DCDCC, STR_DCDCC2)); // Mode Dc/DCC change
 
 // Initial vaues of local variables.
   incValue = 10;
@@ -154,7 +159,9 @@ void setup()
   pinMode(MORE, INPUT);
   pinMode(SELECT, INPUT);
   pinMode(CANCEL, INPUT);
-  less_high = more_high = select_high = cancel_high = false;
+  pinMode(EMERGENCY, INPUT);
+  pinMode(DCDCC, INPUT);
+  less_high = more_high = select_high = cancel_high = emergency_high = dcdcc_high = false;
 }
 
 void loop()
@@ -181,6 +188,28 @@ void loop()
   if (new_high != cancel_high && new_high == HIGH)
       event = EVENT_CANCEL;
   cancel_high = new_high;
+
+  new_high = digitalRead(EMERGENCY);
+  if (new_high != emergency_high && new_high == HIGH)
+  {
+	  if (lcd.GetWindowInterrupt() == 255)
+		  lcd.Interrupt(emergencyWindow); // Emergency
+	  else
+		  if (lcd.GetWindowInterrupt() == emergencyWindow)
+			  lcd.InterruptEnd();
+  }
+  emergency_high = new_high;
+
+  new_high = digitalRead(DCDCC);
+  if (new_high != dcdcc_high && new_high == HIGH)
+  {
+	  if (lcd.GetWindowInterrupt() == 255)
+		  lcd.Interrupt(dcDccWindow); // DcDcc mode change
+	  else
+		  if (lcd.GetWindowInterrupt() == dcDccWindow)
+			lcd.InterruptEnd();
+  }
+  dcdcc_high = new_high;
 
   // Use events to update the screen...
   if (lcd.Loop(event))
