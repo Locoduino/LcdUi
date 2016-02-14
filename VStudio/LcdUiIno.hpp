@@ -5,20 +5,6 @@ description: <LCD UI demo>
 *************************************************************/
 
 #include "LcdUi.h"
-#include "ButtonsCommander.hpp"
-#include "ButtonsCommanderKeyboard.hpp"
-
-
-ButtonsCommander buttons;
-
-#define BUTTON_SPEED_MORE	0
-#define BUTTON_SPEED_LESS	1
-#define BUTTON_DCDCC		2
-#define BUTTON_DIR			3
-#define BUTTON_PANIC		4
-#define BUTTON_F1			5
-#define BUTTON_F2			6
-#define BUTTON_MODE			7
 
 // Strings declaration
 const char  str_dc[] PROGMEM = "Dc";
@@ -135,26 +121,6 @@ void setup()
 {
   LcdUi::StartSetup();
 
-  buttons.Setup(8,
-	  new ButtonsCommanderKeyboard(),	 // BUTTON_SPEED_MORE	
-	  new ButtonsCommanderKeyboard(),	 // BUTTON_SPEED_LESS	
-	  new ButtonsCommanderKeyboard(),  // BUTTON_DCDCC		
-	  new ButtonsCommanderKeyboard(),  // BUTTON_DIR			
-	  new ButtonsCommanderKeyboard(),	 // BUTTON_PANIC		
-	  new ButtonsCommanderKeyboard(),	 // BUTTON_F1			
-	  new ButtonsCommanderKeyboard(),	 // BUTTON_F2			
-	  new ButtonsCommanderKeyboard()	 // BUTTON_MODE			
-	  );
-
-  KEYBOARD(buttons, BUTTON_SPEED_MORE)->Setup('+');
-  KEYBOARD(buttons, BUTTON_SPEED_LESS)->Setup('-');
-  KEYBOARD(buttons, BUTTON_DCDCC)->Setup('d');
-  KEYBOARD(buttons, BUTTON_DIR)->Setup('*');
-  KEYBOARD(buttons, BUTTON_PANIC)->Setup('p');
-  KEYBOARD(buttons, BUTTON_F1)->Setup('1');
-  KEYBOARD(buttons, BUTTON_F2)->Setup('2');
-  KEYBOARD(buttons, BUTTON_MODE)->Setup('/');
-
   screen.Setup(16, 2, string_table, 8, -1, 9, 4, 5, 6, 7);
   Screen::YesMsg = STR_YES;
   Screen::NoMsg = STR_NO;
@@ -196,56 +162,6 @@ void setup()
 void loop()
 {
   int event = EVENT_NONE;
-
-  if (theApp.lastKeyPressed != 0)
-	  ButtonsCommanderKeyboard::lastLoopKey = theApp.lastKeyPressed;
-  theApp.lastKeyPressed = 0;
-
-  buttons.Loop();
-
-  if (buttons[BUTTON_SPEED_MORE]->IsSelectedLastLoop())
-  {
-	  event = EVENT_MORE;
-	  buttons[BUTTON_SPEED_MORE]->UnselectLastLoop();
-  }
-
-  if (buttons[BUTTON_SPEED_LESS]->IsSelectedLastLoop())
-  {
-	  event = EVENT_LESS;
-	  buttons[BUTTON_SPEED_LESS]->UnselectLastLoop();
-  }
-
-  if (buttons[BUTTON_DIR]->IsSelectedLastLoop())
-  {
-	  event = EVENT_SELECT;
-	  buttons[BUTTON_DIR]->UnselectLastLoop();
-  }
-
-  if (buttons[BUTTON_MODE]->IsSelectedLastLoop())
-  {
-	  event = EVENT_CANCEL;
-	  buttons[BUTTON_MODE]->UnselectLastLoop();
-  }
-
-  if (buttons[BUTTON_DCDCC]->IsSelectedLastLoop())
-  {
-	  if (lcd.GetWindowInterrupt() == 255)
-		  lcd.Interrupt(dcDccWindow); // DcDcc mode change
-	  else
-		  if (lcd.GetWindowInterrupt() == dcDccWindow)
-			lcd.InterruptEnd();
-	  buttons[BUTTON_DCDCC]->UnselectLastLoop();
-  }
-
-  if (buttons[BUTTON_PANIC]->IsSelectedLastLoop())
-  {
-	  if (lcd.GetWindowInterrupt() == 255)
-		  lcd.Interrupt(emergencyWindow); // Emergency
-	  else
-		  if (lcd.GetWindowInterrupt() == emergencyWindow)
-			  lcd.InterruptEnd();
-	  buttons[BUTTON_PANIC]->UnselectLastLoop();
-  }
 
   // Mapping of buttons to EVENTs
   bool new_high = digitalRead(LESS);

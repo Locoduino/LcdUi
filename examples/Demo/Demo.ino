@@ -6,7 +6,6 @@ description: <LCD UI demo>
 
 #include "LcdUi.h"
 
-
 // Strings declaration
 const char  str_dc[] PROGMEM = "Dc";
 const char  str_dcc[] PROGMEM = "Dcc";
@@ -111,11 +110,9 @@ char name[80];
 #define MORE	26
 #define SELECT	28
 #define CANCEL	30
-#define EMERGENCY	32
-#define DCDCC		34
 
 // buttons state flags
-bool less_high, more_high, select_high, cancel_high, emergency_high, dcdcc_high;
+bool less_high, more_high, select_high, cancel_high;
 
 byte dcDccWindow;
 byte emergencyWindow;
@@ -129,28 +126,28 @@ void setup()
   Screen::NoMsg = STR_NO;
   lcd.Setup(&screen, 10);
 
-  WindowSplash *pSplash = (WindowSplash *)lcd.AddWindow(new WindowSplash(STR_SPLASH1, STR_SPLASH2, 500));	// Splash screen
-  WindowChoice *pChoiceMain = (WindowChoice *)lcd.AddWindow(new WindowChoice(STR_MODEMODECHOICE));	// menu
+  lcd.AddWindow(new WindowSplash(STR_SPLASH1, STR_SPLASH2, 500));	// Splash screen
+  WindowChoice *pChoiceMain = (WindowChoice *)lcd.AddWindow(new WindowChoice(STR_MODEMODECHOICE, 2, false));	// menu
   pChoiceMain->AddChoice(STR_MODECONFIG);
-     WindowChoice *pChoiceConfig = (WindowChoice *)lcd.AddWindow(new WindowChoice(STR_MODECONFIG), pChoiceMain, 0);	// config
-     pChoiceConfig->AddChoice(STR_INCCFG);
-        lcd.AddWindow(new WindowInt(STR_INCCFG), pChoiceConfig, 0);	// config incValue
-     pChoiceConfig->AddChoice(STR_NAMECFG);
-        lcd.AddWindow(new WindowText(STR_NAMECFG, 10), pChoiceConfig, 1);	// config name
-     pChoiceConfig->AddChoice(STR_BACKLIGHTCFG);
-        lcd.AddWindow(new WindowYesNo(STR_BACKLIGHTCFG), pChoiceConfig, 2);	// config backlight
-     pChoiceConfig->AddChoice(STR_RESETCONFIG);
-        lcd.AddWindow(new WindowConfirm(STR_RESETCONFIG, STR_CONFIRM), pChoiceConfig, 3);	// reset config
+	 WindowChoice *pChoiceConfig = (WindowChoice *)lcd.AddWindow(new WindowChoice(STR_MODECONFIG, 4, false), pChoiceMain, 0);	// config
+	 pChoiceConfig->AddChoice(STR_INCCFG);
+		lcd.AddWindow(new WindowInt(STR_INCCFG), pChoiceConfig, 0);	// config incValue
+	 pChoiceConfig->AddChoice(STR_NAMECFG);
+		lcd.AddWindow(new WindowText(STR_NAMECFG, 10), pChoiceConfig, 1);	// config name
+	 pChoiceConfig->AddChoice(STR_BACKLIGHTCFG);
+		lcd.AddWindow(new WindowYesNo(STR_BACKLIGHTCFG), pChoiceConfig, 2);	// config backlight
+	 pChoiceConfig->AddChoice(STR_RESETCONFIG);
+		lcd.AddWindow(new WindowConfirm(STR_RESETCONFIG, STR_CONFIRM), pChoiceConfig, 3);	// reset config
   pChoiceMain->AddChoice(STR_MODELOCOCTRL);
-     lcd.AddWindow(new Window(STR_MODELOCOCTRL), pChoiceMain, 1); // run
+	 lcd.AddWindow(new Window(STR_MODELOCOCTRL), pChoiceMain, 1); // run
 
-  dcDccWindow = lcd.AddWindowInterrupt(new WindowInterrupt(STR_STOP, STR_STOP2)); // Emergency stop
-  emergencyWindow = lcd.AddWindowInterrupt(new WindowInterrupt(STR_DCDCC, STR_DCDCC2)); // Mode Dc/DCC change
+  emergencyWindow = lcd.AddWindowInterrupt(new WindowInterrupt(STR_STOP, STR_STOP2)); // Emergency stop
+  dcDccWindow = lcd.AddWindowInterrupt(new WindowInterrupt(STR_DCDCC, STR_DCDCC2)); // Mode Dc/DCC change
 
 // Initial vaues of local variables.
   incValue = 10;
   backlight = false;
-  strcpy(name, "Test");
+  strcpy(name, "Locoduino");
 
   LcdUi::EndSetup();
 
@@ -159,9 +156,7 @@ void setup()
   pinMode(MORE, INPUT);
   pinMode(SELECT, INPUT);
   pinMode(CANCEL, INPUT);
-  pinMode(EMERGENCY, INPUT);
-  pinMode(DCDCC, INPUT);
-  less_high = more_high = select_high = cancel_high = emergency_high = dcdcc_high = false;
+  less_high = more_high = select_high = cancel_high = false;
 }
 
 void loop()
@@ -171,83 +166,63 @@ void loop()
   // Mapping of buttons to EVENTs
   bool new_high = digitalRead(LESS);
   if (new_high != less_high && new_high == HIGH)
-      event = EVENT_LESS;
+	  event = EVENT_LESS;
   less_high = new_high;
 
   new_high = digitalRead(MORE);
   if (new_high != more_high && new_high == HIGH)
-      event = EVENT_MORE;
+	  event = EVENT_MORE;
   more_high = new_high;
 
   new_high = digitalRead(SELECT);
   if (new_high != select_high && new_high == HIGH)
-      event = EVENT_SELECT;
+	  event = EVENT_SELECT;
   select_high = new_high;
 
   new_high = digitalRead(CANCEL);
   if (new_high != cancel_high && new_high == HIGH)
-      event = EVENT_CANCEL;
+	  event = EVENT_CANCEL;
   cancel_high = new_high;
-
-  new_high = digitalRead(EMERGENCY);
-  if (new_high != emergency_high && new_high == HIGH)
-  {
-	  if (lcd.GetWindowInterrupt() == 255)
-		  lcd.Interrupt(emergencyWindow); // Emergency
-	  else
-		  if (lcd.GetWindowInterrupt() == emergencyWindow)
-			  lcd.InterruptEnd();
-  }
-  emergency_high = new_high;
-
-  new_high = digitalRead(DCDCC);
-  if (new_high != dcdcc_high && new_high == HIGH)
-  {
-	  if (lcd.GetWindowInterrupt() == 255)
-		  lcd.Interrupt(dcDccWindow); // DcDcc mode change
-	  else
-		  if (lcd.GetWindowInterrupt() == dcDccWindow)
-			lcd.InterruptEnd();
-  }
-  dcdcc_high = new_high;
 
   // Use events to update the screen...
   if (lcd.Loop(event))
   {
-    switch (lcd.GetState())
-    {
-      // If the current window is almost opened...
-      case STATE_INITIALIZE:
-        switch (lcd.GetWindowId())
-        {
-          case STR_INCCFG:
-            lcd.SetValue(incValue);
-            break;
-          case STR_NAMECFG:
-            lcd.SetValue(name);
-            break;
-          case STR_BACKLIGHTCFG:
-            lcd.SetChoiceValue(backlight ? Screen::YesMsg : Screen::NoMsg);
-            break;
-        }
-        break;
+	Window *pCurrent = lcd.GetGlobalCurrentWindow();
 
-      // If the current window is almost closed...
-      case STATE_CONFIRMED:
-        switch (lcd.GetWindowId())
-        {
-          case STR_INCCFG:
-            incValue = lcd.GetIntValue();
-            break;
-          case STR_NAMECFG:
-            strcpy(name, lcd.GetTextValue());
-            break;
-          case STR_BACKLIGHTCFG:
-            backlight = lcd.GetChoiceValue() == Screen::YesMsg;
-            break;
-        }
-        lcd.SetState(STATE_POSTCONFIRMED);
-        break;
-    }
+	switch (lcd.GetState())
+	{
+	  // If the current window is almost opened...
+	  case STATE_INITIALIZE:
+		switch (pCurrent->GetWindowId())
+		{
+		  case STR_INCCFG:
+			((WindowInt*)pCurrent)->SetValue(incValue);
+			break;
+		  case STR_NAMECFG:
+			((WindowText*)pCurrent)->SetValue(name);
+			break;
+		  case STR_BACKLIGHTCFG:
+			lcd.SetChoiceValue(backlight ? Screen::YesMsg : Screen::NoMsg);
+			break;
+		}
+		break;
+
+	  // If the current window is almost closed...
+	  case STATE_CONFIRMED:
+		switch (pCurrent->GetWindowId())
+		{
+		  case STR_INCCFG:
+			incValue = ((WindowInt*)pCurrent)->GetIntValue();
+			break;
+		  case STR_NAMECFG:
+			strcpy(name, ((WindowText*)pCurrent)->GetTextValue());
+			break;
+		  case STR_BACKLIGHTCFG:
+			backlight = lcd.GetChoiceValue() == Screen::YesMsg;
+			break;
+		}
+		lcd.SetState(STATE_POSTCONFIRMED);
+		break;
+	}
   }
 }
