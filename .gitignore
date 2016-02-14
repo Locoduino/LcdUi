@@ -17,3 +17,10 @@ VStudioMfc/.vs/
 VStudioMfc/VStudioMfc.sdf
 VStudioMfc/*.opensdf
 VStudioMfc/VStudioMfc.opensdf
+VStudio/Debug
+VStudio/.vs
+VStudio/ipch
+*.sdf
+*.pch
+*.suo
+*.opendb
