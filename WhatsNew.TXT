@@ -1,2 +1,7 @@
+14/02/2016 V0.1
+	- Ajout d'un fichier zip de bibliothèque Arduino.
+
+	- Add an Arduino library zip file.
+
 12/02/2015 V0
 	- LcdUi project is born !

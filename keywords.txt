@@ -1,0 +1,35 @@
+#######################################
+# Syntax Coloring Map For Matrix
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+LcdUi KEYWORD1
+Window KEYWORD1
+Screen KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+StartSetup KEYWORD2
+EndSetup KEYWORD2
+Loop KEYWORD2
+
+Interrupt KEYWORD2
+InterruptEnd KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+EVENT_NONE		LITERAL1
+EVENT_MORE		LITERAL1
+EVENT_LESS		LITERAL1
+EVENT_SELECT	LITERAL1
+EVENT_CANCEL	LITERAL1
+EVENT_MOVE		LITERAL1
+EVENT_START		LITERAL1
+EVENT_END		LITERAL1

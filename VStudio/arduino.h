@@ -3,9 +3,9 @@
 #define __arduino_H__
 //-------------------------------------------------------------------
 
-#define int8_t		signed char
-#define uint8_t		unsigned char
-#define uint16_t	unsigned int
+typedef signed char		int8_t;
+typedef unsigned char	uint8_t;
+typedef unsigned short     uint16_t;
 #define boolean		bool
 #define byte		unsigned char
 #define strcpy_P(d, s)	strcpy_s(d, this->sizex + 1, s)

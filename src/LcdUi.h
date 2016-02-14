@@ -16,8 +16,8 @@
 #define GPIO2_PREFER_SPEED    1
 
 #ifdef VISUALSTUDIO
-#include "VStudioMfc/arduino.h"
-#include "VStudioMfc/Serial.hpp"
+#include "VStudio/arduino.h"
+#include "VStudio/Serial.hpp"
 #define STRNCPY(out, len ,in)	strcpy_s(out, len, in)
 #define STRCPY(out, in)			strcpy_s(out, in)
 #else

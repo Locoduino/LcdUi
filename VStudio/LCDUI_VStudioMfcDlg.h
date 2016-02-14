@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "stdafx.h"		// main symbols
+#include "stdafx.h"
 #include "resource.h"		// main symbols
 
 #define DEBUGLINES	10

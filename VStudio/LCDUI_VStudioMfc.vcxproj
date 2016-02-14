@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -19,14 +19,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
@@ -104,25 +104,26 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\LcdUi.h" />
-    <ClInclude Include="..\LiquidCrystalFast.hpp" />
-    <ClInclude Include="..\Screen.hpp" />
-    <ClInclude Include="..\ScreenTwoLines.hpp" />
-    <ClInclude Include="..\Window.hpp" />
-    <ClInclude Include="..\WindowChoice.hpp" />
-    <ClInclude Include="..\WindowChoiceText.hpp" />
-    <ClInclude Include="..\WindowConfirm.hpp" />
-    <ClInclude Include="..\WindowInterrupt.hpp" />
-    <ClInclude Include="..\WindowInt.hpp" />
-    <ClInclude Include="..\WindowInterruptConfirm.hpp" />
-    <ClInclude Include="..\WindowSplash.hpp" />
-    <ClInclude Include="..\WindowText.hpp" />
-    <ClInclude Include="..\WindowYesNo.hpp" />
+    <ClInclude Include="..\src\LcdUi.h" />
+    <ClInclude Include="..\src\LiquidCrystalFast.hpp" />
+    <ClInclude Include="..\src\Screen.hpp" />
+    <ClInclude Include="..\src\ScreenTwoLines.hpp" />
+    <ClInclude Include="..\src\Window.hpp" />
+    <ClInclude Include="..\src\WindowChoice.hpp" />
+    <ClInclude Include="..\src\WindowChoiceText.hpp" />
+    <ClInclude Include="..\src\WindowConfirm.hpp" />
+    <ClInclude Include="..\src\WindowInterrupt.hpp" />
+    <ClInclude Include="..\src\WindowInt.hpp" />
+    <ClInclude Include="..\src\WindowInterruptConfirm.hpp" />
+    <ClInclude Include="..\src\WindowSplash.hpp" />
+    <ClInclude Include="..\src\WindowText.hpp" />
+    <ClInclude Include="..\src\WindowYesNo.hpp" />
     <ClInclude Include="arduino.h" />
     <ClInclude Include="ButtonsCommander.hpp" />
     <ClInclude Include="ButtonsCommanderButton.hpp" />
     <ClInclude Include="ButtonsCommanderKeyboard.hpp" />
     <ClInclude Include="Commander.hpp" />
+    <ClInclude Include="LcdUi.h" />
     <ClInclude Include="LCDUI_VStudioMfc.h" />
     <ClInclude Include="LCDUI_VStudioMfcDlg.h" />
     <ClInclude Include="LiquidCrystalFast.h" />
@@ -134,20 +135,20 @@
     <ClInclude Include="WString.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\LcdUi.cpp" />
-    <ClCompile Include="..\Screen.cpp" />
-    <ClCompile Include="..\ScreenTwoLines.cpp" />
-    <ClCompile Include="..\ScreenTwoLines.Display.cpp" />
-    <ClCompile Include="..\Window.cpp" />
-    <ClCompile Include="..\WindowChoice.cpp" />
-    <ClCompile Include="..\WindowChoiceText.cpp" />
-    <ClCompile Include="..\WindowConfirm.cpp" />
-    <ClCompile Include="..\WindowInterrupt.cpp" />
-    <ClCompile Include="..\WindowInt.cpp" />
-    <ClCompile Include="..\WindowInterruptConfirm.cpp" />
-    <ClCompile Include="..\WindowSplash.cpp" />
-    <ClCompile Include="..\WindowText.cpp" />
-    <ClCompile Include="..\WindowYesNo.cpp" />
+    <ClCompile Include="..\src\LcdUi.cpp" />
+    <ClCompile Include="..\src\Screen.cpp" />
+    <ClCompile Include="..\src\ScreenTwoLines.cpp" />
+    <ClCompile Include="..\src\ScreenTwoLines.Display.cpp" />
+    <ClCompile Include="..\src\Window.cpp" />
+    <ClCompile Include="..\src\WindowChoice.cpp" />
+    <ClCompile Include="..\src\WindowChoiceText.cpp" />
+    <ClCompile Include="..\src\WindowConfirm.cpp" />
+    <ClCompile Include="..\src\WindowInterrupt.cpp" />
+    <ClCompile Include="..\src\WindowInt.cpp" />
+    <ClCompile Include="..\src\WindowInterruptConfirm.cpp" />
+    <ClCompile Include="..\src\WindowSplash.cpp" />
+    <ClCompile Include="..\src\WindowText.cpp" />
+    <ClCompile Include="..\src\WindowYesNo.cpp" />
     <ClCompile Include="Arduino.cpp" />
     <ClCompile Include="ButtonsCommander.cpp" />
     <ClCompile Include="ButtonsCommanderButton.cpp" />
