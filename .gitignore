@@ -24,3 +24,8 @@ VStudio/ipch
 *.pch
 *.suo
 *.opendb
+VStudio/old
+VStudio/*.db
+VStudio/x64
+VStudio/*.user
+VStudio/*.filters

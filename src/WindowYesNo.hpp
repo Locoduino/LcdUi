@@ -9,8 +9,11 @@
 
 class WindowYesNo : public Window
 {
+private:
+	bool *pValue;
+
 public:
-	WindowYesNo(byte inFirstLine, int inTag = 0) : Window(inFirstLine, inTag) { }
+	WindowYesNo(byte inFirstLine, bool *inpValue, int inTag = 0) : Window(inFirstLine, inTag) { this->pValue = inpValue; }
 
 	inline byte GetType() const { return WINDOWTYPE_YESNO; }
 

@@ -5,12 +5,6 @@
 
 #include "arduino.h"
 
-#ifdef VISUALSTUDIO
-#ifndef byte
-#define byte unsigned char
-#endif
-#endif
-
 #define MAXSTRINGVALUE	20
 
 #define WINDOWTYPE_YESNO		0
@@ -49,15 +43,21 @@ Steps of the life :
 
 class LcdUi;
 
-typedef void(*event)(byte inEventType, LcdUi *inpItem);
-
 class Window
 {
 protected:
-	byte firstLine;
+	byte firstLine;		// id
 	byte state;
-	byte choiceValue;	// string number as stored in 'choices', not the index !
 	int tag;			// User data...
+	Window *pNextWindow;
+
+	// A window can have a father window.
+	// If this father is a WindowChoice, each choice can go to a Windows list for THIS choice.
+	// For instance, you select 'B' in a multiple choice list, and 'B' give acces to three more windows...
+	// Each of these sub windows will say : my father is the choice, 
+	// and I will be called if choice 'B' is activated.
+	Window *pFatherWindow;
+	byte fatherChoiceValue;	// Index of the choice, 255 if undefined
 
 public:
 	Window(byte inFirstLine, int inTag = 0);
@@ -69,17 +69,18 @@ public:
 	inline void SetFirstLine(byte inLine) { this->firstLine = inLine; }
 	inline void SetState(byte inState) { this->state = inState; }
 
-	inline virtual byte GetChoiceValue() const { return this->choiceValue; }
-	inline virtual void SetChoiceValue(byte inValue) { this->choiceValue = inValue; }
-	//inline virtual int GetIntValue() const { return 0; }
-	//inline virtual void SetValue(int inValue) { }
-	//inline virtual const char *GetTextValue() const { return 0; }
-	//inline virtual void SetValue(const char *inValue) { }
-
 	inline virtual byte GetType() const { return 255; }
 	inline virtual void Event(byte inEventType, LcdUi *inpLcd) {}
 
-#ifdef DEBUG_MODE
+	inline void SetNextWindow(Window *inWindow) { this->pNextWindow = inWindow; }
+	inline Window *GetNextWindow() const { return this->pNextWindow; }
+
+	inline void SetFatherWindow(Window *inpFatherWindow) { this->pFatherWindow = inpFatherWindow; }
+	inline Window *GetFatherWindow() const { return this->pFatherWindow; }
+	inline byte GetFatherChoiceValue() const { return this->fatherChoiceValue; }
+	inline void SetFatherChoiceValue(byte inValue) { this->fatherChoiceValue = inValue; }
+
+#ifdef LCDUI_DEBUG_MODE
 	static void printState(byte inState, const __FlashStringHelper *inFunc);
 #endif
 };

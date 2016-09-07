@@ -23,21 +23,16 @@ void WindowSplash::Event(byte inEventType, LcdUi *inpLcd)
 
 	if (this->state == STATE_START)
 	{
-		Screen *pScreen = inpLcd->GetScreen();
+		LcdScreen *pScreen = inpLcd->GetScreen();
 
 		pScreen->DisplayHeader(this->firstLine);
-		pScreen->setCursor(0, 1);
-		pScreen->GetString(this->secondLine);
-
-		pScreen->print(Screen::buffer);
+		pScreen->DisplayText(this->secondLine, 0, 1);
 
 		this->startingDate = millis();
 
 		this->state = STATE_INITIALIZE;
 		return;
 	}
-
-	unsigned long val = millis();
 
 	if (millis() - this->startingDate > this->delay)
 	{

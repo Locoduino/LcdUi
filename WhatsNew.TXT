@@ -1,3 +1,13 @@
+00/09/2016 V0.30
+	
+
+25/03/2016 V0.20
+	- Utilisation de la bibliothèque externe NewLiquidCrystal, livrée dans extra.
+	- Gestion des écrans plus grand que deux lignes.
+
+	- Use now the library 'New LiquidCrystal' located in extra folder.
+	- Handle correctly screens with more than two lines !
+
 14/02/2016 V0.1
 	- Ajout d'un fichier zip de bibliothèque Arduino.
 

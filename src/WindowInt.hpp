@@ -10,23 +10,20 @@
 class WindowInt : public Window
 {
 protected:
-	int maxIntValue;
 	int minIntValue;
+	int maxIntValue;
 
 	// values for edition modes
-	int intValue;
+	int *pValue;
 
 public:
-	WindowInt(byte inFirstLine, int inMaxIntValue = 32767, int inMinIntValue = 0, int inTag = 0);
+	WindowInt(byte inFirstLine, int *inpValue, int inMinIntValue = 0, int inMaxIntValue = 32767, int inTag = 0);
 
 	inline byte GetType() const { return WINDOWTYPE_INT; }
-	inline int GetMaxIntValue() const { return this->maxIntValue; }
 	inline int GetMinIntValue() const { return this->minIntValue; }
-	inline void SetMaxIntValue(int inMax) { this->maxIntValue = inMax; }
+	inline int GetMaxIntValue() const { return this->maxIntValue; }
 	inline void SetMinIntValue(int inMin) { this->minIntValue = inMin; }
-
-	inline int GetIntValue() const { return this->intValue; }
-	inline void SetValue(int inValue) { this->intValue = inValue; }
+	inline void SetMaxIntValue(int inMax) { this->maxIntValue = inMax; }
 
 	void Event(byte inEventType, LcdUi *inpLcd);
 };

@@ -20,10 +20,7 @@ void WindowInterrupt::Event(byte inEventType, LcdUi *inpLcd)
 	if (this->state == STATE_START)
 	{
 		inpLcd->GetScreen()->DisplayHeader(this->firstLine);
-		inpLcd->GetScreen()->setCursor(0, 1);
-		inpLcd->GetScreen()->GetString(this->secondLine);
-
-		inpLcd->GetScreen()->print(Screen::buffer);
+		inpLcd->GetScreen()->DisplayText(this->secondLine, 0, 1);
 
 		this->state = STATE_INITIALIZE;
 	}

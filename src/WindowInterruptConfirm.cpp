@@ -7,19 +7,19 @@ description: <Class for a confirm dialog in interrupt context>
 #include "LcdUi.h"
 #include "WindowInterruptConfirm.hpp"
 
-WindowInterruptConfirm::WindowInterruptConfirm(byte inFirstLine, byte inPrefix, int inTag) : WindowInterrupt(inFirstLine, inPrefix, inTag)
+WindowInterruptConfirm::WindowInterruptConfirm(byte inFirstLine, byte inSecondLine, int inTag) : WindowInterrupt(inFirstLine, inSecondLine, inTag)
 { 
 }
 
 void WindowInterruptConfirm::Event(byte inEventType, LcdUi *inpLcd)
 {
 	bool showValue = false;
-	Screen *pScreen = inpLcd->GetScreen();
+	LcdScreen *pScreen = inpLcd->GetScreen();
 
 	if (this->state == STATE_INITIALIZE)
 	{
 		this->state = STATE_NONE;
-		this->choiceValue = Screen::NoMsg;
+		this->answer = LcdScreen::NoMsg;
 		showValue = true;
 	}
 
@@ -35,10 +35,10 @@ void WindowInterruptConfirm::Event(byte inEventType, LcdUi *inpLcd)
 	case EVENT_MORE:
 	case EVENT_LESS:
 	case EVENT_MOVE:
-		if (this->choiceValue == Screen::YesMsg)
-			this->choiceValue = Screen::NoMsg;
+		if (this->answer == LcdScreen::YesMsg)
+			this->answer = LcdScreen::NoMsg;
 		else
-			this->choiceValue = Screen::YesMsg;
+			this->answer = LcdScreen::YesMsg;
 		showValue = true;
 		break;
 	case EVENT_SELECT:
@@ -51,7 +51,7 @@ void WindowInterruptConfirm::Event(byte inEventType, LcdUi *inpLcd)
 
 	if (showValue)
 	{
-		pScreen->DisplayYesNo(this->choiceValue, this->secondLine);
+		pScreen->DisplayYesNo(this->answer, this->secondLine);
 	}
 }
 

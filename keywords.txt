@@ -6,24 +6,51 @@
 # Datatypes (KEYWORD1)
 #######################################
 
-LcdUi KEYWORD1
-Window KEYWORD1
-Screen KEYWORD1
+LcdUi					KEYWORD1
+Window					KEYWORD1
+WindowChoice			KEYWORD1
+WindowChoiceText		KEYWORD1
+WindowConfirm			KEYWORD1
+WindowInt				KEYWORD1
+WindowInterrupt			KEYWORD1
+WindowInterruptConfirm	KEYWORD1
+WindowSplash			KEYWORD1
+WindowText				KEYWORD1
+WindowYesNo				KEYWORD1
+Screen					KEYWORD1
+ScreenLiquid			KEYWORD1
+ScreenLiquidNew			KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
 
-StartSetup KEYWORD2
-EndSetup KEYWORD2
-Loop KEYWORD2
+StartSetup	KEYWORD2
+EndSetup	KEYWORD2
+Loop		KEYWORD2
 
-Interrupt KEYWORD2
-InterruptEnd KEYWORD2
+Setup					KEYWORD2
+AddWindow				KEYWORD2
+AddWindowInterrupt		KEYWORD2
+AddChoice				KEYWORD2
+Interrupt 				KEYWORD2
+InterruptEnd			KEYWORD2
+GetGlobalCurrentWindow	KEYWORD2
+GetWindowId				KEYWORD2
+SetValue				KEYWORD2
+SetChoiceValue			KEYWORD2
+SetCurrentChoice		KEYWORD2
+GetIntValue				KEYWORD2
+GetTextValue			KEYWORD2
+GetChoiceValue			KEYWORD2
+GetState				KEYWORD2
+SetState				KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
 #######################################
+
+UNDEFINED_ID	LITERAL1
 
 EVENT_NONE		LITERAL1
 EVENT_MORE		LITERAL1
@@ -33,3 +60,7 @@ EVENT_CANCEL	LITERAL1
 EVENT_MOVE		LITERAL1
 EVENT_START		LITERAL1
 EVENT_END		LITERAL1
+
+STATE_INITIALIZE	LITERAL1
+STATE_CONFIRMED		LITERAL1
+STATE_POSTCONFIRMED	LITERAL1

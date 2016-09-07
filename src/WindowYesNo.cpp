@@ -5,12 +5,11 @@ description: <Class for a basic screen>
 *************************************************************/
 
 #include "LcdUi.h"
-//#include "WindowYesNo.hpp"
 
 void WindowYesNo::Event(byte inEventType, LcdUi *inpLcd)
 {
 	bool showValue = false;
-	Screen *pScreen = inpLcd->GetScreen();
+	LcdScreen *pScreen = inpLcd->GetScreen();
 
 	if (this->state == STATE_INITIALIZE)
 	{
@@ -30,10 +29,7 @@ void WindowYesNo::Event(byte inEventType, LcdUi *inpLcd)
 	case EVENT_MORE:
 	case EVENT_LESS:
 	case EVENT_MOVE:
-		if (this->choiceValue == Screen::YesMsg)
-			this->choiceValue = Screen::NoMsg;
-		else
-			this->choiceValue = Screen::YesMsg;
+		*(this->pValue) = ! *(this->pValue);
 		showValue = true;
 		break;
 	case EVENT_SELECT:
@@ -46,7 +42,7 @@ void WindowYesNo::Event(byte inEventType, LcdUi *inpLcd)
 
 	if (showValue)
 	{
-		pScreen->DisplayYesNo(this->choiceValue);
+		pScreen->DisplayYesNo(*(this->pValue));
 	}
 }
 

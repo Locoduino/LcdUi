@@ -4,29 +4,35 @@
 //-------------------------------------------------------------------
 
 #include "Window.hpp"
+#include "Chain.hpp"
 
 //-------------------------------------------------------------------
 
 #define WINDOW_MAXCHOICES		10
 
+struct Choice
+{
+	byte id;	// string id
+	byte index;
+	byte escapeWindowId;	// escape window id or 255
+};
+
 class WindowChoice : public Window
 {
 protected:
-	byte choiceAddCounter;
-	byte currentIndex;
+	Choice *pSelectedChoice;	// selected choice index
 
-	// strings for choice mode.
-	byte *pChoices;
-	byte *pIndexes;
-	byte *pEscapeWindows;
+	LCDUICHAINEDLIST<Choice> Choices;
 
 public:
-	WindowChoice(byte inFirstLine, int inNumberOfChoices, bool inEscapeWindows, bool inUseIndexes = false, int inTag = 0);
+	WindowChoice(byte inFirstLine, Choice *inpSelectedChoice, bool inUseIndexes = false, int inTag = 0);
 
 	inline byte GetType() const { return WINDOWTYPE_CHOICE; }
-	byte GetChoiceIndex() const;
-	inline byte *GetChoices() { return this->pChoices; }
-	inline byte GetChoiceEscapeWindow() { return this->pEscapeWindows == 0 ? 255 : this->pEscapeWindows[this->GetChoiceIndex()]; }
+	inline const Choice &GetSelectedChoice() const { return *this->pSelectedChoice; }
+	inline byte GetSelectedChoiceId() const { return pSelectedChoice->id; }
+	inline byte GetSelectedChoiceIndex() const { return pSelectedChoice->index; }
+	inline byte GetSelectedChoiceEscapeWindowId() { return this->pSelectedChoice->escapeWindowId; }
+
 	void MoveNextChoice();
 	void MovePreviousChoice();
 

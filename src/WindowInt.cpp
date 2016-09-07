@@ -7,11 +7,16 @@ description: <Class for a basic screen>
 #include "LcdUi.h"
 #include "WindowInt.hpp"
 
-WindowInt::WindowInt(byte inFirstLine, int inMaxIntValue, int inMinIntValue, int inTag) : Window(inFirstLine, inTag)
+WindowInt::WindowInt(byte inFirstLine, int *inpValue, int inMinIntValue, int inMaxIntValue, int inTag) : Window(inFirstLine, inTag)
 {
-	this->maxIntValue = inMaxIntValue;
+#ifdef LCDUI_DEBUG_MODE
+	if (inMinIntValue >= inMaxIntValue)
+		Serial.println(F("Integer minimum value greater or equal to maximum !"));
+#endif
+
 	this->minIntValue = inMinIntValue;
-	this->intValue = 0;
+	this->maxIntValue = inMaxIntValue;
+	this->pValue = inpValue;
 }
 
 void WindowInt::Event(byte inEventType, LcdUi *inpLcd)
@@ -28,27 +33,27 @@ void WindowInt::Event(byte inEventType, LcdUi *inpLcd)
 	{
 		inpLcd->GetScreen()->DisplayHeader(this->firstLine);
 
-		if (this->intValue > this->maxIntValue)
-			this->intValue = this->maxIntValue;
-		if (this->intValue < this->minIntValue)
-			this->intValue = this->minIntValue;
+		if (*this->pValue < this->minIntValue)
+			*this->pValue = this->minIntValue;
+		if (*this->pValue > this->maxIntValue)
+			*this->pValue = this->maxIntValue;
 
 		this->state = STATE_INITIALIZE;
 	}
 
-	int newValue = this->intValue;
+	int newValue = *this->pValue;
 	switch (inEventType)
 	{
 		case EVENT_MORE:
 			newValue++;
 			if (newValue <= this->maxIntValue)
-				this->intValue = newValue;
+				*this->pValue = newValue;
 			showValue = true;
 			break;
 		case EVENT_LESS:
 			newValue--;
 			if (newValue >= this->minIntValue)
-				this->intValue = newValue;
+				*this->pValue = newValue;
 			showValue = true;
 			break;
 		case EVENT_SELECT:
@@ -61,7 +66,7 @@ void WindowInt::Event(byte inEventType, LcdUi *inpLcd)
 
 	if (showValue)
 	{
-		inpLcd->GetScreen()->DisplayInt(this->intValue);
+		inpLcd->GetScreen()->DisplayInt(*this->pValue);
 	}
 }
 

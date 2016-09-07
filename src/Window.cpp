@@ -7,7 +7,7 @@ description: <Class for a basic screen>
 #include "LcdUi.h"
 #include "Window.hpp"
 
-#ifdef DEBUG_MODE
+#ifdef LCDUI_DEBUG_MODE
 void Window::printState(byte inState, const __FlashStringHelper *inFunc)
 {
 	Serial.print(inFunc);
@@ -30,7 +30,9 @@ Window::Window(byte inFirstLine, int inTag)
 {
 	this->firstLine = inFirstLine;
 	this->state = STATE_START;
-	this->choiceValue = 0;
 	this->tag = inTag;
+	this->pNextWindow = NULL;
+	this->pFatherWindow = NULL;
+	this->fatherChoiceValue = 255;
 }
 

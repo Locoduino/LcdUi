@@ -5,19 +5,17 @@
 ////////////////////////////////////////////////////////
 // Add a '//' at the beginning of the line to be in 
 // release mode.
-//#define DEBUG_MODE
+#define LCDUI_DEBUG_MODE
 
 ///////////////////////////////////////////////////////
 // Verbose mode lets you see all actions done by the 
 // library, but with a real flood of text to console...
-// Has no effect if DEBUG_MODE is not activated.
+// Has no effect if LCDUI_DEBUG_MODE is not activated.
 //#define DEBUG_VERBOSE_MODE
 
-#define GPIO2_PREFER_SPEED    1
-
 #ifdef VISUALSTUDIO
-#include "VStudio/arduino.h"
-#include "VStudio/Serial.hpp"
+#include "arduino.h"
+#include "string.h"
 #define STRNCPY(out, len ,in)	strcpy_s(out, len, in)
 #define STRCPY(out, in)			strcpy_s(out, in)
 #else
@@ -25,17 +23,11 @@
 #define STRCPY(out, in)			strcpy(out, in)
 #endif
 
-#ifdef DEBUG_MODE
-#define CHECKPIN(val, text)		CheckPinNb(cval, text)
-#else
-#define CHECKPIN(val, text)
-#endif
-
 #ifndef STR_LCDTITLE
-#define STR_LCDTITLE16		F("LCD UI V0.1")
+#define STR_LCDTITLE16		F("LCD UI V0.20")
 #define STR_LCDCOPYRIGHT16	F("By Thierry Paris")
 
-#define STR_LCDTITLE		F("LCD User Interface V0.1")
+#define STR_LCDTITLE		F("LCD User Interface V0.20")
 #define STR_LCDCOPYRIGHT	F("Developed by Thierry Paris.")
 #endif
 
@@ -58,7 +50,6 @@
 // See below the file names related to each exclusion:
 //
 
-
 /////////////////////////////////////
 
 #include "Window.hpp"
@@ -72,8 +63,26 @@
 #include "WindowInterruptConfirm.hpp"
 #include "WindowSplash.hpp"
 
-#include "Screen.hpp"
-#include "ScreenTwoLines.hpp"
+#include "LcdScreen.hpp"
+
+#ifdef VISUALSTUDIO
+/*#include "ScreenVS.hpp"
+#include "ScreenLiquid.hpp"
+#include "ScreenLiquidNew.hpp"
+#include "ScreenNokia5110.hpp"*/
+#endif
+
+#ifdef LiquidCrystal_h
+#include "ScreenLiquid.hpp"
+#endif
+
+#ifdef _LCD_H_
+#include "ScreenLiquidNew.hpp"
+#endif
+
+#ifdef _ADAFRUIT_PCD8544_H
+#include "ScreenNokia5110.hpp"
+#endif
 
 #define EVENT_NONE		0
 #define EVENT_MORE		1
@@ -87,88 +96,63 @@
 class LcdUi
 {
 private:
-	Screen *pScreen;
-	Window* *pWindows;
+	static bool firstLoop;
+
+	LcdScreen *pScreen;
+	Window *pFirstWindow;
+
 	/* (Index of the father Window in the Window list + 1) * 100 + (Choice number + 1 or 0)
-									NodeFather			Comment
+	NodeFather			Comment
 	0	Win A						0					no father...
 	1		Win B choices 0,1,2		100					Win A (index 0+1) is the father.
 	2			Win C				201					Win B/Choice 0 if the father (Index 1+1 * 100) + Choice (0+1)
 	3			Win D				202					Win B/Choice 1 if the father (Index 1+1 * 100) + Choice (1+1)
 	4			Win E				203					Win B/Choice 2 if the father (Index 1+1 * 100) + Choice (2+1)
 	5			Win F				203					Win B/Choice 2 if the father (Index 1+1 * 100) + Choice (2+1)
-
 	*/
 	int *pNodeFather;
-	int windowSize;
-	int windowAddcounter;
-	byte CurrentWindow;
-	byte WindowInterruptIndex;
+
+	Window *pCurrentWindow;
+	Window *pWindowInterrupt;
 	
 	// functions to move in the windows list
-	byte GetParentWindow(byte inRef);
-	byte GetNextChildWindow(byte inRef);
+	Window *GetNextChildWindow(Window *inpRef);
 
-	// Functions used by interactive mode to evolute in the UI
-	void GetNextUIWindow();
-	void GetPrevUIWindow();
+	// Functions used by interactive mode to evoluate in the UI
+	void MoveToNextUIWindow();
+	void MoveToPrevUIWindow();
 
 public:
 	LcdUi();
 
-	void Setup(Screen *inpScreen, int inNbWindows = 0);
-	void SetWindowsNumber(int inNbWindows);
+	void begin(LcdScreen *inpScreen);
 	Window *AddWindow(Window *inpWindow, Window *inpFatherWindow = 0, byte inChoiceNumber = 255);
-	byte AddWindowInterrupt(WindowInterrupt * inpWindow);
-	inline void SetWindow(byte inWindow) { this->CurrentWindow = inWindow; }
+	Window *AddWindowInterrupt(WindowInterrupt * inpWindow);
+	inline void MoveToWindow(Window *inpWindow) { this->pCurrentWindow = inpWindow; }
 
-	static void StartSetup();
-	static void EndSetup();
-
-	bool Loop(byte inEvent);
-	void Interrupt(byte inInterrupt);
+	bool loop(byte inEvent);
+	void Interrupt(Window *inpInterrupt);
 	void InterruptEnd();
-	inline byte GetCurrentWindow() const { return this->CurrentWindow; }
-	inline byte GetWindowInterrupt() { return this->WindowInterruptIndex; }
-	inline Window *GetGlobalCurrentWindow() const { return this->WindowInterruptIndex != 255 ? this->pWindows[this->WindowInterruptIndex] : this->pWindows[this->CurrentWindow]; }
-	inline Screen *GetScreen() const { return this->pScreen; }
+	inline Window *GetCurrentWindow() const { return this->pCurrentWindow; }
+	inline Window *GetWindowInterrupt() { return this->pWindowInterrupt; }
+	inline Window *GetGlobalCurrentWindow() const { return this->pWindowInterrupt != NULL ? this->pWindowInterrupt : this->pCurrentWindow; }
+	inline LcdScreen *GetScreen() const { return this->pScreen; }
 
-	byte GetWindowIndex(Window *inpWindow) const;
-	byte GetWindowById(byte inId) const;
-	inline byte GetFather(int inChildIndex) const { return (pNodeFather[inChildIndex] / 100) == 0 ? 255 : (pNodeFather[inChildIndex] / 100) - 1; }
-	inline byte GetFatherChoice(int inChildIndex) const { return (pNodeFather[inChildIndex] % 100) == 0 ? 255 : (pNodeFather[inChildIndex] % 100) - 1; }
+	Window *GetPreviousWindow(Window *inpPrevious) const;
+	Window *GetWindowById(byte inId) const;
+//	inline byte GetFather(int inChildIndex) const { return (pNodeFather[inChildIndex] / 100) == 0 ? 255 : (pNodeFather[inChildIndex] / 100) - 1; }
+//	inline byte GetFatherChoice(int inChildIndex) const { return (pNodeFather[inChildIndex] % 100) == 0 ? 255 : (pNodeFather[inChildIndex] % 100) - 1; }
 	inline byte GetWindowId() const { return this->GetGlobalCurrentWindow()->GetWindowId(); }
 	inline byte GetState() const { return this->GetGlobalCurrentWindow()->GetState(); }
 	inline void SetState(byte inState) { this->GetGlobalCurrentWindow()->SetState(inState); }
 	inline byte GetType() const { return this->GetGlobalCurrentWindow()->GetType(); }
-	inline byte GetWindowNumber() const { return this->windowAddcounter; }
-	inline Window *GetWindow(byte inIndex) const { return this->pWindows[inIndex]; }
+	bool IsValueModified(byte inWindowId);
 
-	inline byte GetChoiceValue() const { return this->GetGlobalCurrentWindow()->GetChoiceValue(); }
-	inline void SetChoiceValue(byte inValue) { this->GetGlobalCurrentWindow()->SetChoiceValue(inValue); }
-	//inline int GetIntValue() const { return this->GetGlobalCurrentWindow()->GetIntValue(); }
-	//inline const char *GetTextValue() const { return this->GetGlobalCurrentWindow()->GetTextValue(); }
-	//inline void SetValue(int inValue) { this->GetGlobalCurrentWindow()->SetValue(inValue); }
-	//inline void SetValue(const char *inValue) { this->GetGlobalCurrentWindow()->SetValue(inValue); }
+	inline byte GetChoiceValue() const { return this->GetGlobalCurrentWindow()->GetFatherChoiceValue(); }
+	inline void SetChoiceValue(byte inValue) { this->GetGlobalCurrentWindow()->SetFatherChoiceValue(inValue); }
 
-#ifdef DEBUG_MODE
+#ifdef LCDUI_DEBUG_MODE
 public:
-	void CheckAddIndex(int inIndex, const __FlashStringHelper *infunc);
-	void CheckIndex(int inIndex, const __FlashStringHelper *infunc);
 	static void printEvent(byte inEvent, const __FlashStringHelper *inFunc);
 #endif
 };
-
-#define BEGIN_UI(lui, screen, nb)					LcdUi *plui = &lui;	plui->Setup(&screen, nb);
-#define WIN											Window *
-#define WINDOWCHOICE(first, ...)					plui->AddWindow(new WindowChoice(first), ##__VA_ARGS__);
-#define ADDCHOICE(win, text, ...)					((WindowChoice *)win)->AddChoice(text);
-#define WINDOWCONFIRM(first, prefix, ...)			plui->AddWindow(new WindowConfirm(first, prefix), ##__VA_ARGS__)
-#define WINDOWINT(first, max, min, ...)				plui->AddWindow(new WindowInt(first, max, min), ##__VA_ARGS__)
-#define WINDOWINTERRUPT(first, second, ...)			plui->AddWindow(new WindowInterrupt(first, second), ##__VA_ARGS__)
-#define WINDOWINTERRUPTCONFIRM(first, prefix, ...)	plui->AddWindow(new WindowInterruptConfirm(first, prefix), ##__VA_ARGS__)
-#define WINDOWSPLASH(first, second, delay, ...)		plui->AddWindow(new WindowSplash(first, second, delay), ##__VA_ARGS__)
-#define WINDOWTEXT(first, len, ...)					plui->AddWindow(new WindowText(first, len), ##__VA_ARGS__)
-#define WINDOWYESNO(first, ...)						plui->AddWindow(new WindowYesNo(first), ##__VA_ARGS__)
-#define WINDOWCUSTOM(win, ...)						plui->AddWindow(win, ##__VA_ARGS__)
-#define END_UI()

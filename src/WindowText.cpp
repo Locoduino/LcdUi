@@ -9,23 +9,24 @@ description: <Class for a basic screen>
 
 // char table : 32-127
 
-WindowText::WindowText(byte inFirstLine, byte inMaxLengthValue, int inTag) : Window(inFirstLine, inTag)
+WindowText::WindowText(byte inFirstLine, char *pValue, byte inMaxLengthValue, int inTag) : Window(inFirstLine, inTag)
 { 
 	this->maxTextValueLength = inMaxLengthValue;
 	this->currentCharPos = 0;
 	this->currentCharEdited = 0;
-	memset(this->textValue, 0, WINDOW_MAXTEXTVALUESIZE);
+	this->pTextValue = pValue;
+	memset(this->pTextValue, 0, WINDOW_MAXTEXTVALUESIZE);
 }
 
 void WindowText::Event(byte inEventType, LcdUi *inpLcd)
 {
 	bool showValue = false;
-	Screen *pScreen = inpLcd->GetScreen();
+	LcdScreen *pScreen = inpLcd->GetScreen();
 
 	if (this->state == STATE_INITIALIZE)
 	{
 		this->state = STATE_NONE;
-		this->currentCharEdited = strlen(this->textValue);
+		this->currentCharEdited = strlen(this->pTextValue);
 		showValue = true;
 	}
 
@@ -57,7 +58,7 @@ void WindowText::Event(byte inEventType, LcdUi *inpLcd)
 		if (this->currentCharPos == 0)
 		{
 			this->state = STATE_CONFIRMED;
-			pScreen->cursor_off();
+//			pScreen->noCursor();
 		}
 		else
 		{
@@ -66,12 +67,12 @@ void WindowText::Event(byte inEventType, LcdUi *inpLcd)
 				this->currentCharEdited--;
 				if (this->currentCharEdited < 0 || this->currentCharEdited == 255)
 					this->currentCharEdited = 0;
-				this->textValue[this->currentCharEdited] = 0;
+				this->pTextValue[this->currentCharEdited] = 0;
 			}
 			else
 			{
-				this->textValue[this->currentCharEdited] = Screen::GetChar(this->currentCharPos);
-				this->textValue[this->currentCharEdited + 1] = 0;
+				this->pTextValue[this->currentCharEdited] = LcdScreen::GetChar(this->currentCharPos);
+				this->pTextValue[this->currentCharEdited + 1] = 0;
 				this->currentCharEdited++;
 			}
 			showValue = true;
@@ -79,13 +80,13 @@ void WindowText::Event(byte inEventType, LcdUi *inpLcd)
 		break;
 	case EVENT_CANCEL:
 		this->state = STATE_ABORTED;
-		pScreen->cursor_off();
+//		pScreen->noCursor();
 		break;
 	}
 
 	if (showValue)
 	{
-		pScreen->DisplayTextResult(this->textValue, this->maxTextValueLength, this->currentCharEdited);
+		pScreen->DisplayTextResult(this->pTextValue, this->maxTextValueLength, this->currentCharEdited);
 		pScreen->DisplayTextChoice(this->currentCharPos, this->currentCharEdited);
 	}
 }

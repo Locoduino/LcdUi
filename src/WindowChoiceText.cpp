@@ -7,20 +7,40 @@ description: <Class for a choice window>
 #include "LcdUi.h"
 #include "WindowChoiceText.hpp"
 
-WindowChoiceText::WindowChoiceText(byte inFirstLine, int inTag) : Window(inFirstLine, inTag)
+WindowChoiceText::WindowChoiceText(byte inFirstLine, byte *inpValue, int inTag) : Window(inFirstLine, inTag)
 {
+	this->pValue = inpValue;
 }
 
-void WindowChoiceText::SetCurrentChoice(char *inChoiceText, unsigned int inChoiceValue)
+void WindowChoiceText::SetCurrentChoice(char *inChoiceText, byte inChoiceValue)
 {
-	this->currentValue = inChoiceValue;
 	this->currentValueText = inChoiceText;
+	*this->pValue = inChoiceValue;
+}
+
+void WindowChoiceText::Move(bool inMore)
+{
+	unsigned int val = *this->pValue;
+	if (inMore)
+	{
+		val++;
+		if (val >= this->GetChoiceTextNumber())
+			val = 0;
+	}
+	else
+	{
+		if (val == 0)
+			val = this->GetChoiceTextNumber() - 1;
+		else
+			val--;
+	}
+	SetCurrentChoice(val);
 }
 
 void WindowChoiceText::Event(byte inEventType, LcdUi *inpLcd)
 {
 	bool showValue = false;
-	Screen *pScreen = inpLcd->GetScreen();
+	LcdScreen *pScreen = inpLcd->GetScreen();
 
 	if (this->state == STATE_INITIALIZE)
 	{
@@ -30,7 +50,7 @@ void WindowChoiceText::Event(byte inEventType, LcdUi *inpLcd)
 
 	if (this->state == STATE_START)
 	{
-		pScreen->DisplayHeader(this->GetFirstLine());
+		pScreen->DisplayText(this->GetFirstLine(), 0, 0);
 
 		this->state = STATE_INITIALIZE;
 	}
@@ -55,6 +75,11 @@ void WindowChoiceText::Event(byte inEventType, LcdUi *inpLcd)
 
 	if (showValue)
 	{
-		pScreen->DisplayChoice(this->currentValueText);
+		if (*this->pValue > pScreen->FirstChoiceShown + pScreen->GetSizeY() - 2)
+			pScreen->FirstChoiceShown++;
+		if (*this->pValue < pScreen->FirstChoiceShown)
+			pScreen->FirstChoiceShown = 0;
+		for (byte i = 0; i < this->GetChoiceTextNumber(); i++)
+			pScreen->DisplayChoice(this->GetChoiceTextValue(i), i, i == *this->pValue);
 	}
 }
