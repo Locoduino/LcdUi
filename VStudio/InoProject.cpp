@@ -1,6 +1,7 @@
 #include "Arduino.h"
 #include "DIO2.h"
 
+#include "../examples/Demo/WindowLocoControl.cpp"
 #include "../examples/Demo/Demo.ino"
 
 //#include "TestExe.ino"
@@ -9,7 +10,7 @@ using namespace System;
 using namespace System::Windows::Forms;
 
 void OnMouseDown(System::Object ^sender, System::Windows::Forms::MouseEventArgs ^e);
-void OnClick(System::Object ^sender, System::EventArgs ^e);
+
 [STAThread]
 void Main(array<String^>^ args)
 {

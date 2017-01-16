@@ -9,6 +9,12 @@ description: <Class for a confirm dialog in interrupt context>
 
 WindowInterruptConfirm::WindowInterruptConfirm(byte inFirstLine, byte inSecondLine, int inTag) : WindowInterrupt(inFirstLine, inSecondLine, inTag)
 { 
+#ifdef LCDUI_DEBUG_MODE
+	if (LcdScreen::YesMsg == -1)
+		Serial.println(F("YesMsg undefined !"));
+	if (LcdScreen::NoMsg == -1)
+		Serial.println(F("NoMsg undefined !"));
+#endif
 }
 
 void WindowInterruptConfirm::Event(byte inEventType, LcdUi *inpLcd)
@@ -55,3 +61,16 @@ void WindowInterruptConfirm::Event(byte inEventType, LcdUi *inpLcd)
 	}
 }
 
+
+#ifdef LCDUI_PRINT_WINDOWS
+void WindowInterruptConfirm::printWindow()
+{
+	printWindowHeader(F("Window Interrupt Confirm"));
+	Serial.print(F(" / SecondLine: "));
+	Serial.print(this->secondLine);
+	Serial.print(F(" / EventType: "));
+	Serial.print(this->eventType);
+	Serial.print(F(" / Answer: "));
+	Serial.println(this->answer);
+}
+#endif

@@ -11,11 +11,15 @@ description: <Class for a basic screen>
 
 WindowText::WindowText(byte inFirstLine, char *pValue, byte inMaxLengthValue, int inTag) : Window(inFirstLine, inTag)
 { 
+#ifdef LCDUI_DEBUG_MODE
+	if (LcdScreen::BackspaceMsg == -1)
+		Serial.println(F("BackspaceMsg undefined !"));
+#endif
 	this->maxTextValueLength = inMaxLengthValue;
 	this->currentCharPos = 0;
 	this->currentCharEdited = 0;
 	this->pTextValue = pValue;
-	memset(this->pTextValue, 0, WINDOW_MAXTEXTVALUESIZE);
+	memset(this->pTextValue, 0, inMaxLengthValue < WINDOW_MAXTEXTVALUESIZE? inMaxLengthValue: WINDOW_MAXTEXTVALUESIZE);
 }
 
 void WindowText::Event(byte inEventType, LcdUi *inpLcd)
@@ -55,14 +59,14 @@ void WindowText::Event(byte inEventType, LcdUi *inpLcd)
 	break;
 	case EVENT_SELECT:
 		this->state = STATE_SELECTCHAR;
-		if (this->currentCharPos == 0)
+		/*if (this->currentCharPos == 0)
 		{
 			this->state = STATE_CONFIRMED;
 //			pScreen->noCursor();
 		}
-		else
+		else*/
 		{
-			if (this->currentCharPos == 1) // backspace
+			if (this->currentCharPos == 0) // backspace
 			{
 				this->currentCharEdited--;
 				if (this->currentCharEdited < 0 || this->currentCharEdited == 255)
@@ -86,7 +90,17 @@ void WindowText::Event(byte inEventType, LcdUi *inpLcd)
 
 	if (showValue)
 	{
+		pScreen->clear();
 		pScreen->DisplayTextResult(this->pTextValue, this->maxTextValueLength, this->currentCharEdited);
 		pScreen->DisplayTextChoice(this->currentCharPos, this->currentCharEdited);
 	}
 }
+
+#ifdef LCDUI_PRINT_WINDOWS
+void WindowText::printWindow()
+{
+	printWindowHeader(F("Window Text"));
+	Serial.print(F(" / maxTextValueLength: "));
+	Serial.println(this->maxTextValueLength);
+}
+#endif

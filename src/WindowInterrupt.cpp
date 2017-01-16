@@ -1,15 +1,16 @@
 /*************************************************************
 project: <LcdUi>
 author: <Thierry PARIS>
-description: <Class for a basic screen>
+description: <Class for an interruption window>
 *************************************************************/
 
 #include "LcdUi.h"
 #include "WindowInterrupt.hpp"
 
-WindowInterrupt::WindowInterrupt(byte inFirstLine, byte inSecondLine, int inTag) : Window(inFirstLine, inTag)
+WindowInterrupt::WindowInterrupt(byte inFirstLine, byte inSecondLine, byte inEventType, int inTag) : Window(inFirstLine, inTag)
 { 
 	this->secondLine = inSecondLine;
+	this->eventType = inEventType;
 }
 
 void WindowInterrupt::Event(byte inEventType, LcdUi *inpLcd)
@@ -26,3 +27,13 @@ void WindowInterrupt::Event(byte inEventType, LcdUi *inpLcd)
 	}
 }
 
+#ifdef LCDUI_PRINT_WINDOWS
+void WindowInterrupt::printWindow()
+{
+	printWindowHeader(F("Window Interrupt"));
+	Serial.print(F(" / SecondLine: "));
+	Serial.print(this->secondLine);
+	Serial.print(F(" / EventType: "));
+	Serial.println(this->eventType);
+}
+#endif

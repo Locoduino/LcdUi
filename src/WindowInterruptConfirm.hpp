@@ -20,6 +20,10 @@ public:
 	inline void SetValue(byte inAnswer) { this->answer = inAnswer; }
 
 	void Event(byte inEventType, LcdUi *inpLcd);
+
+#ifdef LCDUI_PRINT_WINDOWS
+	void printWindow();
+#endif
 };
 
 //-------------------------------------------------------------------

@@ -7,6 +7,15 @@
 
 //-------------------------------------------------------------------
 
+// A yes/no window with a text prefix.
+
+/// +------------------+
+/// | Reset config     |
+/// | Sure ? Yes >No<  |
+/// |                  |
+/// |                  |
+/// +------------------+
+
 class WindowConfirm : public Window
 {
 private:
@@ -21,6 +30,10 @@ public:
 	inline void SetValue(byte inAnswer) { this->answer = inAnswer; }
 
 	void Event(byte inEventType, LcdUi *inpLcd);
+
+#ifdef LCDUI_PRINT_WINDOWS
+	void printWindow();
+#endif
 };
 
 //-------------------------------------------------------------------

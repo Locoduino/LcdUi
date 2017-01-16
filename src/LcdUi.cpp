@@ -92,20 +92,20 @@ void LcdUi::begin(LcdScreen *inpScreen)
 Window *LcdUi::AddWindow(Window *inpWindow, Window *inpFatherWindow, byte inChoiceNumber)
 {
 	if (this->pFirstWindow == NULL)
-	{
 		this->pFirstWindow = inpWindow;
-		return inpWindow;
+	else
+	{
+		Window *pCurr = this->pFirstWindow;
+
+		while (pCurr->GetNextWindow() != NULL)
+			pCurr = pCurr->GetNextWindow();
+
+		inpWindow->SetFatherWindow(inpFatherWindow);
+		inpWindow->SetFatherChoiceValue(inChoiceNumber);
+		pCurr->SetNextWindow(inpWindow);
 	}
 
-	Window *pCurr = this->pFirstWindow;
-
-	while (pCurr->GetNextWindow() != NULL)
-		pCurr = pCurr->GetNextWindow();
-
-	inpWindow->SetFatherWindow(inpFatherWindow);
-	pCurr->SetNextWindow(inpWindow);
-
-	if (this->pCurrentWindow == NULL)
+	if (this->pCurrentWindow == NULL && inpWindow->GetType() != WINDOWTYPE_INTERRUPT)
 		this->MoveToWindow(inpWindow);
 
 	return inpWindow;
@@ -113,11 +113,11 @@ Window *LcdUi::AddWindow(Window *inpWindow, Window *inpFatherWindow, byte inChoi
 
 Window *LcdUi::AddWindowInterrupt(WindowInterrupt *inpWindow)
 {
-	//return this->GetWindowIndex(this->AddWindow(inpWindow));
-	return NULL;
+	this->AddWindow(inpWindow);
+	return inpWindow;
 }
 
-Window *LcdUi::GetNextChildWindow(Window *inRef)
+/*Window *LcdUi::GetNextChildWindow(Window *inRef)
 {
 	byte actualChoice = inRef->GetFatherChoiceValue();
 
@@ -141,7 +141,7 @@ Window *LcdUi::GetNextChildWindow(Window *inRef)
 #endif
 	return NULL;
 }
-
+*/
 void LcdUi::MoveToNextUIWindow()
 {
 	Window *pNext = NULL;
@@ -149,9 +149,9 @@ void LcdUi::MoveToNextUIWindow()
 	if (this->GetType() == WINDOWTYPE_CHOICE)
 	{
 		// Move to the next window of the same choice index.
-		Window *pCurr = this->pCurrentWindow;
-		byte selectedChoice = ((WindowChoice *)pCurr)->GetSelectedChoiceIndex();
-		while (pCurr->GetNextWindow() != NULL)
+		byte selectedChoice = ((WindowChoice *)this->pCurrentWindow)->GetSelectedChoiceIndex();
+		Window *pCurr = this->pCurrentWindow->GetNextWindow();
+		while (pCurr != NULL)
 		{
 			if (pCurr->GetFatherWindow() == this->pCurrentWindow)
 			{
@@ -178,8 +178,8 @@ void LcdUi::MoveToNextUIWindow()
 		if (actualChoice == 255)
 		{
 			// Simply move to the next window
-			Window *pCurr = this->pCurrentWindow;
-			while (pCurr->GetNextWindow() != NULL)
+			Window *pCurr = this->pCurrentWindow->GetNextWindow();
+			while (pCurr != NULL)
 			{
 				if (pCurr->GetFatherWindow() == this->pCurrentWindow->GetFatherWindow())
 				{
@@ -211,8 +211,8 @@ void LcdUi::MoveToNextUIWindow()
 
 Window *LcdUi::GetPreviousWindow(Window *inpCurrent) const
 {
-	Window *pCurr = this->pFirstWindow;
-	while (pCurr->GetNextWindow() != NULL)
+	Window *pCurr = this->pFirstWindow->GetNextWindow();
+	while (pCurr != NULL)
 	{
 		if (pCurr->GetNextWindow() == inpCurrent)
 			return pCurr;
@@ -268,7 +268,7 @@ void LcdUi::MoveToPrevUIWindow()
 Window *LcdUi::GetWindowById(byte inId) const
 {
 	Window *pCurr = this->pFirstWindow;
-	while (pCurr->GetNextWindow() != NULL)
+	while (pCurr != NULL)
 	{
 		if (pCurr->GetWindowId() == inId)
 			return pCurr;
@@ -294,6 +294,9 @@ bool LcdUi::loop(byte inEvent)
 	if (inEvent == EVENT_NONE && this->GetState() == STATE_NONE && this->GetType() != WINDOWTYPE_SPLASH)
 		return false;
 
+	if (this->GetState() == STATE_CONFIRMED)
+		this->SetState(STATE_POSTCONFIRMED);
+
 	if (this->pWindowInterrupt != NULL)
 	{
 		this->pWindowInterrupt->Event(inEvent, this);
@@ -310,7 +313,7 @@ bool LcdUi::loop(byte inEvent)
 			InterruptEnd();
 		}
 		else
-			if (this->GetState() == STATE_ABORTED)
+			if (inEvent == EVENT_CANCEL || this->GetState() == STATE_ABORTED)
 			{
 				InterruptEnd();
 #ifdef LCDUI_DEBUG_MODE
@@ -319,6 +322,9 @@ bool LcdUi::loop(byte inEvent)
 			}
 		return true;
 	}
+
+	if (this->InterruptByEvent(inEvent) != 255)
+		return true;
 
 	this->pCurrentWindow->Event(inEvent, this);
 
@@ -333,10 +339,34 @@ bool LcdUi::loop(byte inEvent)
 	if (this->GetState() == STATE_ABORTED)
 		this->MoveToPrevUIWindow();
 
-	if (this->GetState() == STATE_CONFIRMED)
-		this->SetState(STATE_POSTCONFIRMED);
-
 	return true;
+}
+
+byte LcdUi::InterruptByEvent(byte inEventType)
+{
+	if (inEventType == 255)
+		return 255;
+
+	Window *pCurr = this->pFirstWindow;
+	while (pCurr != NULL)
+	{
+		if (pCurr->GetType() == WINDOWTYPE_INTERRUPT)
+			if (((WindowInterrupt *)pCurr)->GetEventType() == inEventType)
+			{
+				Interrupt(pCurr);
+				return pCurr->GetWindowId();
+			}
+		pCurr = pCurr->GetNextWindow();
+	}
+
+	return 255;
+}
+
+void LcdUi::Interrupt(byte inWindowId)
+{
+	Window *pWin = this->GetWindowById(inWindowId);
+	if (pWin != NULL)
+		Interrupt(pWin);
 }
 
 void LcdUi::Interrupt(Window *inpWindow)
@@ -361,3 +391,18 @@ bool LcdUi::IsValueModified(byte inWindowId)
 
 	return false;
 }
+
+#ifdef LCDUI_PRINT_WINDOWS
+void LcdUi::printWindows()
+{
+	Serial.println(F("********* Windows List"));
+	Window *pCurr = this->pFirstWindow;
+
+	while (pCurr != NULL)
+	{
+		pCurr->printWindow();
+		pCurr = pCurr->GetNextWindow();
+	}
+	Serial.println(F("********* End of List"));
+}
+#endif

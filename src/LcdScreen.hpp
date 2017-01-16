@@ -17,6 +17,8 @@ public:
 	static char buffer[BUFFER_SIZE];
 	static int YesMsg;
 	static int NoMsg;
+	static int BackspaceMsg;
+	static int ValidateMsg;
 	byte HeaderY;
 	byte SecondLineY;
 
@@ -37,6 +39,7 @@ public:
 	char *GetChoiceString(int inString);
 
 	// Display string in contexts
+	inline virtual void clear() {};
 	inline virtual void DisplayHeader(int inHeader) {}
 	inline void DisplayText(int inText, byte inX, byte inY) { this->DisplayText(this->GetString(inText), inX, inY); }
 	inline virtual void DisplayText(char *inText, byte inX, byte inY) {}

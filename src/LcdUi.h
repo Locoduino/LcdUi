@@ -1,4 +1,5 @@
 //-------------------------------------------------------------------
+#ifndef __LcdUi_H__
 #define __LcdUi_H__
 //-------------------------------------------------------------------
 
@@ -13,21 +14,29 @@
 // Has no effect if LCDUI_DEBUG_MODE is not activated.
 //#define DEBUG_VERBOSE_MODE
 
+///////////////////////////////////////////////////////
+// The function LcdUi::printWindows()
+// is very heavy in program memory. So to avoid problems
+// you can make this function available by uncomment the next 
+// line.
+//#define LCDUI_PRINT_WINDOWS
+
 #ifdef VISUALSTUDIO
 #include "arduino.h"
 #include "string.h"
 #define STRNCPY(out, len ,in)	strcpy_s(out, len, in)
 #define STRCPY(out, in)			strcpy_s(out, in)
+#define LCDUI_PRINT_WINDOWS
 #else
 #define STRNCPY(out, len ,in)	strcpy(out, in)
 #define STRCPY(out, in)			strcpy(out, in)
 #endif
 
 #ifndef STR_LCDTITLE
-#define STR_LCDTITLE16		F("LCD UI V0.20")
+#define STR_LCDTITLE16		F("LCD UI V0.30")
 #define STR_LCDCOPYRIGHT16	F("By Thierry Paris")
 
-#define STR_LCDTITLE		F("LCD User Interface V0.20")
+#define STR_LCDTITLE		F("LCD User Interface V0.30")
 #define STR_LCDCOPYRIGHT	F("Developed by Thierry Paris.")
 #endif
 
@@ -115,9 +124,6 @@ private:
 	Window *pCurrentWindow;
 	Window *pWindowInterrupt;
 	
-	// functions to move in the windows list
-	Window *GetNextChildWindow(Window *inpRef);
-
 	// Functions used by interactive mode to evoluate in the UI
 	void MoveToNextUIWindow();
 	void MoveToPrevUIWindow();
@@ -131,7 +137,9 @@ public:
 	inline void MoveToWindow(Window *inpWindow) { this->pCurrentWindow = inpWindow; }
 
 	bool loop(byte inEvent);
+	byte InterruptByEvent(byte inEventType);
 	void Interrupt(Window *inpInterrupt);
+	void Interrupt(byte inWindowId);
 	void InterruptEnd();
 	inline Window *GetCurrentWindow() const { return this->pCurrentWindow; }
 	inline Window *GetWindowInterrupt() { return this->pWindowInterrupt; }
@@ -140,8 +148,6 @@ public:
 
 	Window *GetPreviousWindow(Window *inpPrevious) const;
 	Window *GetWindowById(byte inId) const;
-//	inline byte GetFather(int inChildIndex) const { return (pNodeFather[inChildIndex] / 100) == 0 ? 255 : (pNodeFather[inChildIndex] / 100) - 1; }
-//	inline byte GetFatherChoice(int inChildIndex) const { return (pNodeFather[inChildIndex] % 100) == 0 ? 255 : (pNodeFather[inChildIndex] % 100) - 1; }
 	inline byte GetWindowId() const { return this->GetGlobalCurrentWindow()->GetWindowId(); }
 	inline byte GetState() const { return this->GetGlobalCurrentWindow()->GetState(); }
 	inline void SetState(byte inState) { this->GetGlobalCurrentWindow()->SetState(inState); }
@@ -155,4 +161,8 @@ public:
 public:
 	static void printEvent(byte inEvent, const __FlashStringHelper *inFunc);
 #endif
+#ifdef LCDUI_PRINT_WINDOWS
+	void printWindows();
+#endif
 };
+#endif

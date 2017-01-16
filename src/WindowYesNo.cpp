@@ -6,6 +6,17 @@ description: <Class for a basic screen>
 
 #include "LcdUi.h"
 
+WindowYesNo::WindowYesNo(byte inFirstLine, bool *inpValue, int inTag) : Window(inFirstLine, inTag)
+{
+#ifdef LCDUI_DEBUG_MODE
+	if (LcdScreen::YesMsg == -1)
+		Serial.println(F("YesMsg undefined !"));
+	if (LcdScreen::NoMsg == -1)
+		Serial.println(F("NoMsg undefined !"));
+#endif
+	this->pValue = inpValue;
+}
+
 void WindowYesNo::Event(byte inEventType, LcdUi *inpLcd)
 {
 	bool showValue = false;
@@ -42,7 +53,14 @@ void WindowYesNo::Event(byte inEventType, LcdUi *inpLcd)
 
 	if (showValue)
 	{
-		pScreen->DisplayYesNo(*(this->pValue));
+		pScreen->DisplayYesNo(*(this->pValue)? LcdScreen::YesMsg: LcdScreen::NoMsg);
 	}
 }
 
+#ifdef LCDUI_PRINT_WINDOWS
+void WindowYesNo::printWindow()
+{
+	printWindowHeader(F("Window YesNo"));
+	Serial.println("");
+}
+#endif

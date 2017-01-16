@@ -1,5 +1,11 @@
-00/09/2016 V0.30
-	
+16/01/2017 V0.30
+	- Ajout de printWindows()
+	- Gestion de plus de deux lignes sur l'écran.
+	- Chaque fenêtre met à jour une donnée extérieure, et pas une donnée membre de la fenêtre.
+	- Usage généralisé des listes chainées.
+	- Ajout d'une chaine 'Suppr' pour la windowText, et suppression de la validation.
+	- Gestion d'un EVENT_TYPE dans WindowInterrupt
+	- Test de la présence des messages lorsque nécessaire (YesMsg, NoMsg, BackspaceMsg...)
 
 25/03/2016 V0.20
 	- Utilisation de la bibliothèque externe NewLiquidCrystal, livrée dans extra.

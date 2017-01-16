@@ -7,8 +7,9 @@ description: <Class for a basic screen>
 #include "LcdUi.h"
 
 char LcdScreen::buffer[];
-int LcdScreen::YesMsg;
-int LcdScreen::NoMsg;
+int LcdScreen::YesMsg = -1;
+int LcdScreen::NoMsg = -1;
+int LcdScreen::BackspaceMsg = -1;
 
 void LcdScreen::begin(byte inSizeX, byte inSizeY, const char * const *inpStringTable)
 {
@@ -16,10 +17,8 @@ void LcdScreen::begin(byte inSizeX, byte inSizeY, const char * const *inpStringT
 	this->sizey = inSizeY;
 	this->pStringTable = inpStringTable;
 	this->FirstChoiceShown = 0;
-
-#ifdef VISUALSTUDIO
-	//pScreenVS->begin(sizex, sizey);
-#endif
+	this->HeaderY = 0;
+	this->SecondLineY = 1;
 }
 
 void LcdScreen::BuildString(int inValue, char *outString, int digits)
@@ -106,7 +105,7 @@ byte LcdScreen::BuildStringLeft(const char *inString, byte inSizeMax, char *outS
 char *LcdScreen::GetString(int inString)
 {
 #ifdef VISUALSTUDIO
-	//strcpy_s(buffer, BUFFER_SIZE, this->pStringTable[inString]);
+	strcpy_s(buffer, BUFFER_SIZE, this->pStringTable[inString]);
 #else
 	strcpy_P(buffer, (char*)pgm_read_word(&this->pStringTable[inString]));
 #endif
@@ -118,7 +117,7 @@ char *LcdScreen::GetChoiceString(int inString)
 {
 	buffer[0] = '>';
 #ifdef VISUALSTUDIO
-	//strcpy_s(buffer + 1, BUFFER_SIZE-1, this->pStringTable[inString]);
+	strcpy_s(buffer + 1, BUFFER_SIZE-1, this->pStringTable[inString]);
 #else
 	strcpy_P(buffer+1, (char*)pgm_read_word(&this->pStringTable[inString]));
 #endif
@@ -135,11 +134,8 @@ byte LcdScreen::GetChar(int inPos)
 		return ' ';
 
 	if (inPos == 0)
-		return 4;	// validated !
+		return 127;	// backspace
 
-	if (inPos == 1)
-		return 5;	// backspace
-
-	return 32 + (inPos - 2);
+	return 32 + (inPos - 1);
 }
 

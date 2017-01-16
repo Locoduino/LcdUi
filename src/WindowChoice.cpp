@@ -16,10 +16,16 @@ byte WindowChoice::AddChoice(byte inStringNumber, byte inIndex, byte inInterrupt
 {
 	Choice *pChoice = new Choice();
 	pChoice->id = inStringNumber;
+	if (inIndex == 255)
+		inIndex = this->Choices.GetCount();
 	pChoice->index = inIndex;
 	pChoice->escapeWindowId = inInterruptIdOnEscape;
 
 	this->Choices.AddItem(pChoice);
+
+	if (this->Choices.GetCount() == 1)
+		*(this->pSelectedChoice) = *pChoice;
+
 	return inStringNumber;
 }
 
@@ -27,14 +33,14 @@ byte WindowChoice::AddChoice(byte inStringNumber, byte inIndex, byte inInterrupt
 void WindowChoice::MoveNextChoice()
 {
 	this->Choices.NextCurrent();
-	this->pSelectedChoice = this->Choices.pCurrentItem->Obj;
+	*(this->pSelectedChoice) = *(this->Choices.pCurrentItem->Obj);
 }
 
 // Get the previous choice value from choices, if the current selection is the first one, go to the last...
 void WindowChoice::MovePreviousChoice()
 {
 	this->Choices.PreviousCurrent();
-	this->pSelectedChoice = this->Choices.pCurrentItem->Obj;
+	*(this->pSelectedChoice) = *(this->Choices.pCurrentItem->Obj);
 }
 
 void WindowChoice::Event(byte inEventType, LcdUi *inpLcd)
@@ -50,6 +56,7 @@ void WindowChoice::Event(byte inEventType, LcdUi *inpLcd)
 
 	if (this->state == STATE_START)
 	{
+		pScreen->clear();
 		pScreen->DisplayText(this->GetFirstLine(), 0, 0);
 
 		this->state = STATE_INITIALIZE;
@@ -106,3 +113,30 @@ void WindowChoice::Event(byte inEventType, LcdUi *inpLcd)
 		}
 	}
 }
+
+#ifdef LCDUI_PRINT_WINDOWS
+void WindowChoice::printWindow()
+{
+	printWindowHeader(F("Window Choice"));
+	Serial.println("");
+
+	LCDUICHAINEDLISTITEM<Choice> *pCurr = this->Choices.pFirst;
+	while (pCurr != NULL)
+	{
+		Serial.print("    Choice id:");
+		Serial.print(pCurr->Obj->id);
+		if (pCurr->Obj->index != 255)
+		{
+			Serial.print(" / Index:");
+			Serial.print(pCurr->Obj->index);
+		}
+		if (pCurr->Obj->escapeWindowId != 255)
+		{
+			Serial.print(" / EscapeId:");
+			Serial.print(pCurr->Obj->escapeWindowId);
+		}
+		Serial.println("");
+		pCurr = pCurr->pNext;
+	}
+}
+#endif

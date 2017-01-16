@@ -17,6 +17,15 @@ struct Choice
 	byte escapeWindowId;	// escape window id or 255
 };
 
+// Select a choice in the list created by AddChoice() calls.
+
+/// +------------------+
+/// | Choose something |
+/// |     A choice     |
+/// |    >B choice<    |
+/// |     C choice     |
+/// +------------------+
+
 class WindowChoice : public Window
 {
 protected:
@@ -39,6 +48,10 @@ public:
 	byte AddChoice(byte inStringIndex, byte inIndex = 255, byte inInterruptOnEscape = 255);
 
 	void Event(byte inEventType, LcdUi *inpLcd);
+
+#ifdef LCDUI_PRINT_WINDOWS
+	void printWindow();
+#endif
 };
 
 //-------------------------------------------------------------------

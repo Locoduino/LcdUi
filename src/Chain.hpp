@@ -22,6 +22,7 @@ public:
 	void AddItem(T *t);
 	void NextCurrent();
 	void PreviousCurrent();
+	byte GetCount();
 };
 
 #define CHAIN_ENUMERATE(T, list, func) LCDUICHAINEDLISTITEM<T> *pCurr = list.pFirst; while (pCurr != NULL) { func(pCurr->Obj); pCurr = pCurr->pNext; }
@@ -81,5 +82,23 @@ template<class T> void LCDUICHAINEDLIST<T>::PreviousCurrent()
 		}
 		pCurr = pCurr->pNext;
 	}
+}
+
+// This function count the actual number of items..
+template<class T> byte LCDUICHAINEDLIST<T>::GetCount()
+{
+	if (this->pFirst == NULL)
+		return 0;
+
+	byte count = 1;
+	LCDUICHAINEDLISTITEM<T> *pCurr = this->pFirst->pNext;
+
+	while (pCurr != NULL)
+	{
+		pCurr = pCurr->pNext;
+		count++;
+	}
+
+	return count;
 }
 #endif

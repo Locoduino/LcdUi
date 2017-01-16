@@ -70,3 +70,14 @@ void WindowInt::Event(byte inEventType, LcdUi *inpLcd)
 	}
 }
 
+#ifdef LCDUI_PRINT_WINDOWS
+void WindowInt::printWindow()
+{
+	printWindowHeader(F("Window Int"));
+	Serial.print(F(" / minIntValue: "));
+	Serial.print(this->minIntValue);
+	Serial.print(F(" / maxIntValue: "));
+	Serial.print(this->maxIntValue);
+	Serial.println("");
+}
+#endif

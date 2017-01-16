@@ -9,6 +9,13 @@ description: <Class for a basic screen>
 
 WindowConfirm::WindowConfirm(byte inFirstLine, byte inPrefix, int inTag) : Window(inFirstLine, inTag)
 { 
+#ifdef LCDUI_DEBUG_MODE
+	if (LcdScreen::YesMsg == -1)
+		Serial.println(F("YesMsg undefined !"));
+	if (LcdScreen::NoMsg == -1)
+		Serial.println(F("NoMsg undefined !"));
+#endif
+
 	this->prefix = inPrefix;
 }
 
@@ -56,3 +63,14 @@ void WindowConfirm::Event(byte inEventType, LcdUi *inpLcd)
 	}
 }
 
+#ifdef LCDUI_PRINT_WINDOWS
+void WindowConfirm::printWindow()
+{
+	printWindowHeader(F("Window Confirm"));
+	Serial.print(F(" / Prefix: "));
+	Serial.print(this->prefix);
+	Serial.print(F(" / Answer: "));
+	Serial.print(this->answer);
+	Serial.println("");
+}
+#endif

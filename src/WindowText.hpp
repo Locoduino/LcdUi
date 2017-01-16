@@ -4,9 +4,17 @@
 //-------------------------------------------------------------------
 
 #include "Window.hpp"
-//#include "string.h"
 
 //-------------------------------------------------------------------
+
+// Changes a text value
+
+/// +------------------+
+/// | LOCODUINO___     |
+/// |        >Z<       |
+/// |                  |
+/// |                  |
+/// +------------------+
 
 #define WINDOW_MAXTEXTVALUESIZE	20
 
@@ -22,6 +30,7 @@ private:
 	char *pTextValue;
 
 public:
+	static byte Backspace;
 	WindowText(byte inFirstLine, char *inpValue, byte inMaxLengthValue = WINDOW_MAXTEXTVALUESIZE, int inTag = 0);
 
 	inline byte GetType() const { return WINDOWTYPE_TEXT; }
@@ -29,6 +38,10 @@ public:
 	inline void SetMaxTextValueLength(byte inLength) { this->maxTextValueLength = inLength; }
 
 	void Event(byte inEventType, LcdUi *inpLcd);
+
+#ifdef LCDUI_PRINT_WINDOWS
+	void printWindow();
+#endif
 };
 
 //-------------------------------------------------------------------

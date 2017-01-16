@@ -13,6 +13,13 @@
 // This windows can choose an item inside a list of strings, and return the 
 // selected string or the associated integer value.
 //
+/// +------------------+
+/// | Choose something |
+/// |     A choice     |
+/// |    >B choice<    |
+/// |     C choice     |
+/// +------------------+
+
 class WindowChoiceText : public Window
 {
 protected:
@@ -37,6 +44,10 @@ public:
 	// Abstract functions the derived class must instanciate
 	virtual byte GetChoiceTextNumber() const = 0;
 	virtual char *GetChoiceTextValue(unsigned int indexValue) const = 0;
+
+#ifdef LCDUI_PRINT_WINDOWS
+	void printWindow();
+#endif
 };
 
 //-------------------------------------------------------------------

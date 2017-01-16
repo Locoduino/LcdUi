@@ -83,6 +83,11 @@ public:
 #ifdef LCDUI_DEBUG_MODE
 	static void printState(byte inState, const __FlashStringHelper *inFunc);
 #endif
+
+#ifdef LCDUI_PRINT_WINDOWS
+	virtual void printWindow() {};
+	void printWindowHeader(const __FlashStringHelper *inName);
+#endif
 };
 
 //-------------------------------------------------------------------

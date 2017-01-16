@@ -7,6 +7,16 @@
 
 //-------------------------------------------------------------------
 
+// This is a temporary window for time limited messages
+
+/// +------------------+
+/// | LCD UI v0.30     |
+/// | (c) Locoduino    |
+/// |                  |
+/// |                  |
+/// +------------------+
+
+
 class WindowSplash : public Window
 {
 protected:
@@ -20,6 +30,10 @@ public:
 	inline byte GetType() const { return WINDOWTYPE_SPLASH; }
 
 	void Event(byte inEventType, LcdUi *inpLcd);
+
+#ifdef LCDUI_PRINT_WINDOWS
+	void printWindow();
+#endif
 };
 
 //-------------------------------------------------------------------

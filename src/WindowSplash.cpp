@@ -41,3 +41,13 @@ void WindowSplash::Event(byte inEventType, LcdUi *inpLcd)
 	}
 }
 
+#ifdef LCDUI_PRINT_WINDOWS
+void WindowSplash::printWindow()
+{
+	printWindowHeader(F("Window Splash"));
+	Serial.print(F(" / SecondLine: "));
+	Serial.print(this->secondLine);
+	Serial.print(F(" / Delay: "));
+	Serial.println(this->delay);
+}
+#endif

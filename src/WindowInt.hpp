@@ -7,6 +7,15 @@
 
 //-------------------------------------------------------------------
 
+// Change an integer value
+
+/// +------------------+
+/// | Address          |
+/// |       >12<       |
+/// |                  |
+/// |                  |
+/// +------------------+
+
 class WindowInt : public Window
 {
 protected:
@@ -26,6 +35,10 @@ public:
 	inline void SetMaxIntValue(int inMax) { this->maxIntValue = inMax; }
 
 	void Event(byte inEventType, LcdUi *inpLcd);
+
+#ifdef LCDUI_PRINT_WINDOWS
+	void printWindow();
+#endif
 };
 
 //-------------------------------------------------------------------

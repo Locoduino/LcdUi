@@ -189,6 +189,7 @@
     <ClInclude Include="..\..\Commanders\src\Commanders.h" />
     <ClInclude Include="..\..\Commanders\src\Commanders.hpp" />
     <ClInclude Include="..\..\Commanders\src\DccCommander.hpp" />
+    <ClInclude Include="..\..\Commanders\src\Events.h" />
     <ClInclude Include="..\..\Commanders\src\I2CCommander.hpp" />
     <ClInclude Include="..\..\Commanders\src\SerialCommander.hpp" />
     <ClInclude Include="..\..\Commanders\src\TextInterpreter.hpp" />

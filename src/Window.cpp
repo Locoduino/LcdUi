@@ -36,3 +36,19 @@ Window::Window(byte inFirstLine, int inTag)
 	this->fatherChoiceValue = 255;
 }
 
+#ifdef LCDUI_PRINT_WINDOWS
+void Window::printWindowHeader(const __FlashStringHelper *inName)
+{
+	Serial.print(inName);
+	Serial.print(F(": FirstLine: "));
+	Serial.print(this->firstLine);
+	if (this->GetFatherWindow() != NULL)
+	{
+		Serial.print(F(" / Father: "));
+		Serial.print(this->GetFatherWindow()->GetFirstLine());
+		Serial.print(F(" / FatherChoice: "));
+		Serial.print(this->fatherChoiceValue);
+	}
+}
+#endif
+

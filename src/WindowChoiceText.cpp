@@ -83,3 +83,11 @@ void WindowChoiceText::Event(byte inEventType, LcdUi *inpLcd)
 			pScreen->DisplayChoice(this->GetChoiceTextValue(i), i, i == *this->pValue);
 	}
 }
+
+#ifdef LCDUI_PRINT_WINDOWS
+void WindowChoiceText::printWindow()
+{
+	printWindowHeader(F("Window Choice Text"));
+	Serial.println("");
+}
+#endif
