@@ -22,8 +22,10 @@ private:
 	bool *pValue;
 
 public:
-	WindowYesNo(byte inFirstLine, bool *inpValue, int inTag = 0);
+	inline WindowYesNo() { this->pValue = NULL; }
+	inline WindowYesNo(byte inFirstLine, bool *inpValue) { this->begin(inFirstLine, inpValue); }
 
+	void begin(byte inFirstLine, bool *inpValue);
 	inline byte GetType() const { return WINDOWTYPE_YESNO; }
 
 	void Event(byte inEventType, LcdUi *inpLcd);

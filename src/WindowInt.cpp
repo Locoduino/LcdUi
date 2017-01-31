@@ -1,14 +1,16 @@
 /*************************************************************
 project: <LcdUi>
 author: <Thierry PARIS>
-description: <Class for a basic screen>
+description: <Class for an integer input screen>
 *************************************************************/
 
 #include "LcdUi.h"
 #include "WindowInt.hpp"
 
-WindowInt::WindowInt(byte inFirstLine, int *inpValue, int inMinIntValue, int inMaxIntValue, int inTag) : Window(inFirstLine, inTag)
+void WindowInt::begin(byte inFirstLine, int *inpValue, int inMinIntValue, int inMaxIntValue)
 {
+	Window::begin(inFirstLine);
+
 #ifdef LCDUI_DEBUG_MODE
 	if (inMinIntValue >= inMaxIntValue)
 		Serial.println(F("Integer minimum value greater or equal to maximum !"));

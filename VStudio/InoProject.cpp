@@ -1,8 +1,11 @@
 #include "Arduino.h"
 #include "DIO2.h"
 
-#include "../examples/Demo/WindowLocoControl.cpp"
-#include "../examples/Demo/Demo.ino"
+//#include "../examples/Demo/UI.cpp"
+//#include "../examples/Demo/WindowLocoControl.cpp"
+//#include "../examples/Demo/Demo.ino"
+#include "../examples/Locoduino/Sample/UI.cpp"
+#include "../examples/Locoduino/Sample/Sample.ino"
 
 //#include "TestExe.ino"
 

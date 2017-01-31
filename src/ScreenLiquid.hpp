@@ -28,7 +28,7 @@ public:
 	{
 		for (unsigned int i = 0; i <= this->sizex; i++)
 		{
-			this->setCursor(0, posy);
+			this->setCursor(i, posy);
 			this->write(' ');
 		}
 	}
@@ -120,6 +120,7 @@ public:
 
 		int line = inIndex - this->FirstChoiceShown + 1;
 
+		this->clearLine(line);
 		this->DisplayCenteredText((char *)inChoice, line, inChoosen);
 	}
 
@@ -154,7 +155,7 @@ public:
 		else
 		{
 			char text[2];
-			text[0] = GetChar(inPos);
+			text[0] = inPos;
 			text[1] = 0;
 			this->DisplayCenteredText(text, this->SecondLineY, true);
 		}

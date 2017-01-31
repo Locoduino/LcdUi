@@ -26,8 +26,10 @@ protected:
 	int *pValue;
 
 public:
-	WindowInt(byte inFirstLine, int *inpValue, int inMinIntValue = 0, int inMaxIntValue = 32767, int inTag = 0);
+	inline WindowInt() { this->minIntValue = this->maxIntValue = 0; this->pValue = NULL; }
+	inline WindowInt(byte inFirstLine, int *inpValue, int inMinIntValue = 0, int inMaxIntValue = 32767) { this->begin(inFirstLine, inpValue, inMinIntValue, inMaxIntValue); }
 
+	void begin(byte inFirstLine, int *inpValue, int inMinIntValue = 0, int inMaxIntValue = 32767);
 	inline byte GetType() const { return WINDOWTYPE_INT; }
 	inline int GetMinIntValue() const { return this->minIntValue; }
 	inline int GetMaxIntValue() const { return this->maxIntValue; }

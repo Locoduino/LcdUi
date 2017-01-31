@@ -29,8 +29,10 @@ protected:
 	byte *pValue;
 
 public:
-	WindowChoiceText(byte inFirstLine, byte *inpValue, int inTag = 0);
+	inline WindowChoiceText() { this->currentValueText = NULL; this->pValue = NULL; }
+	inline WindowChoiceText(byte inFirstLine, byte *inpValue) { this->begin(inFirstLine, inpValue);	}
 
+	void begin(byte inFirstLine, byte *inpValue);
 	inline byte GetType() const { return WINDOWTYPE_CHOICETEXT; }
 	inline unsigned int GetChoiceIntValue() const { return *(this->pValue); }
 	inline char *GetChoiceTextValue() const { return this->currentValueText; }

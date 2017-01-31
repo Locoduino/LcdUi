@@ -30,17 +30,22 @@ class WindowChoice : public Window
 {
 protected:
 	Choice *pSelectedChoice;	// selected choice index
+	byte currentConfiguration;
 
 	LCDUICHAINEDLIST<Choice> Choices;
 
 public:
-	WindowChoice(byte inFirstLine, Choice *inpSelectedChoice, bool inUseIndexes = false, int inTag = 0);
+	inline WindowChoice() { this->pSelectedChoice = NULL; }
+	inline WindowChoice(byte inFirstLine, Choice *inpSelectedChoice) { this->begin(inFirstLine, inpSelectedChoice); }
 
+	void begin(byte inFirstLine, Choice *inpSelectedChoice);
 	inline byte GetType() const { return WINDOWTYPE_CHOICE; }
 	inline const Choice &GetSelectedChoice() const { return *this->pSelectedChoice; }
 	inline byte GetSelectedChoiceId() const { return pSelectedChoice->id; }
 	inline byte GetSelectedChoiceIndex() const { return pSelectedChoice->index; }
 	inline byte GetSelectedChoiceEscapeWindowId() { return this->pSelectedChoice->escapeWindowId; }
+	inline byte GetCurrentConfiguration() const { return this->currentConfiguration; }
+	inline void SetCurrentConfiguration(byte inNewConfiguration) { this->currentConfiguration = inNewConfiguration; }
 
 	void MoveNextChoice();
 	void MovePreviousChoice();

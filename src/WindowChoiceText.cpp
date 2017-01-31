@@ -7,8 +7,9 @@ description: <Class for a choice window>
 #include "LcdUi.h"
 #include "WindowChoiceText.hpp"
 
-WindowChoiceText::WindowChoiceText(byte inFirstLine, byte *inpValue, int inTag) : Window(inFirstLine, inTag)
+void WindowChoiceText::begin(byte inFirstLine, byte *inpValue)
 {
+	Window::begin(inFirstLine);
 	this->pValue = inpValue;
 }
 

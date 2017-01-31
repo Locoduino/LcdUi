@@ -26,14 +26,20 @@ void Window::printState(byte inState, const __FlashStringHelper *inFunc)
 }
 #endif
 
-Window::Window(byte inFirstLine, int inTag)
+Window::Window()
 {
-	this->firstLine = inFirstLine;
+	this->firstLine = -1;
 	this->state = STATE_START;
-	this->tag = inTag;
+	this->tag = 0;
 	this->pNextWindow = NULL;
 	this->pFatherWindow = NULL;
 	this->fatherChoiceValue = 255;
+	this->active = true;
+}
+
+void Window::begin(byte inFirstLine)
+{
+	this->firstLine = inFirstLine;
 }
 
 #ifdef LCDUI_PRINT_WINDOWS

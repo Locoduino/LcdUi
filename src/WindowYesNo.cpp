@@ -6,8 +6,10 @@ description: <Class for a basic screen>
 
 #include "LcdUi.h"
 
-WindowYesNo::WindowYesNo(byte inFirstLine, bool *inpValue, int inTag) : Window(inFirstLine, inTag)
+void WindowYesNo::begin(byte inFirstLine, bool *inpValue)
 {
+	Window::begin(inFirstLine);
+
 #ifdef LCDUI_DEBUG_MODE
 	if (LcdScreen::YesMsg == -1)
 		Serial.println(F("YesMsg undefined !"));

@@ -48,6 +48,7 @@ class Window
 protected:
 	byte firstLine;		// id
 	byte state;
+	bool active;
 	int tag;			// User data...
 	Window *pNextWindow;
 
@@ -60,14 +61,19 @@ protected:
 	byte fatherChoiceValue;	// Index of the choice, 255 if undefined
 
 public:
-	Window(byte inFirstLine, int inTag = 0);
+	Window();
+	inline Window(byte inFirstLine) : Window::Window() { this->begin(inFirstLine); }
 
+	void begin(byte inFirstLine);
 	inline byte GetWindowId() { return this->GetFirstLine(); }
 	inline byte GetFirstLine() const { return this->firstLine; }
 	inline byte GetState() const { return this->state; }
 	inline int GetTag() const { return this->tag; }
+	inline bool IsActive() const { return this->active; }
 	inline void SetFirstLine(byte inLine) { this->firstLine = inLine; }
 	inline void SetState(byte inState) { this->state = inState; }
+	inline void SetTag(int inTag) { this->tag = inTag; }
+	inline void SetActive(bool inActive) { this->active = inActive; }
 
 	inline virtual byte GetType() const { return 255; }
 	inline virtual void Event(byte inEventType, LcdUi *inpLcd) {}
@@ -79,6 +85,7 @@ public:
 	inline Window *GetFatherWindow() const { return this->pFatherWindow; }
 	inline byte GetFatherChoiceValue() const { return this->fatherChoiceValue; }
 	inline void SetFatherChoiceValue(byte inValue) { this->fatherChoiceValue = inValue; }
+	inline void SetFather(Window *inpFatherWindow, byte inValue) { this->pFatherWindow = inpFatherWindow; this->fatherChoiceValue = inValue; }
 
 #ifdef LCDUI_DEBUG_MODE
 	static void printState(byte inState, const __FlashStringHelper *inFunc);

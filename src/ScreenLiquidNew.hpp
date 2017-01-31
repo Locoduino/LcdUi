@@ -3,22 +3,15 @@
 #define __screenLiquidNew_H__
 //-------------------------------------------------------------------
 
-#include "Screen.hpp"
+#include "LcdScreen.hpp"
 
-#ifdef VISUALSTUDIO
-#include "LCD-VS.h"
-#include "ScreenVS.hpp"
-#else
-#include "../../LiquidCrystal/LCD.h"
+#ifndef _LCDVS_H_
+#include "LiquidCrystal.h"
 #endif
 
 //-------------------------------------------------------------------
 
-#ifdef VISUALSTUDIO
-#define SCREEN	this->pScreenVS
-#else
 #define SCREEN	this->pLcd
-#endif
 
 class ScreenLiquidNew : public LcdScreen
 {
@@ -29,18 +22,15 @@ public:
 	ScreenLiquidNew() : LcdScreen() 
 	{ 
 		this->pLcd = 0; 
-#ifdef VISUALSTUDIO
-		this->pScreenVS = new ScreenVS();
-#endif
 	}
 
 	void clearLine(int posy)
 	{
-		memset(LcdScreen::buffer, ' ', this->sizex);
-		LcdScreen::buffer[this->sizex] = 0;
-
-		this->setCursor(0, posy);
-		this->print(LcdScreen::buffer);
+		for (unsigned int i = 0; i <= this->sizex; i++)
+		{
+			this->setCursor(i, posy);
+			this->write(' ');
+		}
 	}
 
 	void begin(byte inSizeX, byte inSizeY, PGM_P const *inpStringTable, LCD *inpLcd)
@@ -181,7 +171,7 @@ public:
 		this->setCursor(start, this->SecondLineY);
 		this->write('>');
 		this->setCursor(start + 1, this->SecondLineY);
-		this->write(GetChar(inPos));
+		this->write(inPos);
 		this->setCursor(start + 2, this->SecondLineY);
 		this->write('<');
 

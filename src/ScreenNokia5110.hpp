@@ -3,22 +3,16 @@
 #define __screenNokia_H__
 //-------------------------------------------------------------------
 
-#include "Screen.hpp"
+#include "LcdScreen.hpp"
 
-#ifdef VISUALSTUDIO
-#include "ScreenVS.hpp"
-#else
+#ifndef VISUALSTUDIO
 #include "../../Adafruit_GFX_Library/Adafruit_GFX.h"
 #include "../../Adafruit_PCD8544/Adafruit_PCD8544.h"
 #endif
 
 //-------------------------------------------------------------------
 
-#ifdef VISUALSTUDIO
-#define SCREEN	this->pScreenVS
-#else
 #define SCREEN	this->pDisplay
-#endif
 
 class ScreenNokia5110 : public LcdScreen
 {
@@ -30,18 +24,15 @@ private:
 public:
 	ScreenNokia5110() : LcdScreen()
 	{ 
-#ifdef VISUALSTUDIO
-		this->pScreenVS = new ScreenVS();
-#endif
 	}
 
 	void clearLine(int posy)
 	{
-		memset(LcdScreen::buffer, ' ', this->sizex);
-		LcdScreen::buffer[this->sizex] = 0;
-
-		this->setCursor(0, posy);
-		this->print(LcdScreen::buffer);
+		for (unsigned int i = 0; i <= this->sizex; i++)
+		{
+			this->setCursor(i, posy);
+			this->write(' ');
+		}
 	}
 
 #ifdef VISUALSTUDIO

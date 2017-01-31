@@ -7,8 +7,10 @@ description: <Class for a basic screen>
 #include "LcdUi.h"
 #include "WindowConfirm.hpp"
 
-WindowConfirm::WindowConfirm(byte inFirstLine, byte inPrefix, int inTag) : Window(inFirstLine, inTag)
+void WindowConfirm::begin(byte inFirstLine, byte inPrefix)
 { 
+	Window::begin(inFirstLine);
+
 #ifdef LCDUI_DEBUG_MODE
 	if (LcdScreen::YesMsg == -1)
 		Serial.println(F("YesMsg undefined !"));

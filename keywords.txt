@@ -25,26 +25,31 @@ ScreenLiquidNew			KEYWORD1
 # Methods and Functions (KEYWORD2)
 #######################################
 
-StartSetup	KEYWORD2
-EndSetup	KEYWORD2
-Loop		KEYWORD2
-
-Setup					KEYWORD2
+begin					KEYWORD2
 AddWindow				KEYWORD2
 AddWindowInterrupt		KEYWORD2
 AddChoice				KEYWORD2
 Interrupt 				KEYWORD2
 InterruptEnd			KEYWORD2
+IsActive				KEYWORD2
+GetCurrentWindow		KEYWORD2
 GetGlobalCurrentWindow	KEYWORD2
 GetWindowId				KEYWORD2
-SetValue				KEYWORD2
-SetChoiceValue			KEYWORD2
-SetCurrentChoice		KEYWORD2
+SetFather				KEYWORD2
 GetIntValue				KEYWORD2
 GetTextValue			KEYWORD2
-GetChoiceValue			KEYWORD2
+GetSelectedValue		KEYWORD2
 GetState				KEYWORD2
 SetState				KEYWORD2
+SetMinIntValue			KEYWORD2
+SetMaxIntValue			KEYWORD2
+SetMaxTextValueLength	KEYWORD2
+GetMinIntValue			KEYWORD2
+GetMaxIntValue			KEYWORD2
+GetMaxTextValueLength	KEYWORD2
+
+printEvent				KEYWORD2
+printWindows			KEYWORD2
 
 #######################################
 # Constants (LITERAL1)

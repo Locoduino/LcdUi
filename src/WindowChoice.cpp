@@ -1,14 +1,16 @@
 /*************************************************************
 project: <LcdUi>
 author: <Thierry PARIS>
-description: <Class for a basic screen>
+description: <Class for a multiple choice screen>
 *************************************************************/
 
 #include "LcdUi.h"
 #include "WindowChoice.hpp"
 
-WindowChoice::WindowChoice(byte inFirstLine, Choice *inpSelectedChoice, bool inUseIndexes, int inTag) : Window(inFirstLine, inTag)
+void WindowChoice::begin(byte inFirstLine, Choice *inpSelectedChoice)
 {
+	Window::begin(inFirstLine);
+
 	this->pSelectedChoice = inpSelectedChoice;
 }
 

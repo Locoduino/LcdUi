@@ -23,8 +23,10 @@ private:
 	byte answer;
 
 public:
-	WindowConfirm(byte inFirstLine, byte prefix, int inTag = 0);
+	inline WindowConfirm() { this->prefix = 0; this->answer = 0; }
+	inline WindowConfirm(byte inFirstLine, byte prefix) { this->begin(inFirstLine, prefix); }
 
+	void begin(byte inFirstLine, byte prefix);
 	inline byte GetType() const { return WINDOWTYPE_CONFIRM; }
 	inline byte GetValue() const { return this->answer; }
 	inline void SetValue(byte inAnswer) { this->answer = inAnswer; }

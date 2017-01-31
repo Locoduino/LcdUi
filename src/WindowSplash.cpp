@@ -6,8 +6,9 @@ description: <Class for a splash screen (time limited info)>
 
 #include "LcdUi.h"
 
-WindowSplash::WindowSplash(byte inFirstLine, byte inSecondLine, unsigned long inDelay, int inTag) : Window(inFirstLine, inTag)
+void WindowSplash::begin(byte inFirstLine, byte inSecondLine, unsigned long inDelay)
 { 
+	Window::begin(inFirstLine);
 	this->secondLine = inSecondLine;
 	this->delay = inDelay;
 	this->startingDate = 0;

@@ -31,8 +31,10 @@ private:
 
 public:
 	static byte Backspace;
-	WindowText(byte inFirstLine, char *inpValue, byte inMaxLengthValue = WINDOW_MAXTEXTVALUESIZE, int inTag = 0);
+	inline WindowText() { this->maxTextValueLength = WINDOW_MAXTEXTVALUESIZE; this->currentCharPos = 0; this->currentCharEdited = 0; this->pTextValue = NULL; }
+	inline WindowText(byte inFirstLine, char *inpValue, byte inMaxLengthValue = WINDOW_MAXTEXTVALUESIZE) { this->begin(inFirstLine, inpValue, inMaxLengthValue); }
 
+	void begin(byte inFirstLine, char *inpValue, byte inMaxLengthValue = WINDOW_MAXTEXTVALUESIZE);
 	inline byte GetType() const { return WINDOWTYPE_TEXT; }
 	inline byte GetMaxTextValueLength() const { return this->maxTextValueLength; }
 	inline void SetMaxTextValueLength(byte inLength) { this->maxTextValueLength = inLength; }

@@ -7,8 +7,10 @@ description: <Class for an interruption window>
 #include "LcdUi.h"
 #include "WindowInterrupt.hpp"
 
-WindowInterrupt::WindowInterrupt(byte inFirstLine, byte inSecondLine, byte inEventType, int inTag) : Window(inFirstLine, inTag)
+void WindowInterrupt::begin(byte inFirstLine, byte inSecondLine, byte inEventType)
 { 
+	Window::begin(inFirstLine);
+
 	this->secondLine = inSecondLine;
 	this->eventType = inEventType;
 }

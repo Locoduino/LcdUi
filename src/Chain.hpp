@@ -73,7 +73,10 @@ template<class T> void LCDUICHAINEDLIST<T>::PreviousCurrent()
 
 	LCDUICHAINEDLISTITEM<T> *pCurr = this->pFirst;
 
-	while (pCurr != NULL)
+	if (this->pCurrentItem == pCurr)
+		this->pCurrentItem = NULL;
+
+	while (pCurr != NULL || this->pCurrentItem == NULL)
 	{
 		if (pCurr->pNext == this->pCurrentItem)
 		{

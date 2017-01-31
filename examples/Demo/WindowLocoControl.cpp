@@ -8,6 +8,9 @@ description: <Class for a loco control window>
 
 WindowLocoControl::WindowLocoControl() : Window(-1)
 {
+	this->isDcc = true;
+	this->dcFrequency = 0;
+	this->dcFrequencyText = NULL;
 	this->Address = 3;
 	this->AddressSize = 3;
 	this->Speed = 0;
@@ -31,15 +34,21 @@ void WindowLocoControl::Event(byte inEventType, LcdUi *inpLcd)
 	if (this->state == STATE_START)
 	{
 		pScreen->clear();
-		pScreen->DisplayText("Dcc ", 0, 0);
-		LcdScreen::BuildString(this->Address, LcdScreen::buffer, this->AddressSize);
-		pScreen->DisplayText(LcdScreen::buffer, 4, 0);
-#ifndef NANOCONTROLER
-		// Only show the loco's name if not on a Nano.
-		pScreen->DisplayText(" ", 4 + this->AddressSize, 0);
-		byte len = LcdScreen::BuildStringLeft(this->Name, inpLcd->GetScreen()->GetSizeX() - (4 + this->AddressSize + 1), LcdScreen::buffer);
-		pScreen->DisplayText(LcdScreen::buffer, pScreen->GetSizeX() - len, 0);
-#endif
+		if (this->isDcc)
+		{
+			pScreen->DisplayText("Dcc ", 0, 0);
+			LcdScreen::BuildString(this->Address, LcdScreen::buffer, this->AddressSize);
+			pScreen->DisplayText(LcdScreen::buffer, 4, 0);
+		}
+		else
+		{
+			pScreen->DisplayText("Dc", 0, 0);
+			if (this->dcFrequencyText != NULL)
+			{
+				byte len = LcdScreen::BuildStringLeft(this->dcFrequencyText, inpLcd->GetScreen()->GetSizeX() - (2 + 1), LcdScreen::buffer);
+				pScreen->DisplayText(LcdScreen::buffer, pScreen->GetSizeX() - len, 0);
+			}
+		}
 		this->state = STATE_INITIALIZE;
 	}
 
@@ -100,7 +109,7 @@ void WindowLocoControl::Event(byte inEventType, LcdUi *inpLcd)
 	if (showValue)
 	{
 		//   01234567879012345
-		// 0 Dcc 003 nomloco11
+		// 0 Dcc 003
 		// 1 +>>>>>			 -
 		//   01234567879012345
 		int speed = this->Speed;

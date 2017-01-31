@@ -25,8 +25,10 @@ protected:
 	unsigned long startingDate;
 
 public:
-	WindowSplash(byte inFirstLine, byte inSecondLine, unsigned long inDelay = 2000, int inTag = 0);
+	inline WindowSplash() { this->secondLine = 0; this->delay = 0; this->startingDate = 0; }
+	inline WindowSplash(byte inFirstLine, byte inSecondLine, unsigned long inDelay = 2000) { this->begin(inFirstLine, inSecondLine, inDelay); }
 
+	void begin(byte inFirstLine, byte inSecondLine, unsigned long inDelay = 2000);
 	inline byte GetType() const { return WINDOWTYPE_SPLASH; }
 
 	void Event(byte inEventType, LcdUi *inpLcd);

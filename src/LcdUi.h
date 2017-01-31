@@ -33,10 +33,10 @@
 #endif
 
 #ifndef STR_LCDTITLE
-#define STR_LCDTITLE16		F("LCD UI V0.30")
+#define STR_LCDTITLE16		F("LCD UI V0.40")
 #define STR_LCDCOPYRIGHT16	F("By Thierry Paris")
 
-#define STR_LCDTITLE		F("LCD User Interface V0.30")
+#define STR_LCDTITLE		F("LCD User Interface V0.40")
 #define STR_LCDCOPYRIGHT	F("Developed by Thierry Paris.")
 #endif
 
@@ -73,13 +73,6 @@
 #include "WindowSplash.hpp"
 
 #include "LcdScreen.hpp"
-
-#ifdef VISUALSTUDIO
-/*#include "ScreenVS.hpp"
-#include "ScreenLiquid.hpp"
-#include "ScreenLiquidNew.hpp"
-#include "ScreenNokia5110.hpp"*/
-#endif
 
 #ifdef LiquidCrystal_h
 #include "ScreenLiquid.hpp"
@@ -132,8 +125,7 @@ public:
 	LcdUi();
 
 	void begin(LcdScreen *inpScreen);
-	Window *AddWindow(Window *inpWindow, Window *inpFatherWindow = 0, byte inChoiceNumber = 255);
-	Window *AddWindowInterrupt(WindowInterrupt * inpWindow);
+	Window *AddWindow(Window *inpWindow);
 	inline void MoveToWindow(Window *inpWindow) { this->pCurrentWindow = inpWindow; }
 
 	bool loop(byte inEvent);
@@ -141,6 +133,7 @@ public:
 	void Interrupt(Window *inpInterrupt);
 	void Interrupt(byte inWindowId);
 	void InterruptEnd();
+	inline Window *GetFirstWindow() const { return this->pFirstWindow; }
 	inline Window *GetCurrentWindow() const { return this->pCurrentWindow; }
 	inline Window *GetWindowInterrupt() { return this->pWindowInterrupt; }
 	inline Window *GetGlobalCurrentWindow() const { return this->pWindowInterrupt != NULL ? this->pWindowInterrupt : this->pCurrentWindow; }

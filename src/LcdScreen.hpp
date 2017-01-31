@@ -32,11 +32,13 @@ public:
 	static void BuildString(int inValue, char *outString, int digits = 0);
 	static void BuildProgress(byte inValue, byte inMax, bool inFromLeftDir, byte inLengthString, char *outString);
 	static byte BuildStringLeft(const char *inString, byte inSizeMax, char *outString);
-	static byte GetChar(int inPos);
-
+	
 	// Get real string from pStringTable.
 	char *GetString(int inString);
 	char *GetChoiceString(int inString);
+
+	virtual char MoveNextChar(char incurrPos);
+	virtual char MovePreviousChar(char incurrPos);
 
 	// Display string in contexts
 	inline virtual void clear() {};

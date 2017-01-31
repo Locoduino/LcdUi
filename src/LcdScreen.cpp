@@ -128,14 +128,38 @@ char *LcdScreen::GetChoiceString(int inString)
 	return buffer;
 }
 
-byte LcdScreen::GetChar(int inPos)
+// ASCII char table : 32-127
+//			 A-Z	 a-z	  0-9	 misc chars
+// del(0) / 65-90 / 97-122 / 48-57 / 32-47
+
+char LcdScreen::MoveNextChar(char inCurrPos)
 {
-	if (inPos < 0 || inPos > 127)
-		return ' ';
+	int newValue = -1;
 
-	if (inPos == 0)
-		return 127;	// backspace
+	if (inCurrPos == 47)	return 47;
+	if (inCurrPos == 0)		newValue = 65;
+	if (inCurrPos == 90)	newValue = 97;
+	if (inCurrPos == 122)	newValue = 48;
+	if (inCurrPos == 57)	newValue = 32;
 
-	return 32 + (inPos - 1);
+	if (newValue == -1)
+		newValue = inCurrPos + 1;
+
+	return newValue;
+}
+
+char LcdScreen::MovePreviousChar(char incurrPos)
+{
+	int newValue = -1;
+	if (incurrPos == 0)	return 0;
+	if (incurrPos == 32)	newValue = 57;
+	if (incurrPos == 48)	newValue = 122;
+	if (incurrPos == 97)	newValue = 90;
+	if (incurrPos == 65)	newValue = 0;
+
+	if (newValue == -1)
+		newValue = incurrPos - 1;
+
+	return newValue;
 }
 

@@ -7,8 +7,10 @@ description: <Class for a confirm dialog in interrupt context>
 #include "LcdUi.h"
 #include "WindowInterruptConfirm.hpp"
 
-WindowInterruptConfirm::WindowInterruptConfirm(byte inFirstLine, byte inSecondLine, int inTag) : WindowInterrupt(inFirstLine, inSecondLine, inTag)
+void WindowInterruptConfirm::begin(byte inFirstLine, byte inSecondLine)
 { 
+	Window::begin(inFirstLine);
+
 #ifdef LCDUI_DEBUG_MODE
 	if (LcdScreen::YesMsg == -1)
 		Serial.println(F("YesMsg undefined !"));

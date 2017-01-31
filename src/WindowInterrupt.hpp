@@ -23,8 +23,10 @@ protected:
 	byte eventType;
 
 public:
-	WindowInterrupt(byte inFirstLine, byte inSecondLine, byte inEventType = 255, int inTag = 0);
+	inline WindowInterrupt() { this->secondLine = 0; this->eventType = 0; }
+	inline WindowInterrupt(byte inFirstLine, byte inSecondLine, byte inEventType = 255) { this->begin(inFirstLine, inSecondLine, inEventType); }
 
+	void begin(byte inFirstLine, byte inSecondLine, byte inEventType = 255);
 	inline byte GetType() const { return WINDOWTYPE_INTERRUPT; }
 	inline byte GetEventType() const { return this->eventType; }
 

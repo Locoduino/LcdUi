@@ -1,3 +1,9 @@
+31/01/2017 V0.40
+	- Séparation des begin de fenêtre, et de la constrution de la liste des fenêtre pour des raisons de clarté.
+	- Ajout du flag Active pour permettre de choisir une fenêtre plutôt qu'une autre...
+	- Dans demo.ino, sortie de la partie UI dans un UI.cpp et un UI.hpp .
+	- Dans WinText : ajout de la gestion des séquences de codes ASCII A-za-z0-9 etc..
+
 16/01/2017 V0.30
 	- Ajout de printWindows()
 	- Gestion de plus de deux lignes sur l'écran.

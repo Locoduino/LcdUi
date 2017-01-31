@@ -10,6 +10,9 @@
 class WindowLocoControl : public Window
 {
 public:
+	bool isDcc;
+	byte dcFrequency;
+	const char *dcFrequencyText;
 	int Address;
 	byte AddressSize;
 	byte Speed;
@@ -23,6 +26,8 @@ public:
 
 	inline byte GetType() const { return WINDOWTYPE_LOCOCONTROL; }
 	void Event(byte inEventType, LcdUi *inpLcd);
+
+	void printWindow() { Serial.println("WindowLocoControl"); }
 };
 
 #endif

@@ -7,10 +7,10 @@ description: <Class for a basic screen>
 #include "LcdUi.h"
 #include "WindowText.hpp"
 
-// char table : 32-127
-
-WindowText::WindowText(byte inFirstLine, char *pValue, byte inMaxLengthValue, int inTag) : Window(inFirstLine, inTag)
+void WindowText::begin(byte inFirstLine, char *pValue, byte inMaxLengthValue)
 { 
+	Window::begin(inFirstLine);
+
 #ifdef LCDUI_DEBUG_MODE
 	if (LcdScreen::BackspaceMsg == -1)
 		Serial.println(F("BackspaceMsg undefined !"));
@@ -42,21 +42,15 @@ void WindowText::Event(byte inEventType, LcdUi *inpLcd)
 	switch (inEventType)
 	{
 	case EVENT_MORE:
-	{
-		int newValue = this->currentCharPos + 1;
-		if (newValue < 129)
-			this->currentCharPos = newValue;
-	}
-	showValue = true;
-	break;
+		this->currentCharPos = pScreen->MoveNextChar(this->currentCharPos);
+		showValue = true;
+		break;
+
 	case EVENT_LESS:
-	{
-		int newValue = this->currentCharPos - 1;
-		if (newValue >= 0)
-			this->currentCharPos = newValue;
-	}
-	showValue = true;
-	break;
+		this->currentCharPos = pScreen->MovePreviousChar(this->currentCharPos);
+		showValue = true;
+		break;
+
 	case EVENT_SELECT:
 		this->state = STATE_SELECTCHAR;
 		/*if (this->currentCharPos == 0)
@@ -75,7 +69,7 @@ void WindowText::Event(byte inEventType, LcdUi *inpLcd)
 			}
 			else
 			{
-				this->pTextValue[this->currentCharEdited] = LcdScreen::GetChar(this->currentCharPos);
+				this->pTextValue[this->currentCharEdited] = this->currentCharPos;
 				this->pTextValue[this->currentCharEdited + 1] = 0;
 				this->currentCharEdited++;
 			}
@@ -83,7 +77,7 @@ void WindowText::Event(byte inEventType, LcdUi *inpLcd)
 		}
 		break;
 	case EVENT_CANCEL:
-		this->state = STATE_ABORTED;
+		this->state = STATE_CONFIRMED;
 //		pScreen->noCursor();
 		break;
 	}

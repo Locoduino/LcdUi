@@ -13,8 +13,10 @@ private:
 	byte answer;
 
 public:
-	WindowInterruptConfirm(byte inFirstLine, byte inSecondLine, int inTag = 0);
+	inline WindowInterruptConfirm() { this->answer = 0; }
+	inline WindowInterruptConfirm(byte inFirstLine, byte inSecondLine) { this->begin(inFirstLine, inSecondLine); }
 
+	void begin(byte inFirstLine, byte inSecondLine);
 	inline byte GetType() const { return WINDOWTYPE_CONFIRM; }
 	inline byte GetValue() const { return this->answer; }
 	inline void SetValue(byte inAnswer) { this->answer = inAnswer; }
