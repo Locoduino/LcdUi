@@ -37,7 +37,7 @@ void setup()
 	int values[] = { 0, 145, 329, 505, 741 };
 	// Each button as an EVENT number as ID ! Easier for the loop !
 	// One button has no meaning with 1004 (why not ?) as ID.
-	unsigned long ids[] = { EVENT_SELECT, EVENT_MORE, EVENT_LESS, 1004, EVENT_CANCEL };
+	unsigned long ids[] = { EVENT_DCDCC, EVENT_MORE, EVENT_LESS, EVENT_CANCEL, EVENT_SELECT };
 
 	pushes.begin(A0, 5, ids, values, 50);
 #endif

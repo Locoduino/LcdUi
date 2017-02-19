@@ -1,3 +1,9 @@
+19/02/2017 V0.90
+	- Nouvelles fonctions d'affichage typée 'F' pour argument en __FlashStringHelper *
+	- Déplacement de FillBuffer locale à LcdUi.cpp dans la classe LcdScreen .
+	- Correction de clearLine() qui écrivait un caractère de trop.
+	- correction du calcul de FirstChoiceShown dans windowChoice.
+
 31/01/2017 V0.40
 	- Séparation des begin de fenêtre, et de la constrution de la liste des fenêtre pour des raisons de clarté.
 	- Ajout du flag Active pour permettre de choisir une fenêtre plutôt qu'une autre...

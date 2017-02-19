@@ -4,22 +4,22 @@ author: <Thierry PARIS>
 description: <LCD UI demo>
 *************************************************************/
 
-//#include <LiquidCrystal_I2C.h>
-#include <LiquidCrystal.h>
+#include <NewLiquidCrystal_I2C.h>
+//#include <NewLiquidCrystal.h>
 #include "Commanders.h"
 #include "LcdUi.h"
-#include "ScreenLiquid.hpp"
+#include "ScreenLiquidNew.hpp"
 #include "WindowLocoControl.hpp"
 #include "UI.hpp"
 
 // Strings declaration
 const char  str_dc[] PROGMEM = "Dc";
 const char  str_dcc[] PROGMEM = "Dcc";
-const char  str_stop[] PROGMEM = "Arret Alim";
-const char  str_stop2[] PROGMEM = "Appuyer Rouge";
+const char  str_stop[] PROGMEM = "Arret Urgence";
+const char  str_stop2[] PROGMEM = "Appuyer Annuler";
 const char  str_dcdcc[] PROGMEM = "Change DC/DCC";
 const char  str_dcdcc2[] PROGMEM = "Redemarrer/annul";
-const char  str_modemodechoice[] PROGMEM = "Choix du mode :";
+const char  str_modemodechoice[] PROGMEM = "Menu principal:";
 const char  str_modelococtrl[] PROGMEM = "Controle loco";
 const char  str_modeconfig[] PROGMEM = "Configuration";
 const char  str_resetconfig[] PROGMEM = "Reset Config";
@@ -105,13 +105,11 @@ public:
 
 // Main object and its screen
 //LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // Set the LCD I2C address
+NewLiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // Set the LCD I2C address
 //LiquidCrystal lcd(0, 4, 5, 6, 7, 3);
-LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
+//NewLiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 LcdUi lcdui;
-ScreenLiquid screen;
-
-#define EVENT_DCDCC		10
-#define EVENT_EMERGENCY	11
+ScreenLiquidNew screen;
 
 // Local values the UI must be able to update...
 bool backlight;
@@ -119,7 +117,7 @@ Choice modeChoice;
 Choice configChoiceDc;
 Choice configChoiceDcc;
 
-/*WindowSplash winSplash;
+WindowSplash winSplash;
 WindowChoice winMainChoice;
 WindowChoice winDcSettingsChoice;
 WindowChoice winDccSettingsChoice;
@@ -131,18 +129,19 @@ WindowConfirm winReset, winResetDc;
 WindowLocoControl winLoco;
 WindowChooseDcFreq winFreq;
 WindowInterrupt winStop;
-WindowInterrupt winDcDcc;*/
+WindowInterrupt winDcDcc;
 
 void setupUI()
 {
-	screen.begin(16, 2, string_table, &lcd);
+	screen.begin(20, 4, string_table, &lcd);
+	//screen.begin(16, 2, string_table, &lcd);
 	lcdui.begin(&screen);
 	
 	LcdScreen::YesMsg = STR_YES;
 	LcdScreen::NoMsg = STR_NO;
 	LcdScreen::BackspaceMsg = STR_BACKSPACE;
 
-/*	winSplash.begin(STR_SPLASH1, STR_SPLASH2, 500);
+	winSplash.begin(STR_SPLASH1, STR_SPLASH2, 500);
 	winMainChoice.begin(STR_MODEMODECHOICE, &modeChoice);
 	winDcSettingsChoice.begin(STR_MODECONFIG, &configChoiceDc);
 	winDccSettingsChoice.begin(STR_MODECONFIG, &configChoiceDcc);
@@ -204,7 +203,6 @@ void setupUI()
 	winDcSettingsChoice.SetActive(!winLoco.isDcc);
 
 	//lcdui.printWindows();
-	*/
 }
 
 void loopUI(unsigned long inEvent)
@@ -212,7 +210,7 @@ void loopUI(unsigned long inEvent)
 	// Use events to update the screen...
 	if (lcdui.loop(inEvent))
 	{
-/*		Window *pCurrent = lcdui.GetGlobalCurrentWindow();
+		Window *pCurrent = lcdui.GetGlobalCurrentWindow();
 
 		// Do things when a window is confirmed:
 		if (lcdui.GetState() == STATE_CONFIRMED)
@@ -253,6 +251,19 @@ void loopUI(unsigned long inEvent)
 				strcpy(winLoco.Name, "Locoduino");
 				break;
 			}
-		}*/
+		}
+
+		if (lcdui.GetState() == STATE_INITIALIZE)
+		{
+			switch (pCurrent->GetWindowId())
+			{
+			case STR_DCDCC:
+				Serial.println("Dc/Dcc mode changed");
+				winLoco.isDcc = !winLoco.isDcc;
+				winDccSettingsChoice.SetActive(winLoco.isDcc);
+				winDcSettingsChoice.SetActive(!winLoco.isDcc);
+				break;
+			}
+		}
 	}
 }

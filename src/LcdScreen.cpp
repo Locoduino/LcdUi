@@ -102,6 +102,22 @@ byte LcdScreen::BuildStringLeft(const char *inString, byte inSizeMax, char *outS
 	return len;
 }
 
+void LcdScreen::FillBuffer(const __FlashStringHelper *str)
+{
+#ifdef VISUALSTUDIO
+	strcpy_s(buffer, BUFFER_SIZE, str);
+#else
+	const char *p = (const char *)str;
+	int k;
+	for (k = 0; k < 40 && pgm_read_byte(p + k) != 0x00; k++)
+	{
+		char myChar = pgm_read_byte_near(p + k);
+		LcdScreen::buffer[k] = myChar;
+	}
+	LcdScreen::buffer[k] = 0;
+#endif
+}
+
 char *LcdScreen::GetString(int inString)
 {
 #ifdef VISUALSTUDIO

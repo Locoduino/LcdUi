@@ -39,6 +39,8 @@ void WindowLocoControl::Event(byte inEventType, LcdUi *inpLcd)
 			pScreen->DisplayText("Dcc ", 0, 0);
 			LcdScreen::BuildString(this->Address, LcdScreen::buffer, this->AddressSize);
 			pScreen->DisplayText(LcdScreen::buffer, 4, 0);
+			byte len = LcdScreen::BuildStringLeft(this->Name, inpLcd->GetScreen()->GetSizeX() - (2 + 1), LcdScreen::buffer);
+			pScreen->DisplayText(LcdScreen::buffer, pScreen->GetSizeX() - len, 0);
 		}
 		else
 		{

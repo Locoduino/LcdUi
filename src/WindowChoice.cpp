@@ -91,6 +91,7 @@ void WindowChoice::Event(byte inEventType, LcdUi *inpLcd)
 
 		LCDUICHAINEDLISTITEM<Choice> *pCurr = this->Choices.pFirst;
 
+		// Find index of current item.
 		while (pCurr != NULL)
 		{
 			if (pCurr == this->Choices.pCurrentItem)
@@ -100,18 +101,21 @@ void WindowChoice::Event(byte inEventType, LcdUi *inpLcd)
 		}
 
 		if (index > pScreen->FirstChoiceShown + pScreen->GetSizeY() - 2)
-			pScreen->FirstChoiceShown++;
+			pScreen->FirstChoiceShown = index - pScreen->GetSizeY() + 2;
 		if (index < pScreen->FirstChoiceShown)
-			pScreen->FirstChoiceShown = 0;
+			pScreen->FirstChoiceShown = index;
 
 		index = 0;
 		pCurr = this->Choices.pFirst;
 
 		while (pCurr != NULL)
 		{
-			pScreen->DisplayChoice(pCurr->Obj->id, index, false, pCurr->Obj->id == this->Choices.pCurrentItem->Obj->id);
+			if (index >= pScreen->FirstChoiceShown)
+				pScreen->DisplayChoice(pCurr->Obj->id, index, false, pCurr->Obj->id == this->Choices.pCurrentItem->Obj->id);
 			pCurr = pCurr->pNext;
 			index++;
+			if (index > pScreen->FirstChoiceShown + pScreen->GetSizeY() - 2)
+				break;
 		}
 	}
 }

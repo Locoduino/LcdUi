@@ -41,18 +41,6 @@ LcdUi::LcdUi()
 	this->pWindowInterrupt = NULL;
 }
 
-void FillBuffer(const __FlashStringHelper *str)
-{
-	const char *p = (const char *)str;
-	int k;
-	for (k = 0; k < 40 && pgm_read_byte(p + k) != 0x00; k++)
-	{
-		char myChar = pgm_read_byte_near(p + k);
-		LcdScreen::buffer[k] = myChar;
-	}
-	LcdScreen::buffer[k] = 0;
-}
-
 void LcdUi::begin(LcdScreen *inpScreen)
 {
 #ifdef LCDUI_DEBUG_MODE
@@ -67,26 +55,30 @@ void LcdUi::begin(LcdScreen *inpScreen)
 	this->pScreen = inpScreen;
 
 #ifdef LCDUI_DEBUG_MODE
-	for (int line = 0; line < this->pScreen->GetSizeY(); line++)
-		this->pScreen->DisplayText(F("                    "), 0, line);
 
-	this->pScreen->DisplayText(F("===================="), 0, 0);
-	this->pScreen->DisplayText(F("===================="), 0, this->pScreen->GetSizeY() - 1);
+	this->pScreen->clear();
+
+	if (this->pScreen->GetSizeY() > 3)
+	{
+		this->pScreen->DisplayTextF(F("===================="), 0, 0);
+		this->pScreen->DisplayTextF(F("===================="), 0, this->pScreen->GetSizeY() - 1);
+	}
 
 	if (this->pScreen->GetSizeX() <= 24)
-		FillBuffer(STR_LCDTITLE16);
+		LcdScreen::FillBuffer(STR_LCDTITLE16);
 	else
-		FillBuffer(STR_LCDTITLE);
+		LcdScreen::FillBuffer(STR_LCDTITLE);
 	this->pScreen->DisplayText(LcdScreen::buffer, 0, (this->pScreen->GetSizeY() / 2) - 1);
 
 	if (this->pScreen->GetSizeX() <= 28)
-		FillBuffer(STR_LCDCOPYRIGHT16);
+		LcdScreen::FillBuffer(STR_LCDCOPYRIGHT16);
 	else
-		FillBuffer(STR_LCDCOPYRIGHT);
+		LcdScreen::FillBuffer(STR_LCDCOPYRIGHT);
 	this->pScreen->DisplayText(LcdScreen::buffer, 0, (this->pScreen->GetSizeY() / 2));
 
 	delay(2000);
 #endif
+
 }
 
 Window *LcdUi::AddWindow(Window *inpWindow)

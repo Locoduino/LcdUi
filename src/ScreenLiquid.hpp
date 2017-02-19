@@ -26,7 +26,7 @@ public:
 
 	void clearLine(int posy)
 	{
-		for (unsigned int i = 0; i <= this->sizex; i++)
+		for (unsigned int i = 0; i < this->sizex; i++)
 		{
 			this->setCursor(i, posy);
 			this->write(' ');
@@ -143,7 +143,6 @@ public:
 	{
 		this->noCursor();
 		this->setCursor(0, this->SecondLineY);
-		int start = sizex / 2 - 1;
 
 		//   'ABCD>E<FGHIJ'
 

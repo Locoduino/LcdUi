@@ -6,7 +6,7 @@
 #include "LcdScreen.hpp"
 
 #ifndef _LCDVS_H_
-#include "LiquidCrystal.h"
+#include "NewLiquidCrystal.h"
 #endif
 
 //-------------------------------------------------------------------
@@ -19,14 +19,14 @@ private:
 	LCD *pLcd;
 
 public:
-	ScreenLiquidNew() : LcdScreen() 
+	inline ScreenLiquidNew() : LcdScreen() 
 	{ 
-		this->pLcd = 0; 
+		this->pLcd = NULL; 
 	}
 
 	void clearLine(int posy)
 	{
-		for (unsigned int i = 0; i <= this->sizex; i++)
+		for (unsigned int i = 0; i < this->sizex; i++)
 		{
 			this->setCursor(i, posy);
 			this->write(' ');
@@ -36,10 +36,10 @@ public:
 	void begin(byte inSizeX, byte inSizeY, PGM_P const *inpStringTable, LCD *inpLcd)
 	{
 		this->pLcd = inpLcd;
+		this->pLcd->begin(inSizeX, inSizeY);
 
 		LcdScreen::begin(inSizeX, inSizeY, inpStringTable);
 
-		this->pLcd->begin(inSizeX, inSizeY);   // initialize the lcd for X chars Y lines
 		clear();
 	}
 
@@ -51,7 +51,6 @@ public:
 	inline void print(const char *inString) { SCREEN->print(inString); }
 	inline void print(int inValue, char inType) { SCREEN->print(inValue, inType); }
 	inline void write(char inValue) { SCREEN->write(inValue); }
-	inline void clear() { SCREEN->clear(); }
 	inline void home() { SCREEN->home();	}
 	inline void setCursor(byte Col, byte Row) { SCREEN->setCursor(Col, Row); }
 	inline void display() { SCREEN->display(); }
@@ -61,21 +60,40 @@ public:
 	inline void blink() { SCREEN->blink(); }
 	inline void noBlink() { SCREEN->noBlink(); }
 
-	/////////////
+	// LCD_API and LcdScreen override...
+	inline void clear() { SCREEN->clear(); }
 
-	void DisplayHeader(int inHeader)
+	// LcdScreen overrides...
+
+	void DisplayChar(char car, byte inX, byte inY)
 	{
-		this->clear();
-		this->setCursor(0, this->HeaderY);
-		this->print(this->GetString(inHeader));
+		this->setCursor(inX, inY);
+		this->write(car);
 	}
-	
+
 	void DisplayText(char *inText, byte inX, byte inY)
 	{
 		this->setCursor(inX, inY);
 		this->print(inText);
 	}
-	
+
+	void DisplayCenteredText(char *inText, byte inY, bool inChoosen)
+	{
+		this->clearLine(inY);
+		byte pos = (this->sizex / 2) - (strlen(inText) / 2) - 1;
+
+		this->DisplayChar(inChoosen ? '>' : ' ', pos++, inY);
+		this->DisplayText((char *)inText, pos, inY);
+		pos += strlen(inText);
+		this->DisplayChar(inChoosen ? '<' : ' ', pos, inY);
+	}
+
+	void DisplayHeader(int inHeader)
+	{
+		this->clear();
+		this->DisplayText(this->GetString(inHeader), 0, this->HeaderY);
+	}
+
 	void DisplayChoice(int inCurrentChoice, int inIndex, bool inShowIndex, bool inChoosen)
 	{
 		this->GetString(inCurrentChoice);
@@ -91,7 +109,7 @@ public:
 		}
 		DisplayChoice(LcdScreen::buffer, inIndex, inChoosen);
 	}
-	
+
 	void DisplayChoice(const char *inChoice, int inIndex, bool inChoosen)
 	{
 		if (inIndex < this->FirstChoiceShown)
@@ -102,89 +120,48 @@ public:
 
 		int line = inIndex - this->FirstChoiceShown + 1;
 
-		byte pos = (this->sizex / 2) - (strlen(inChoice) / 2) - 1;
-		for (int i = 0; i < pos; i++)
-		{
-			this->setCursor(i, line);
-			this->write(' ');
-		}
-
-		this->setCursor(pos++, line);
-		if (inChoosen)
-			this->write('>');
-		else
-			this->write(' ');
-
-		this->setCursor(pos, line);
-		this->print(inChoice);
-		pos += strlen(inChoice);
-
-		if (inChoosen)
-		{
-			this->setCursor(pos++, line);
-			this->write('<');
-		}
-
-		for (int i = pos; i < this->sizex; i++)
-		{
-			this->setCursor(i, line);
-			this->write(' ');
-		}
+		this->clearLine(line);
+		this->DisplayCenteredText((char *)inChoice, line, inChoosen);
 	}
-	
+
 	void DisplayInt(int inValue)
 	{
-		this->clearLine(this->SecondLineY);
-
 		this->BuildString(inValue, LcdScreen::buffer);
-		byte pos = (this->sizex / 2) - (strlen(LcdScreen::buffer) / 2) - 1;
-		this->setCursor(pos, this->SecondLineY);
-		this->write('>');
-
-		this->setCursor(pos + 1, this->SecondLineY);
-		this->print(LcdScreen::buffer);
-
-		this->setCursor(pos + 1 + strlen(LcdScreen::buffer), this->SecondLineY);
-		this->write('<');
+		this->DisplayCenteredText(LcdScreen::buffer, this->SecondLineY, true);
 	}
-	
+
 	void DisplayTextResult(const char *inTextValue, byte inLength, byte inEditedChar)
 	{
 		this->noCursor();
-		this->setCursor(0, this->HeaderY);
-		this->print(inTextValue);
+		this->DisplayText((char *)inTextValue, 0, this->HeaderY);
+
 		for (int i = strlen(inTextValue); i < inLength && i < sizex; i++)
-		{
-			this->setCursor(i, this->HeaderY);
-			this->write('_');
-		}
+			this->DisplayChar('_', i, this->HeaderY);
 	}
 
 	void DisplayTextChoice(byte inPos, byte inEditedChar)
 	{
 		this->noCursor();
 		this->setCursor(0, this->SecondLineY);
-		int start = sizex / 2 - 1;
 
 		//   'ABCD>E<FGHIJ'
 
-		this->setCursor(start, this->SecondLineY);
-		this->write('>');
-		this->setCursor(start + 1, this->SecondLineY);
-		this->write(inPos);
-		this->setCursor(start + 2, this->SecondLineY);
-		this->write('<');
-
-		/*for (int i = 0; i < sizex; i++)
+		if (inPos == 0)
 		{
-		LcdScreen::buffer[i] = GetChar(start + i);
-		} */
-		//	LcdScreen::buffer[sizex] = 0;
-		//	this->print(LcdScreen::buffer);
+			this->GetString(LcdScreen::BackspaceMsg);
+			this->DisplayCenteredText(LcdScreen::buffer, this->SecondLineY, true);
+		}
+		else
+		{
+			char text[2];
+			text[0] = inPos;
+			text[1] = 0;
+			this->DisplayCenteredText(text, this->SecondLineY, true);
+		}
 		this->setCursor(inEditedChar, this->HeaderY);
 		this->cursor();
 	}
-	
+
 	void DisplayYesNo(byte inChoiceValue, int inPrefixString = 0)
 	{
 		this->clearLine(this->SecondLineY);
@@ -193,26 +170,18 @@ public:
 		if (inPrefixString != 0)
 		{
 			this->GetString(inPrefixString);
-			this->setCursor(0, this->SecondLineY);
-			this->print(LcdScreen::buffer);
+			this->DisplayText(LcdScreen::buffer, 0, this->SecondLineY);
 			pos = strlen(LcdScreen::buffer);
 		}
 
+		if (inChoiceValue != LcdScreen::NoMsg)
+			this->DisplayChar('>', pos, this->SecondLineY);
+
 		this->GetString(LcdScreen::YesMsg);
-		if (inChoiceValue != LcdScreen::NoMsg)
-		{
-			this->setCursor(pos, this->SecondLineY);
-			this->write('>');
-		}
-
-		this->setCursor(pos + 1, this->SecondLineY);
-		this->print(LcdScreen::buffer);
+		this->DisplayText(LcdScreen::buffer, pos + 1, this->SecondLineY);
 
 		if (inChoiceValue != LcdScreen::NoMsg)
-		{
-			this->setCursor(pos + 1 + strlen(LcdScreen::buffer), this->SecondLineY);
-			this->write('<');
-		}
+			this->DisplayChar('<', pos + 1 + strlen(LcdScreen::buffer), this->SecondLineY);
 
 		pos = pos + 1 + strlen(LcdScreen::buffer) + 1;
 
@@ -220,19 +189,12 @@ public:
 
 		pos++;
 		if (inChoiceValue == LcdScreen::NoMsg)
-		{
-			this->setCursor(pos, this->SecondLineY);
-			this->write('>');
-		}
+			this->DisplayChar('>', pos, this->SecondLineY);
 
-		this->setCursor(pos + 1, this->SecondLineY);
-		this->print(LcdScreen::buffer);
+		this->DisplayText(LcdScreen::buffer, pos + 1, this->SecondLineY);
 
 		if (inChoiceValue == LcdScreen::NoMsg)
-		{
-			this->setCursor(pos + 1 + strlen(LcdScreen::buffer), this->SecondLineY);
-			this->write('<');
-		}
+			this->DisplayChar('<', pos + 1 + strlen(LcdScreen::buffer), this->SecondLineY);
 	}
 };
 

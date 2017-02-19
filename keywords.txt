@@ -20,6 +20,7 @@ WindowYesNo				KEYWORD1
 Screen					KEYWORD1
 ScreenLiquid			KEYWORD1
 ScreenLiquidNew			KEYWORD1
+ScreenNokia5110			KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
