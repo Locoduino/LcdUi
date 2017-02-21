@@ -7,9 +7,9 @@ description: <Class for a confirm dialog in interrupt context>
 #include "LcdUi.h"
 #include "WindowInterruptConfirm.hpp"
 
-void WindowInterruptConfirm::begin(byte inFirstLine, byte inSecondLine)
+void WindowInterruptConfirm::begin(byte inFirstLine, byte inSecondLine, byte inEventType)
 { 
-	Window::begin(inFirstLine);
+	WindowInterrupt::begin(inFirstLine, inSecondLine, inEventType);
 
 #ifdef LCDUI_DEBUG_MODE
 	if (LcdScreen::YesMsg == -1)

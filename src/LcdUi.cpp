@@ -107,7 +107,7 @@ void LcdUi::MoveToNextUIWindow()
 
 	if (this->GetType() == WINDOWTYPE_CHOICE)
 	{
-		// Move to the next window of the same choice index.
+		// Move to the next window according to the choice made.
 		byte selectedChoice = ((WindowChoice *)this->pCurrentWindow)->GetSelectedChoiceId();
 		Window *pCurr = this->pCurrentWindow->GetNextWindow();
 		while (pCurr != NULL)
@@ -135,7 +135,7 @@ void LcdUi::MoveToNextUIWindow()
 	{
 		byte actualChoice = this->pCurrentWindow->GetFatherChoiceValue();
 
-		if (actualChoice == 255)
+		//if (actualChoice == 255)
 		{
 			// Simply move to the next window
 			Window *pCurr = this->pCurrentWindow->GetNextWindow();
@@ -147,10 +147,21 @@ void LcdUi::MoveToNextUIWindow()
 						if (pCurr->GetType() == WINDOWTYPE_INTERRUPT)
 							continue;
 						byte choice = pCurr->GetFatherChoiceValue();
-						if (choice == 255 || choice == actualChoice)
+						if (actualChoice != 255)
 						{
-							pNext = pCurr;
-							break;
+							if (choice == actualChoice)
+							{
+								pNext = pCurr;
+								break;
+							}
+						}
+						else
+						{
+							if (choice == 255)
+							{
+								pNext = pCurr;
+								break;
+							}
 						}
 					}
 				pCurr = pCurr->GetNextWindow();
@@ -265,13 +276,13 @@ bool LcdUi::loop(byte inEvent)
 		if (this->GetState() == STATE_POSTCONFIRMED)
 		{
 #ifdef LCDUI_DEBUG_MODE
-			Serial.println(F("Interrupted"));
+			Serial.println(F("Interrup confirmed"));
 #endif
-			if (this->pWindowInterrupt != NULL && this->GetType() == WINDOWTYPE_CONFIRM)
+			/*if (this->pWindowInterrupt != NULL && this->GetType() == WINDOWTYPE_INTERRUPTCONFIRM)
 			{
 				Window *prev = this->pCurrentWindow->GetFatherWindow();
 				this->MoveToWindow(prev);
-			}
+			}*/
 			InterruptEnd();
 		}
 		else
@@ -313,7 +324,7 @@ byte LcdUi::InterruptByEvent(byte inEventType)
 	while (pCurr != NULL)
 	{
 		if (pCurr->IsActive())
-			if (pCurr->GetType() == WINDOWTYPE_INTERRUPT)
+			if (pCurr->GetType() == WINDOWTYPE_INTERRUPT || pCurr->GetType() == WINDOWTYPE_INTERRUPTCONFIRM)
 				if (((WindowInterrupt *)pCurr)->GetEventType() == inEventType)
 				{
 					Interrupt(pCurr);

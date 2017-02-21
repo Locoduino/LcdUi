@@ -14,10 +14,10 @@ private:
 
 public:
 	inline WindowInterruptConfirm() { this->answer = 0; }
-	inline WindowInterruptConfirm(byte inFirstLine, byte inSecondLine) { this->begin(inFirstLine, inSecondLine); }
+	inline WindowInterruptConfirm(byte inFirstLine, byte inSecondLine, byte inEventType = 255) { this->begin(inFirstLine, inSecondLine, inEventType); }
 
-	void begin(byte inFirstLine, byte inSecondLine);
-	inline byte GetType() const { return WINDOWTYPE_CONFIRM; }
+	void begin(byte inFirstLine, byte inSecondLine, byte inEventType = 255);
+	inline byte GetType() const { return WINDOWTYPE_INTERRUPTCONFIRM; }
 	inline byte GetValue() const { return this->answer; }
 	inline void SetValue(byte inAnswer) { this->answer = inAnswer; }
 

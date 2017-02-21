@@ -13,6 +13,7 @@ ButtonsCommanderKeyboard pushSelect;
 ButtonsCommanderKeyboard pushMore;
 ButtonsCommanderKeyboard pushLess;
 ButtonsCommanderKeyboard pushCancel;
+ButtonsCommanderKeyboard pushEmergency;
 #else
 ButtonsCommanderAnalogPushes pushes;
 #endif
@@ -28,6 +29,7 @@ void setup()
 	pushMore.begin(EVENT_MORE, '+');
 	pushLess.begin(EVENT_LESS, '-');
 	pushCancel.begin(EVENT_CANCEL, '/');
+	pushEmergency.begin(EVENT_EMERGENCY, '0');
 #else
 	// Buttons on a 'LCD Keypad shield', handled in analog way.
 	int values[] = { 0, 145, 329, 505, 741 };
@@ -38,7 +40,7 @@ void setup()
 	pushes.begin(A0, 5, ids, values, 50);
 #endif
 
-	//Commanders::printCommanders();
+	Commanders::printCommanders();
 	setupUI();
 }
 
