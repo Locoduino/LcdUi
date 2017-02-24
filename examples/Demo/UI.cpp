@@ -4,11 +4,13 @@ author: <Thierry PARIS>
 description: <LCD UI demo>
 *************************************************************/
 
-#include <NewLiquidCrystal_I2C.h>
+//#include <NewLiquidCrystal_I2C.h>
 //#include <NewLiquidCrystal.h>
+#include <LiquidCrystal.h>
 #include "Commanders.h"
 #include "LcdUi.h"
-#include "ScreenLiquidNew.hpp"
+//#include "ScreenLiquidNew.hpp"
+#include "ScreenLiquid.hpp"
 #include "WindowLocoControl.hpp"
 #include "UI.hpp"
 
@@ -104,12 +106,12 @@ public:
 /////////////////
 
 // Main object and its screen
-//LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // Set the LCD I2C address
-NewLiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // Set the LCD I2C address
-//LiquidCrystal lcd(0, 4, 5, 6, 7, 3);
+//NewLiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // Set the LCD I2C address
 //NewLiquidCrystal lcd(8, 9, 4, 5, 6, 7);
+LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 LcdUi lcdui;
-ScreenLiquidNew screen;
+//ScreenLiquidNew screen;
+ScreenLiquid screen;
 
 // Local values the UI must be able to update...
 bool backlight;

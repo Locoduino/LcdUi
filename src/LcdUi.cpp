@@ -95,10 +95,27 @@ Window *LcdUi::AddWindow(Window *inpWindow)
 		pCurr->SetNextWindow(inpWindow);
 	}
 
-	if (this->pCurrentWindow == NULL && inpWindow->GetType() != WINDOWTYPE_INTERRUPT)
+	if (this->pCurrentWindow == NULL && inpWindow->GetType() != WINDOWTYPE_INTERRUPT && inpWindow->GetType() != WINDOWTYPE_INTERRUPTCONFIRM)
 		this->MoveToWindow(inpWindow);
 
 	return inpWindow;
+}
+
+Window *LcdUi::GetNextWindowWithFather(Window *inpStart, Window *inpFatherTofind, byte inChoiceToFind)
+{
+	Window *pCurr = inpStart->GetNextWindow();
+
+	while (pCurr != NULL)
+	{
+		if (pCurr->GetType() != WINDOWTYPE_INTERRUPT && pCurr->GetType() != WINDOWTYPE_INTERRUPTCONFIRM)
+			if (pCurr->IsActive())
+				if (pCurr->GetFatherWindow() == inpFatherTofind)
+					if (inChoiceToFind == 255 || inChoiceToFind == pCurr->GetFatherChoiceValue())
+						return pCurr;
+		pCurr = pCurr->GetNextWindow();
+	}
+
+	return NULL;
 }
 
 void LcdUi::MoveToNextUIWindow()
@@ -109,70 +126,37 @@ void LcdUi::MoveToNextUIWindow()
 	{
 		// Move to the next window according to the choice made.
 		byte selectedChoice = ((WindowChoice *)this->pCurrentWindow)->GetSelectedChoiceId();
-		Window *pCurr = this->pCurrentWindow->GetNextWindow();
-		while (pCurr != NULL)
-		{
-			if (pCurr->IsActive())
-				if (pCurr->GetFatherWindow() == this->pCurrentWindow)
-				{
-					byte choice = pCurr->GetFatherChoiceValue();
-					if (choice == 255 || choice == selectedChoice)
-					{
-						pNext = pCurr;
-						break;
-					}
-				}
-			pCurr = pCurr->GetNextWindow();
-		}
-
-#ifdef LCDUI_DEBUG_MODE
-		if (pNext == NULL)
-			Serial.println(F("Window first child not found !"));
-#endif
+		pNext = this->GetNextWindowWithFather(this->pCurrentWindow, this->pCurrentWindow, selectedChoice);
 	}
 
 	if (pNext == NULL)
 	{
 		byte actualChoice = this->pCurrentWindow->GetFatherChoiceValue();
 
-		//if (actualChoice == 255)
-		{
-			// Simply move to the next window
-			Window *pCurr = this->pCurrentWindow->GetNextWindow();
-			while (pCurr != NULL)
+		// Look for the next window with the same level
+		pNext = this->GetNextWindowWithFather(this->pCurrentWindow, this->pCurrentWindow->GetFatherWindow(), actualChoice);
+
+		// if not found
+		if (pNext == NULL)
+			// if not choice window
+			if (actualChoice == 255)
 			{
-				if (pCurr->IsActive())
-					if (pCurr->GetFatherWindow() == this->pCurrentWindow->GetFatherWindow())
-					{
-						if (pCurr->GetType() == WINDOWTYPE_INTERRUPT)
-							continue;
-						byte choice = pCurr->GetFatherChoiceValue();
-						if (actualChoice != 255)
-						{
-							if (choice == actualChoice)
-							{
-								pNext = pCurr;
-								break;
-							}
-						}
-						else
-						{
-							if (choice == 255)
-							{
-								pNext = pCurr;
-								break;
-							}
-						}
-					}
-				pCurr = pCurr->GetNextWindow();
+				// If no father, return to this window
+				if (this->pCurrentWindow->GetFatherWindow() != NULL)
+					pNext = this->pCurrentWindow->GetFatherWindow();
+				else
+					// Otherwise go to the previous window of the same level.
+					pNext = this->GetPreviousWindow(this->pCurrentWindow);
 			}
+			else
+				// if choice window without next window, return to the father.
+				pNext = this->pCurrentWindow->GetFatherWindow();
+	}
 
 #ifdef LCDUI_DEBUG_MODE
-			if (pNext == NULL)
-				Serial.println(F("Window next child not found !"));
+	if (pNext == NULL)
+		Serial.println(F("Window next child not found !"));
 #endif
-		}
-	}
 
 	if (pNext != NULL)
 	{
@@ -219,7 +203,7 @@ void LcdUi::MoveToPrevUIWindow()
 			if (pCurr->IsActive())
 				if (pCurr->GetFatherWindow() == this->pCurrentWindow->GetFatherWindow())
 				{
-					if (pCurr->GetType() == WINDOWTYPE_INTERRUPT)
+					if (pCurr->GetType() == WINDOWTYPE_INTERRUPT || pCurr->GetType() == WINDOWTYPE_INTERRUPTCONFIRM)
 						continue;
 					pPrev = pCurr;
 					break;
@@ -278,11 +262,6 @@ bool LcdUi::loop(byte inEvent)
 #ifdef LCDUI_DEBUG_MODE
 			Serial.println(F("Interrup confirmed"));
 #endif
-			/*if (this->pWindowInterrupt != NULL && this->GetType() == WINDOWTYPE_INTERRUPTCONFIRM)
-			{
-				Window *prev = this->pCurrentWindow->GetFatherWindow();
-				this->MoveToWindow(prev);
-			}*/
 			InterruptEnd();
 		}
 		else

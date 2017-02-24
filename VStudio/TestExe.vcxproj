@@ -157,7 +157,6 @@
     <ClCompile Include="..\..\Commanders\src\I2CCommander.cpp" />
     <ClCompile Include="..\..\Commanders\src\TextInterpreter.cpp" />
     <ClCompile Include="..\..\Commanders\VStudio\ButtonsCommanderKeyboard.cpp" />
-    <ClCompile Include="..\examples\Locoduino\Sample\UI.cpp" />
     <ClCompile Include="..\src\LcdUi.cpp" />
     <ClCompile Include="..\src\LcdScreen.cpp" />
     <ClCompile Include="..\src\Window.cpp" />

@@ -118,6 +118,7 @@ private:
 	Window *pWindowInterrupt;
 	
 	// Functions used by interactive mode to evoluate in the UI
+	Window *GetNextWindowWithFather(Window *inpCurr, Window *inpFatherTofind, byte inChoiceToFind = 255);
 	void MoveToNextUIWindow();
 	void MoveToPrevUIWindow();
 
