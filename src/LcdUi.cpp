@@ -257,21 +257,14 @@ bool LcdUi::loop(byte inEvent)
 	if (this->pWindowInterrupt != NULL)
 	{
 		this->pWindowInterrupt->Event(inEvent, this);
-		if (this->GetState() == STATE_POSTCONFIRMED)
+
+		switch (this->GetState())
 		{
-#ifdef LCDUI_DEBUG_MODE
-			Serial.println(F("Interrup confirmed"));
-#endif
+		case STATE_POSTCONFIRMED:
+		case STATE_ABORTED:
 			InterruptEnd();
+			break;
 		}
-		else
-			if (inEvent == EVENT_CANCEL || this->GetState() == STATE_ABORTED)
-			{
-				InterruptEnd();
-#ifdef LCDUI_DEBUG_MODE
-				Serial.println(F("Interrupt aborted"));
-#endif
-			}
 		return true;
 	}
 

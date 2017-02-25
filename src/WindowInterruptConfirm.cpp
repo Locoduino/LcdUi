@@ -50,9 +50,16 @@ void WindowInterruptConfirm::Event(byte inEventType, LcdUi *inpLcd)
 		showValue = true;
 		break;
 	case EVENT_SELECT:
+#ifdef LCDUI_DEBUG_MODE
+		Serial.print(F("Interrup confirmed : "));
+		Serial.println(this->answer == LcdScreen::YesMsg ? "Yes" : "No");
+#endif
 		this->state = STATE_CONFIRMED;
 		break;
 	case EVENT_CANCEL:
+#ifdef LCDUI_DEBUG_MODE
+		Serial.println(F("Interrup aborted"));
+#endif
 		this->state = STATE_ABORTED;
 		break;
 	}

@@ -17,7 +17,6 @@ void Window::printState(byte inState, const __FlashStringHelper *inFunc)
 	case STATE_NONE:	Serial.println(F("STATE_NONE"));	break;
 	case STATE_START:	Serial.println(F("STATE_START"));	break;
 	case STATE_INITIALIZE:	Serial.println(F("STATE_INITIALIZE"));	break;
-	case STATE_LOOP:	Serial.println(F("STATE_LOOP"));	break;
 	case STATE_ABORTED:	Serial.println(F("STATE_ABORTED"));	break;
 	case STATE_CONFIRMED:	Serial.println(F("STATE_CONFIRMED"));	break;
 	case STATE_POSTCONFIRMED:	Serial.println(F("STATE_POSTCONFIRMED"));		break;

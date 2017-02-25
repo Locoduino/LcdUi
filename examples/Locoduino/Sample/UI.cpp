@@ -102,8 +102,8 @@ void setupUI()
 	lcdui.AddWindow(&winOption2);
 	lcdui.AddWindow(&winOption3);
 	lcdui.AddWindow(&winConfirme);
-	lcdui.AddWindow(&winInterrupt);
-	//lcdui.AddWindow(&winInterruptConfirm);
+	//lcdui.AddWindow(&winInterrupt);
+	lcdui.AddWindow(&winInterruptConfirm);
 
 	winChoix.AddChoice(STR_OPTION1);
 		winOption1.SetFather(&winChoix, STR_OPTION1);
@@ -140,10 +140,23 @@ void loopUI(unsigned long inEvent)
 				Serial.print("Option2: ");
 				Serial.println(option2);
 				break;
+			case STR_INT1:
+				Serial.println("Interrupt finished: ");
+				break;
 /*			case STR_INT1:
 				Serial.print("Interrupt finished: ");
 				Serial.println(((WindowInterruptConfirm*)pCurrent)->GetValue() == STR_OUI ? "Yes":"No");
 				break;*/
+			}
+		}
+
+		if (lcdui.GetState() == STATE_INITIALIZE)
+		{
+			switch (pCurrent->GetWindowId())
+			{
+			case STR_INT1:
+				Serial.println("Interrupt started: ");
+				break;
 			}
 		}
 	}

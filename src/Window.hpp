@@ -20,22 +20,19 @@
 /*
 Steps of the life :
 
-	STATE_START		Show first line
-	STATE_POSTSTART	initialize value if necessary
+	STATE_START			Show first line
+	STATE_INITIALIZE	initialize value if necessary
 
-	STATE_LOOP		Waiting for events
+	Escape :	STATE_ABORTED		Return to previous window.
 
-		Escape :	STATE_ABORTED		Return to previous window.
-
-		Confirm :	STATE_CONFIRMED		Get new value and use it
-					STATE_POSTCONFIRMED	Go to the next window
+	Confirm :	STATE_CONFIRMED		Get new value and use it
+				STATE_POSTCONFIRMED	Go to the next window
 
 */
 
 #define STATE_NONE				0
 #define STATE_START				1
 #define STATE_INITIALIZE		2
-#define STATE_LOOP				3
 #define STATE_ABORTED			4
 #define STATE_CONFIRMED			5
 #define STATE_POSTCONFIRMED		6
