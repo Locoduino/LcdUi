@@ -48,6 +48,7 @@ SetMaxTextValueLength	KEYWORD2
 GetMinIntValue			KEYWORD2
 GetMaxIntValue			KEYWORD2
 GetMaxTextValueLength	KEYWORD2
+SetValueAddress			KEYWORD2
 
 printEvent				KEYWORD2
 printWindows			KEYWORD2
