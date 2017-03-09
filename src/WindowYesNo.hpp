@@ -26,6 +26,7 @@ public:
 	inline WindowYesNo(byte inFirstLine, bool *inpValue) { this->begin(inFirstLine, inpValue); }
 
 	void begin(byte inFirstLine, bool *inpValue);
+	inline void SetValueAddress(bool *inpValue) { this->pValue = inpValue; }
 	inline byte GetType() const { return WINDOWTYPE_YESNO; }
 
 	void Event(byte inEventType, LcdUi *inpLcd);

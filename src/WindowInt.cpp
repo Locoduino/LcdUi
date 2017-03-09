@@ -9,7 +9,7 @@ description: <Class for an integer input screen>
 
 void WindowInt::begin(byte inFirstLine, int *inpValue, int inMinIntValue, int inMaxIntValue)
 {
-	Window::begin(inFirstLine);
+	this->Window::begin(inFirstLine);
 
 #ifdef LCDUI_DEBUG_MODE
 	if (inMinIntValue >= inMaxIntValue)

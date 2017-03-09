@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////
 // Add a '//' at the beginning of the line to be in 
 // release mode.
-#define LCDUI_DEBUG_MODE
+//#define LCDUI_DEBUG_MODE
 
 ///////////////////////////////////////////////////////
 // Verbose mode lets you see all actions done by the 
@@ -26,6 +26,7 @@
 #include "string.h"
 #define STRNCPY(out, len ,in)	strcpy_s(out, len, in)
 #define STRCPY(out, in)			strcpy_s(out, in)
+#define LCDUI_DEBUG_MODE
 #define LCDUI_PRINT_WINDOWS
 #else
 #define STRNCPY(out, len ,in)	strcpy(out, in)
@@ -157,7 +158,10 @@ public:
 	static void printEvent(byte inEvent, const __FlashStringHelper *inFunc);
 #endif
 #ifdef LCDUI_PRINT_WINDOWS
+	#define PRINT_WINDOWS()		LcdUi::printWindows();
 	void printWindows();
+#else
+	#define PRINT_WINDOWS()
 #endif
 };
 #endif

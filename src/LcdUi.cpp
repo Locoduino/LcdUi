@@ -5,6 +5,7 @@ description: <Base functions of the library>
 *************************************************************/
 
 #include "LcdUi.h"
+#include "../VStudio/LcdUi.hpp"
 
 #ifndef VISUALSTUDIO
 #include "arduino.h"
@@ -138,6 +139,7 @@ void LcdUi::MoveToNextUIWindow()
 
 		// if not found
 		if (pNext == NULL)
+		{
 			// if not choice window
 			if (actualChoice == 255)
 			{
@@ -151,6 +153,7 @@ void LcdUi::MoveToNextUIWindow()
 			else
 				// if choice window without next window, return to the father.
 				pNext = this->pCurrentWindow->GetFatherWindow();
+		}
 	}
 
 #ifdef LCDUI_DEBUG_MODE
@@ -325,8 +328,11 @@ void LcdUi::Interrupt(Window *inpWindow)
 void LcdUi::InterruptEnd()
 {
 	this->pWindowInterrupt = NULL;
-	this->SetState(STATE_START);
-	this->pCurrentWindow->Event(EVENT_NONE, this);
+	if (this->pCurrentWindow != NULL)
+	{
+		this->SetState(STATE_START);
+		this->pCurrentWindow->Event(EVENT_NONE, this);
+	}
 }
 
 bool LcdUi::IsValueModified(byte inWindowId)

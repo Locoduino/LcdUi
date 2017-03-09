@@ -29,3 +29,6 @@ VStudio/*.db
 VStudio/x64
 VStudio/*.user
 VStudio/*.filters
+VStudio/Project/x64
+*.filters
+*.user

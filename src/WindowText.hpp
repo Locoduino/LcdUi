@@ -35,6 +35,7 @@ public:
 	inline WindowText(byte inFirstLine, char *inpValue, byte inMaxLengthValue = WINDOW_MAXTEXTVALUESIZE) { this->begin(inFirstLine, inpValue, inMaxLengthValue); }
 
 	void begin(byte inFirstLine, char *inpValue, byte inMaxLengthValue = WINDOW_MAXTEXTVALUESIZE);
+	inline void SetValueAddress(char *inpValue) { this->pTextValue = inpValue; }
 	inline byte GetType() const { return WINDOWTYPE_TEXT; }
 	inline byte GetMaxTextValueLength() const { return this->maxTextValueLength; }
 	inline void SetMaxTextValueLength(byte inLength) { this->maxTextValueLength = inLength; }

@@ -95,7 +95,7 @@ byte LcdScreen::BuildStringLeft(const char *inString, byte inSizeMax, char *outS
 	memcpy(outString, inString, inSizeMax);
 	outString[inSizeMax] = 0;
 
-	int len = strlen(outString);
+	int len = (int)strlen(outString);
 	if (len > inSizeMax)
 		len = inSizeMax;
 

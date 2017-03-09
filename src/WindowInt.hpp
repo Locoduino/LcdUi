@@ -30,6 +30,7 @@ public:
 	inline WindowInt(byte inFirstLine, int *inpValue, int inMinIntValue = 0, int inMaxIntValue = 32767) { this->begin(inFirstLine, inpValue, inMinIntValue, inMaxIntValue); }
 
 	void begin(byte inFirstLine, int *inpValue, int inMinIntValue = 0, int inMaxIntValue = 32767);
+	inline void SetValueAddress(int *inpValue) { this->pValue = inpValue; }
 	inline byte GetType() const { return WINDOWTYPE_INT; }
 	inline int GetMinIntValue() const { return this->minIntValue; }
 	inline int GetMaxIntValue() const { return this->maxIntValue; }

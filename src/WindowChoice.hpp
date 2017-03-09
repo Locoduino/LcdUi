@@ -46,6 +46,7 @@ public:
 	inline byte GetSelectedChoiceEscapeWindowId() { return this->pSelectedChoice->escapeWindowId; }
 	inline byte GetCurrentConfiguration() const { return this->currentConfiguration; }
 	inline void SetCurrentConfiguration(byte inNewConfiguration) { this->currentConfiguration = inNewConfiguration; }
+	void SetCurrentChoiceById(byte inId);
 
 	void MoveNextChoice();
 	void MovePreviousChoice();

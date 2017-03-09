@@ -63,14 +63,14 @@ void WindowLocoControl::Event(byte inEventType, LcdUi *inpLcd)
 	{
 		case EVENT_MORE:
 			{
-#ifdef DEBUG_MODE
+#ifdef DDC_DEBUG_MODE
 			Serial.print(F("MORE "));
 #endif
 			unsigned int newValue = this->Speed + inc;
 			if (newValue > this->SpeedMax)
 				newValue = this->SpeedMax;
 			this->Speed = newValue;
-#ifdef DEBUG_MODE
+#ifdef DDC_DEBUG_MODE
 			Serial.println(newValue);
 #endif
 			}
@@ -79,14 +79,14 @@ void WindowLocoControl::Event(byte inEventType, LcdUi *inpLcd)
 
 		case EVENT_LESS:
 			{
-#ifdef DEBUG_MODE
+#ifdef DDC_DEBUG_MODE
 			Serial.print(F("LESS "));
 #endif
 			int newValue = this->Speed - inc;
 			if (newValue < 0)
 				newValue = 0;
 			this->Speed = newValue;
-#ifdef DEBUG_MODE
+#ifdef DDC_DEBUG_MODE
 			Serial.println(newValue);
 #endif
 			}
@@ -94,14 +94,14 @@ void WindowLocoControl::Event(byte inEventType, LcdUi *inpLcd)
 			break;
 
 		case EVENT_SELECT:
-#ifdef DEBUG_MODE
+#ifdef DDC_DEBUG_MODE
 			Serial.println(F("SELECT"));
 #endif
 			this->Direction = !this->Direction;
 			showValue = true;
 			break;
 		case EVENT_CANCEL:
-#ifdef DEBUG_MODE
+#ifdef DDC_DEBUG_MODE
 			Serial.println(F("CANCEL"));
 #endif
 			this->state = STATE_ABORTED;

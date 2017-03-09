@@ -45,6 +45,26 @@ void WindowChoice::MovePreviousChoice()
 	*(this->pSelectedChoice) = *(this->Choices.pCurrentItem->Obj);
 }
 
+void WindowChoice::SetCurrentChoiceById(byte inId)
+{
+	LCDUICHAINEDLISTITEM<Choice> *pCurr = this->Choices.pFirst;
+
+	// Find index of current item.
+	while (pCurr != NULL)
+	{
+		if (pCurr->Obj->id == inId)
+		{
+			*(this->pSelectedChoice) = *(pCurr->Obj);
+			return;
+		}
+		pCurr = pCurr->pNext;
+	}
+
+#ifdef LCDUI_DEBUG_MODE
+	Serial.println("Choice selection impossible !");
+#endif
+}
+
 void WindowChoice::Event(byte inEventType, LcdUi *inpLcd)
 {
 	bool showValue = false;
