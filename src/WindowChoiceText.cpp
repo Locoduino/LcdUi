@@ -51,6 +51,7 @@ void WindowChoiceText::Event(byte inEventType, LcdUi *inpLcd)
 
 	if (this->state == STATE_START)
 	{
+		pScreen->clear();
 		pScreen->DisplayText(this->GetFirstLine(), 0, 0);
 
 		this->state = STATE_INITIALIZE;
@@ -77,9 +78,10 @@ void WindowChoiceText::Event(byte inEventType, LcdUi *inpLcd)
 	if (showValue)
 	{
 		if (*this->pValue > pScreen->FirstChoiceShown + pScreen->GetSizeY() - 2)
-			pScreen->FirstChoiceShown++;
+			pScreen->FirstChoiceShown = *this->pValue - pScreen->GetSizeY() + 2;
 		if (*this->pValue < pScreen->FirstChoiceShown)
-			pScreen->FirstChoiceShown = 0;
+			pScreen->FirstChoiceShown = *this->pValue;
+
 		for (byte i = 0; i < this->GetChoiceTextNumber(); i++)
 			pScreen->DisplayChoice(this->GetChoiceTextValue(i), i, i == *this->pValue);
 	}

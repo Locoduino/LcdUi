@@ -30,7 +30,7 @@ void WindowText::Event(byte inEventType, LcdUi *inpLcd)
 	if (this->state == STATE_INITIALIZE)
 	{
 		this->state = STATE_NONE;
-		this->currentCharEdited = strlen(this->pTextValue);
+		this->currentCharEdited = (byte) strlen(this->pTextValue);
 		showValue = true;
 	}
 

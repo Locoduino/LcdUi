@@ -137,7 +137,7 @@ char *LcdScreen::GetChoiceString(int inString)
 #else
 	strcpy_P(buffer+1, (char*)pgm_read_word(&this->pStringTable[inString]));
 #endif
-	int len = strlen(buffer);
+	int len = (int) strlen(buffer);
 	buffer[len] = '<';
 	buffer[len+1] = 0;
 

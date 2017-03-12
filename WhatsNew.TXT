@@ -1,6 +1,7 @@
-09/03/2017 V0.91
+12/03/2017 V0.91
 	- Ajout des SetValueAddress()
 	- Ajout de SetCurrentChoiceById()
+	- Correction de WindowChoiceText.
 
 24/02/2017 V0.90
 	- Nouvelles fonctions d'affichage typée 'F' pour argument en __FlashStringHelper *

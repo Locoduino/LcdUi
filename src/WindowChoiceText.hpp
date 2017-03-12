@@ -33,6 +33,7 @@ public:
 	inline WindowChoiceText(byte inFirstLine, byte *inpValue) { this->begin(inFirstLine, inpValue);	}
 
 	void begin(byte inFirstLine, byte *inpValue);
+	inline void SetValueAddress(byte *inpValue) { this->pValue = inpValue; }
 	inline byte GetType() const { return WINDOWTYPE_CHOICETEXT; }
 	inline unsigned int GetChoiceIntValue() const { return *(this->pValue); }
 	inline char *GetChoiceTextValue() const { return this->currentValueText; }

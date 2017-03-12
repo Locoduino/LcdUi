@@ -1,4 +1,4 @@
-Start debug 09/03/2017 11:05:54,67 
+Start debug 12/03/2017 16:19:44,50 
 .............................................................
 Compiling D:\Mes documents\Trusty\Arduino\Libraries\LcdUi\examples\Demo\Demo.ino
 Chargement de la configuration
@@ -16,7 +16,7 @@ sketch\WindowLocoControl.cpp:39:37: warning: deprecated conversion from string c
 sketch\WindowLocoControl.cpp:47:35: warning: deprecated conversion from string constant to 'char*' [-Wwrite-strings]
     pScreen->DisplayText("Dc", 0, 0);
                                    ^
-Le croquis utilise 16010 octets (49%) de l'espace de stockage de programmes. Le maximum est de 32256 octets.
+Le croquis utilise 16034 octets (49%) de l'espace de stockage de programmes. Le maximum est de 32256 octets.
 Les variables globales utilisent 1140 octets (55%) de mémoire dynamique, ce qui laisse 908 octets pour les variables locales. Le maximum est de 2048 octets.
 .............................................................
 Compiling D:\Mes documents\Trusty\Arduino\Libraries\LcdUi\examples\Locoduino\Sample\Sample.ino
