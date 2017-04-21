@@ -14,7 +14,7 @@ void WindowChoice::begin(byte inFirstLine, Choice *inpSelectedChoice)
 	this->pSelectedChoice = inpSelectedChoice;
 }
 
-byte WindowChoice::AddChoice(byte inStringNumber, byte inIndex, byte inInterruptIdOnEscape)
+byte WindowChoice::AddChoice(byte inStringNumber, Window *apChildWindow, byte inIndex, byte inInterruptIdOnEscape)
 {
 	Choice *pChoice = new Choice();
 	pChoice->id = inStringNumber;
@@ -27,6 +27,9 @@ byte WindowChoice::AddChoice(byte inStringNumber, byte inIndex, byte inInterrupt
 
 	if (this->Choices.GetCount() == 1)
 		*(this->pSelectedChoice) = *pChoice;
+
+	if (apChildWindow != NULL)
+		apChildWindow->SetFather(this, inStringNumber);
 
 	return inStringNumber;
 }
@@ -55,6 +58,7 @@ void WindowChoice::SetCurrentChoiceById(byte inId)
 		if (pCurr->Obj->id == inId)
 		{
 			*(this->pSelectedChoice) = *(pCurr->Obj);
+			this->Choices.pCurrentItem = pCurr;
 			return;
 		}
 		pCurr = pCurr->pNext;
@@ -67,6 +71,11 @@ void WindowChoice::SetCurrentChoiceById(byte inId)
 
 void WindowChoice::Event(byte inEventType, LcdUi *inpLcd)
 {
+#ifdef LCDUI_DEBUG_MODE
+	if (this->Choices.pFirst == NULL)
+		Serial.println("At least one choice must be defined with AddChoice() !");
+#endif
+
 	bool showValue = false;
 	LcdScreen *pScreen = inpLcd->GetScreen();
 

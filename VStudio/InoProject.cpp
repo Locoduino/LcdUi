@@ -4,8 +4,11 @@
 /*#include "../examples/Demo/UI.cpp"
 #include "../examples/Demo/WindowLocoControl.cpp"
 #include "../examples/Demo/Demo.ino"*/
-#include "../examples/Locoduino/Sample/UI.cpp"
-#include "../examples/Locoduino/Sample/Sample.ino"
+/*#include "../examples/Locoduino/Sample/UI.cpp"
+#include "../examples/Locoduino/Sample/Sample.ino"*/
+#include "../examples/Locoduino/Dcc/UI.cpp"
+#include "../examples/Locoduino/Dcc/WindowLocoControl.cpp"
+#include "../examples/Locoduino/Dcc/Dcc.ino"
 
 //#include "TestExe.ino"
 

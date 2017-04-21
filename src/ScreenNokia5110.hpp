@@ -3,9 +3,13 @@
 #define __screenNokia_H__
 //-------------------------------------------------------------------
 
+#ifndef _ADAFRUIT_PCD8544_H
+#error To be able to compile this screen, the 'Adafruit PCD8544' library must be installed.
+#endif
+
 #include "LcdScreen.hpp"
 
-#ifndef VISUALSTUDIO
+#ifndef _LCDVS_H_
 #include "../../Adafruit_GFX_Library/Adafruit_GFX.h"
 #include "../../Adafruit_PCD8544/Adafruit_PCD8544.h"
 #endif
@@ -109,17 +113,18 @@ public:
 	void DisplayText(char *inText, byte inX, byte inY)
 	{
 		this->setCursor(inX, inY);
+		inText[this->sizex - inX] = 0;
 		this->print(inText);
 	}
 
 	void DisplayCenteredText(char *inText, byte inY, bool inChoosen)
 	{
 		this->clearLine(inY);
-		byte pos = (this->sizex / 2) - (strlen(inText) / 2) - 1;
+		byte pos = (this->sizex / 2) - ((byte)strlen(inText) / 2) - 1;
 
 		this->DisplayChar(inChoosen ? '>' : ' ', pos++, inY);
 		this->DisplayText((char *)inText, pos, inY);
-		pos += strlen(inText);
+		pos += (byte)strlen(inText);
 		this->DisplayChar(inChoosen ? '<' : ' ', pos, inY);
 	}
 
@@ -138,7 +143,7 @@ public:
 			// postfix with a number...
 			char index[10];
 			this->BuildString(inIndex + 1, index);
-			int len = strlen(LcdScreen::buffer);
+			int len = (int)strlen(LcdScreen::buffer);
 			for (unsigned int i = 0; i <= strlen(index); i++)
 				LcdScreen::buffer[len + i] = index[i];
 		}
@@ -164,13 +169,13 @@ public:
 		this->BuildString(inValue, LcdScreen::buffer);
 		this->DisplayCenteredText(LcdScreen::buffer, this->SecondLineY, true);
 	}
-	
+
 	void DisplayTextResult(const char *inTextValue, byte inLength, byte inEditedChar)
 	{
 		this->noCursor();
 		this->DisplayText((char *)inTextValue, 0, this->HeaderY);
 
-		for (int i = strlen(inTextValue); i < inLength && i < sizex; i++)
+		for (int i = (int)strlen(inTextValue); i < inLength && i < sizex; i++)
 			this->DisplayChar('_', i, this->HeaderY);
 	}
 
@@ -197,7 +202,7 @@ public:
 		this->cursor();
 	}
 
-	void DisplayYesNo(byte inChoiceValue, int inPrefixString = 0)
+	void DisplayYesNo(byte inChoiceValue, bool inOnlyYes, int inPrefixString = 0)
 	{
 		this->clearLine(this->SecondLineY);
 
@@ -206,30 +211,33 @@ public:
 		{
 			this->GetString(inPrefixString);
 			this->DisplayText(LcdScreen::buffer, 0, this->SecondLineY);
-			pos = strlen(LcdScreen::buffer);
+			pos = (byte)strlen(LcdScreen::buffer);
 		}
 
-		if (inChoiceValue != LcdScreen::NoMsg)
+		if (inOnlyYes || inChoiceValue != LcdScreen::NoMsg)
 			this->DisplayChar('>', pos, this->SecondLineY);
 
 		this->GetString(LcdScreen::YesMsg);
 		this->DisplayText(LcdScreen::buffer, pos + 1, this->SecondLineY);
 
-		if (inChoiceValue != LcdScreen::NoMsg)
-			this->DisplayChar('<', pos + 1 + strlen(LcdScreen::buffer), this->SecondLineY);
+		if (inOnlyYes || inChoiceValue != LcdScreen::NoMsg)
+			this->DisplayChar('<', pos + 1 + (byte)strlen(LcdScreen::buffer), this->SecondLineY);
 
-		pos = pos + 1 + strlen(LcdScreen::buffer) + 1;
+		if (!inOnlyYes)
+		{
+			pos = pos + 1 + (byte)strlen(LcdScreen::buffer) + 1;
 
-		this->GetString(LcdScreen::NoMsg);
+			this->GetString(LcdScreen::NoMsg);
 
-		pos++;
-		if (inChoiceValue == LcdScreen::NoMsg)
-			this->DisplayChar('>', pos, this->SecondLineY);
+			pos++;
+			if (inChoiceValue == LcdScreen::NoMsg)
+				this->DisplayChar('>', pos, this->SecondLineY);
 
-		this->DisplayText(LcdScreen::buffer, pos + 1, this->SecondLineY);
+			this->DisplayText(LcdScreen::buffer, pos + 1, this->SecondLineY);
 
-		if (inChoiceValue == LcdScreen::NoMsg)
-			this->DisplayChar('<', pos + 1 + strlen(LcdScreen::buffer), this->SecondLineY);
+			if (inChoiceValue == LcdScreen::NoMsg)
+				this->DisplayChar('<', pos + 1 + (byte)strlen(LcdScreen::buffer), this->SecondLineY);
+		}
 	}
 };
 

@@ -1,16 +1,13 @@
 /*************************************************************
-project: <Dc/Dcc Controler>
+project: <Dcc Controler>
 author: <Thierry PARIS>
 description: <Class for a loco control window>
 *************************************************************/
 
 #include "WindowLocoControl.hpp"
 
-WindowLocoControl::WindowLocoControl() : Window(-1)
+WindowLocoControl::WindowLocoControl()
 {
-	this->isDcc = true;
-	this->dcFrequency = 0;
-	this->dcFrequencyText = NULL;
 	this->Address = 3;
 	this->AddressSize = 3;
 	this->Speed = 0;
@@ -25,33 +22,15 @@ void WindowLocoControl::Event(byte inEventType, LcdUi *inpLcd)
 	bool showValue = false;
 	LcdScreen *pScreen = inpLcd->GetScreen();
 
-	if (this->state == STATE_INITIALIZE)
-	{
-		this->state = STATE_NONE;
-		showValue = true;
-	}
-
 	if (this->state == STATE_START)
 	{
 		pScreen->clear();
-		if (this->isDcc)
-		{
-			pScreen->DisplayText("Dcc ", 0, 0);
-			LcdScreen::BuildString(this->Address, LcdScreen::buffer, this->AddressSize);
-			pScreen->DisplayText(LcdScreen::buffer, 4, 0);
-			byte len = LcdScreen::BuildStringLeft(this->Name, inpLcd->GetScreen()->GetSizeX() - (2 + 1), LcdScreen::buffer);
-			pScreen->DisplayText(LcdScreen::buffer, pScreen->GetSizeX() - len, 0);
-		}
-		else
-		{
-			pScreen->DisplayText("Dc", 0, 0);
-			if (this->dcFrequencyText != NULL)
-			{
-				byte len = LcdScreen::BuildStringLeft(this->dcFrequencyText, inpLcd->GetScreen()->GetSizeX() - (2 + 1), LcdScreen::buffer);
-				pScreen->DisplayText(LcdScreen::buffer, pScreen->GetSizeX() - len, 0);
-			}
-		}
-		this->state = STATE_INITIALIZE;
+		LcdScreen::BuildString(this->Address, LcdScreen::buffer, this->AddressSize);
+		pScreen->DisplayText(LcdScreen::buffer, 0, 0);
+		byte len = LcdScreen::BuildString(this->Name, inpLcd->GetScreen()->GetSizeX() - (this->AddressSize + 1), LcdScreen::buffer);
+		pScreen->DisplayText(LcdScreen::buffer, pScreen->GetSizeX() - len, 0);
+		this->state = STATE_NONE;
+		showValue = true;
 	}
 
 	byte inc = 1;

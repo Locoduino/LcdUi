@@ -5,21 +5,18 @@
 #include "LcdUi.h"
 //-------------------------------------------------------------------
 
-#define WINDOWTYPE_LOCOCONTROL	14
+#define WINDOWTYPE_LOCOCONTROL	100
 
 class WindowLocoControl : public Window
 {
 public:
-	bool isDcc;
-	byte dcFrequency;
-	const char *dcFrequencyText;
 	int Address;
 	byte AddressSize;
 	byte Speed;
 	byte SpeedMax;
 	int Speed128Inc;	// int only because of the editing window which accepts only ints...
 	bool Direction;
-	char Name[12];
+	char Name[20];
 
 public:
 	WindowLocoControl();

@@ -29,14 +29,15 @@ void WindowText::Event(byte inEventType, LcdUi *inpLcd)
 
 	if (this->state == STATE_INITIALIZE)
 	{
-		this->state = STATE_NONE;
-		this->currentCharEdited = (byte) strlen(this->pTextValue);
-		showValue = true;
 	}
 
 	if (this->state == STATE_START)
 	{
-		this->state = STATE_INITIALIZE;
+//		this->state = STATE_INITIALIZE;
+		this->state = STATE_NONE;
+		this->pTextValue[this->maxTextValueLength - 1] = 0;
+		this->currentCharEdited = (byte)strlen(this->pTextValue);
+		showValue = true;
 	}
 
 	switch (inEventType)

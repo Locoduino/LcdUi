@@ -51,7 +51,7 @@ public:
 	void MoveNextChoice();
 	void MovePreviousChoice();
 
-	byte AddChoice(byte inStringIndex, byte inIndex = 255, byte inInterruptOnEscape = 255);
+	byte AddChoice(byte inStringNumber, Window *apChildWindow = NULL, byte inIndex = 255, byte inInterruptIdOnEscape = 255);
 
 	void Event(byte inEventType, LcdUi *inpLcd);
 

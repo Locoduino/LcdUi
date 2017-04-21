@@ -50,6 +50,25 @@ GetMaxIntValue			KEYWORD2
 GetMaxTextValueLength	KEYWORD2
 SetValueAddress			KEYWORD2
 
+GetSizeX				KEYWORD2
+GetSizeY				KEYWORD2
+BuildString				KEYWORD2
+BuildProgress			KEYWORD2
+FillBuffer				KEYWORD2
+clear					KEYWORD2
+DisplayHeader			KEYWORD2
+DisplayText				KEYWORD2
+DisplayTextF			KEYWORD2
+DisplayChoiceF			KEYWORD2
+DisplayTextResultF		KEYWORD2
+DisplayText				KEYWORD2
+DisplayChoice			KEYWORD2
+DisplayChoice			KEYWORD2
+DisplayInt				KEYWORD2
+DisplayTextResult		KEYWORD2
+DisplayTextChoice		KEYWORD2
+DisplayYesNo			KEYWORD2
+
 printEvent				KEYWORD2
 printWindows			KEYWORD2
 

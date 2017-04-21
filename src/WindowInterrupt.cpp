@@ -13,6 +13,12 @@ void WindowInterrupt::begin(byte inFirstLine, byte inSecondLine, byte inEventTyp
 
 	this->secondLine = inSecondLine;
 	this->eventType = inEventType;
+
+#ifdef LCDUI_DEBUG_MODE
+	if (inEventType <= EVENT_END)
+		Serial.println("Your event number collide with LcdUi events ! To be sure, use value greater than 10...");
+#endif
+
 }
 
 void WindowInterrupt::Event(byte inEventType, LcdUi *inpLcd)

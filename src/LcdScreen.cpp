@@ -90,7 +90,7 @@ void LcdScreen::BuildProgress(byte inValue, byte inMax, bool inFromLeftDir, byte
 	}
 }
 
-byte LcdScreen::BuildStringLeft(const char *inString, byte inSizeMax, char *outString)
+byte LcdScreen::BuildString(const char *inString, byte inSizeMax, char *outString)
 {
 	memcpy(outString, inString, inSizeMax);
 	outString[inSizeMax] = 0;

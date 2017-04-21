@@ -30,8 +30,8 @@ public:
 
 	// String building in global buffer
 	static void BuildString(int inValue, char *outString, int digits = 0);
+	static byte BuildString(const char *inString, byte inSizeMax, char *outString);
 	static void BuildProgress(byte inValue, byte inMax, bool inFromLeftDir, byte inLengthString, char *outString);
-	static byte BuildStringLeft(const char *inString, byte inSizeMax, char *outString);
 	
 	static void FillBuffer(const __FlashStringHelper *str);
 
@@ -61,7 +61,7 @@ public:
 	inline virtual void DisplayInt(int inValue) {}
 	inline virtual void DisplayTextResult(const char *inTextValue, byte inLength, byte inEditedChar) {}
 	inline virtual void DisplayTextChoice(byte inPos, byte inEditedChar) {}
-	inline virtual void DisplayYesNo(byte inChoiceValue, int prefixString = 0) {}
+	inline virtual void DisplayYesNo(byte inChoiceValue, bool inOnlyYes, int prefixString = 0) {}
 };
 
 //-------------------------------------------------------------------

@@ -1,6 +1,6 @@
-Start debug 12/03/2017 16:19:44,50 
+Start debug 21/04/2017 20:46:32,69 
 .............................................................
-Compiling D:\Mes documents\Trusty\Arduino\Libraries\LcdUi\examples\Demo\Demo.ino
+Compiling D:\Mes documents\Trusty\Arduino\Libraries\LcdUi\examples\Locoduino\Dcc\Dcc.ino
 Chargement de la configuration
 Initialisation des paquets...
 Préparation des cartes
@@ -9,15 +9,8 @@ Bibliothèque non valide trouvée dans D:\Mes documents\Trusty\Arduino\libraries\D
 Bibliothèque non valide trouvée dans D:\Mes documents\Trusty\Arduino\libraries\DcDccControler : D:\Mes documents\Trusty\Arduino\libraries\DcDccControler
 Bibliothèque non valide trouvée dans D:\Mes documents\Trusty\Arduino\libraries\DcDccControler : D:\Mes documents\Trusty\Arduino\libraries\DcDccControler
 Vérification...
-sketch\WindowLocoControl.cpp: In member function 'virtual void WindowLocoControl::Event(byte, LcdUi*)':
-sketch\WindowLocoControl.cpp:39:37: warning: deprecated conversion from string constant to 'char*' [-Wwrite-strings]
-    pScreen->DisplayText("Dcc ", 0, 0);
-                                     ^
-sketch\WindowLocoControl.cpp:47:35: warning: deprecated conversion from string constant to 'char*' [-Wwrite-strings]
-    pScreen->DisplayText("Dc", 0, 0);
-                                   ^
-Le croquis utilise 16034 octets (49%) de l'espace de stockage de programmes. Le maximum est de 32256 octets.
-Les variables globales utilisent 1140 octets (55%) de mémoire dynamique, ce qui laisse 908 octets pour les variables locales. Le maximum est de 2048 octets.
+Le croquis utilise 17034 octets (52%) de l'espace de stockage de programmes. Le maximum est de 32256 octets.
+Les variables globales utilisent 1228 octets (59%) de mémoire dynamique, ce qui laisse 820 octets pour les variables locales. Le maximum est de 2048 octets.
 .............................................................
 Compiling D:\Mes documents\Trusty\Arduino\Libraries\LcdUi\examples\Locoduino\Sample\Sample.ino
 Chargement de la configuration
@@ -28,5 +21,5 @@ Bibliothèque non valide trouvée dans D:\Mes documents\Trusty\Arduino\libraries\D
 Bibliothèque non valide trouvée dans D:\Mes documents\Trusty\Arduino\libraries\DcDccControler : D:\Mes documents\Trusty\Arduino\libraries\DcDccControler
 Bibliothèque non valide trouvée dans D:\Mes documents\Trusty\Arduino\libraries\DcDccControler : D:\Mes documents\Trusty\Arduino\libraries\DcDccControler
 Vérification...
-Le croquis utilise 15516 octets (48%) de l'espace de stockage de programmes. Le maximum est de 32256 octets.
-Les variables globales utilisent 1249 octets (60%) de mémoire dynamique, ce qui laisse 799 octets pour les variables locales. Le maximum est de 2048 octets.
+Le croquis utilise 16102 octets (49%) de l'espace de stockage de programmes. Le maximum est de 32256 octets.
+Les variables globales utilisent 1273 octets (62%) de mémoire dynamique, ce qui laisse 775 octets pour les variables locales. Le maximum est de 2048 octets.

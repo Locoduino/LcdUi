@@ -1,3 +1,20 @@
+21/04/2017 V0.95
+	- Nouvel exemple Locoduino/Dcc.ino
+	- Renommage LcdScreen.BuildStringLeft en  BuildString
+	- Nouvel argument dans LcdScreen.DisplayYesNo() pour ne pas faire apparaitre 'No' .
+	- Nouveaux tests macros pour s'assurer de la présence des include écran (LiquidCrystal et assimilés)
+	- Nouvel argument dans WindowChoice.AddChoice() pour directement fixer la fenêtre associée à une option.
+	- Nouveau test debug pour s'assurer qu'une WindowChoice a bien des options.
+	- Nouveau test debug pour vérifier que le numéro d'événement associé à une WindowInterrupt ne collisionne pas avec les événements classiques.
+
+	- New sample Locoduino/Dcc.ino
+	- LcdScreen.BuildStringLeft renamed in BuildString
+	- New argument in LcdScreen.DisplayYesNo() to not show the option 'No' .
+	- New macro tests to be sure that screen includes (LiquidCrystal or similar) is present.
+	- New argument in WindowChoice.AddChoice() to directly give the associated window.
+	- New debug test to be sure that a WindowChoice have at least one choice !
+	- New debug test to check that event number associated with a windowInterrupt does not collide with basic LcdUi event numbers.
+
 12/03/2017 V0.91
 	- Ajout des SetValueAddress()
 	- Ajout de SetCurrentChoiceById()
