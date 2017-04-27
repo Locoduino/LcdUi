@@ -1,6 +1,6 @@
 /*************************************************************
 project: <Dcc Controler>
-author: <Thierry PARIS>
+author: <Thierry PARIS/Locoduino>
 description: <Class for a loco control window>
 *************************************************************/
 
@@ -8,96 +8,78 @@ description: <Class for a loco control window>
 
 WindowLocoControl::WindowLocoControl()
 {
-	this->Address = 3;
-	this->AddressSize = 3;
-	this->Speed = 0;
-	this->SpeedMax = 128;
-	this->Speed128Inc = 10;
+	this->Adresse = 3;
+	this->FormatAdresse = 3;
+	this->Vitesse = 0;
+	this->VitesseMax = 128;
+	this->Increment128 = 10;
 	this->Direction = true;
-	strcpy(this->Name, "Locoduino");
+	strcpy(this->Nom, "Name");
 }
 
-void WindowLocoControl::Event(byte inEventType, LcdUi *inpLcd)
+void WindowLocoControl::Event(byte inEvenement, LcdUi *inpLcd)
 {
-	bool showValue = false;
-	LcdScreen *pScreen = inpLcd->GetScreen();
+	bool afficheValeur = false;
+	LcdScreen *pEcran = inpLcd->GetScreen();
 
 	if (this->state == STATE_START)
 	{
-		pScreen->clear();
-		LcdScreen::BuildString(this->Address, LcdScreen::buffer, this->AddressSize);
-		pScreen->DisplayText(LcdScreen::buffer, 0, 0);
-		byte len = LcdScreen::BuildString(this->Name, inpLcd->GetScreen()->GetSizeX() - (this->AddressSize + 1), LcdScreen::buffer);
-		pScreen->DisplayText(LcdScreen::buffer, pScreen->GetSizeX() - len, 0);
+		pEcran->clear();
+		LcdScreen::BuildString(this->Adresse, LcdScreen::buffer, this->FormatAdresse);
+		pEcran->DisplayText(LcdScreen::buffer, 0, 0);
+		byte len = LcdScreen::BuildString(this->Nom, pEcran->GetSizeX() - (this->FormatAdresse + 1), LcdScreen::buffer);
+		pEcran->DisplayText(LcdScreen::buffer, pEcran->GetSizeX() - len, 0);
 		this->state = STATE_NONE;
-		showValue = true;
+		afficheValeur = true;
 	}
 
 	byte inc = 1;
 
-	if (this->SpeedMax == 128)
-		inc = this->Speed128Inc;
+	if (this->VitesseMax == 128)
+		inc = this->Increment128;
  
-	switch (inEventType)
+	switch (inEvenement)
 	{
 		case EVENT_MORE:
 			{
-#ifdef DDC_DEBUG_MODE
-			Serial.print(F("MORE "));
-#endif
-			unsigned int newValue = this->Speed + inc;
-			if (newValue > this->SpeedMax)
-				newValue = this->SpeedMax;
-			this->Speed = newValue;
-#ifdef DDC_DEBUG_MODE
-			Serial.println(newValue);
-#endif
+			unsigned int nouvelleValeur = this->Vitesse + inc;
+			if (nouvelleValeur > this->VitesseMax)
+				nouvelleValeur = this->VitesseMax;
+			this->Vitesse = nouvelleValeur;
 			}
-			showValue = true;
+			afficheValeur = true;
 			break;
 
 		case EVENT_LESS:
 			{
-#ifdef DDC_DEBUG_MODE
-			Serial.print(F("LESS "));
-#endif
-			int newValue = this->Speed - inc;
-			if (newValue < 0)
-				newValue = 0;
-			this->Speed = newValue;
-#ifdef DDC_DEBUG_MODE
-			Serial.println(newValue);
-#endif
+			int nouvelleValeur = this->Vitesse - inc;
+			if (nouvelleValeur < 0)
+				nouvelleValeur = 0;
+			this->Vitesse = nouvelleValeur;
 			}
-			showValue = true;
+			afficheValeur = true;
 			break;
 
 		case EVENT_SELECT:
-#ifdef DDC_DEBUG_MODE
-			Serial.println(F("SELECT"));
-#endif
 			this->Direction = !this->Direction;
-			showValue = true;
+			afficheValeur = true;
 			break;
 		case EVENT_CANCEL:
-#ifdef DDC_DEBUG_MODE
-			Serial.println(F("CANCEL"));
-#endif
 			this->state = STATE_ABORTED;
 			break;
 	}
 
-	if (showValue)
+	if (afficheValeur)
 	{
 		//   01234567879012345
 		// 0 Dcc 003
 		// 1 +>>>>>			 -
 		//   01234567879012345
-		int speed = this->Speed;
-		if (speed == 1)
-			speed = 0;
-		LcdScreen::BuildProgress(speed, this->SpeedMax, this->Direction, pScreen->GetSizeX(), LcdScreen::buffer);
-		pScreen->DisplayText(LcdScreen::buffer, 0, 1);
+		int vitesse = this->Vitesse;
+		if (vitesse == 1)
+			vitesse = 0;
+		LcdScreen::BuildProgress(vitesse, this->Vitesse, this->Direction, pEcran->GetSizeX(), LcdScreen::buffer);
+		pEcran->DisplayText(LcdScreen::buffer, 0, 1);
 	}
 }
 

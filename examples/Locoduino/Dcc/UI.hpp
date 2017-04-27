@@ -1,5 +1,5 @@
-#define EVENT_EMERGENCY	10
+#define EVENT_STOP	10
 
 void setupUI();
-void loopUI(byte inEvent);
+void loopUI(byte inEvenement);
 

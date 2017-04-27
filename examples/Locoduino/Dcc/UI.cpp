@@ -1,150 +1,140 @@
 /*************************************************************
 project: <LCD User Interface>
-author: <Thierry PARIS>
+author: <Thierry PARIS/Locoduino>
 description: <LCDUI DcDcc demo>
 *************************************************************/
 
-//#include <NewLiquidCrystal_I2C.h>
-//#include <NewLiquidCrystal.h>
-//#include <LiquidCrystal.h>
+#include <LiquidCrystal.h>
 #include "LcdUi.h"
-//#include "ScreenLiquidNew.hpp"
 #include "ScreenLiquid.hpp"
 #include "WindowLocoControl.hpp"
 #include "UI.hpp"
 
-// Strings declaration
+// Declarations des textes
 const char  str_stop[] PROGMEM = "Arret Urgence";
 const char  str_stop2[] PROGMEM = "Appuyer Annuler";
-const char  str_modemodechoice[] PROGMEM = "Menu principal:";
-const char  str_modelococtrl[] PROGMEM = "Controle loco";
-const char  str_modeconfig[] PROGMEM = "Configuration";
+const char  str_choixprincipal[] PROGMEM = "Menu principal:";
+const char  str_controleloco[] PROGMEM = "Controle loco";
+const char  str_choixconfig[] PROGMEM = "Configuration";
 const char  str_resetconfig[] PROGMEM = "Reset Config";
-const char  str_yes[] PROGMEM = "oui";
-const char  str_no[] PROGMEM = "non";
-const char  str_confirm[] PROGMEM = "Sur ?";
-const char  str_bkltconfig[] PROGMEM = "Retro eclairage";
-const char  str_incconfig[] PROGMEM = "Vit Increment";
-const char  str_nameconfig[] PROGMEM = "Nom";
-const char  str_locoAddress[] PROGMEM = "Adresse Loco";
+const char  str_oui[] PROGMEM = "oui";
+const char  str_non[] PROGMEM = "non";
+const char  str_confirmer[] PROGMEM = "Sur ?";
+const char  str_retroeclairage[] PROGMEM = "Retro eclairage";
+const char  str_increment[] PROGMEM = "Vit Increment";
+const char  str_nomloco[] PROGMEM = "Nom";
+const char  str_adresseloco[] PROGMEM = "Adresse Loco";
 const char  str_splash1[] PROGMEM = "LcdUI Demo";
 const char  str_splash2[] PROGMEM = "For ... you !";
-const char  str_backspace[] PROGMEM = "Supprimer";
+const char  str_supprimer[] PROGMEM = "Supprimer";
 
-// Array of declared strings
+// Liste des textes
 const char * const string_table[] PROGMEM =
 {
 	str_stop,
 	str_stop2,
-	str_modemodechoice,
-	str_modelococtrl,
-	str_modeconfig,
+	str_choixprincipal,
+	str_controleloco,
+	str_choixconfig,
 	str_resetconfig,
-	str_yes,
-	str_no,
-	str_confirm,
-	str_bkltconfig,
-	str_incconfig,
-	str_nameconfig,
-	str_locoAddress,
+	str_oui,
+	str_non,
+	str_confirmer,
+	str_retroeclairage,
+	str_increment,
+	str_nomloco,
+	str_adresseloco,
 	str_splash1,
 	str_splash2,
-	str_backspace
+	str_supprimer
 };
 
-// Indexes of strings in the array !
+// Indices dans la liste des textes
 #define STR_STOP			0
 #define STR_STOP2			1
-#define STR_MODEMODECHOICE	2
-#define STR_MODELOCOCTRL	3
-#define STR_MODECONFIG		4
+#define STR_CHOIXPRINCIPAL	2
+#define STR_CONTROLELOCO	3
+#define STR_CHOIXCONFIG		4
 #define STR_RESETCONFIG		5
-#define STR_YES				6
-#define STR_NO				7
-#define STR_CONFIRM			8
-#define STR_BACKLIGHTCFG	9
-#define STR_INCCFG			10
-#define STR_NAMECFG			11
-#define STR_LOCOADDRESS		12
+#define STR_OUI				6
+#define STR_NON				7
+#define STR_CONFIRMER		8
+#define STR_RETROECLAIRAGE	9
+#define STR_INCREMENT		10
+#define STR_NOM				11
+#define STR_ADRESSELOCO		12
 #define STR_SPLASH1			13
 #define STR_SPLASH2			14
-#define STR_BACKSPACE		15
+#define STR_SUPPRIMER		15
 
-// Main object and its screen
-//NewLiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // Set the LCD I2C address
-//NewLiquidCrystal lcd(8, 9, 4, 5, 6, 7);
+// Objets principaux
 LiquidCrystal lcd(7, 6, 5, 4, 3, 2);
 LcdUi lcdui;
-//ScreenLiquidNew screen;
-ScreenLiquid screen;
+ScreenLiquid ecran;
 
-// Local values the UI must be able to update...
-bool backlight;
-Choice modeChoice;
-Choice configChoice;
+// Variables mises à jour par les fenêtres.
+bool retroEclairage;
+Choice choixPrincipal;
+Choice choixConfiguration;
 
 WindowSplash winSplash;
-WindowChoice winMainChoice;
-WindowChoice winSettingsChoice;
-WindowInt winAddress;
+WindowChoice winChoixPrincipal;
+WindowChoice winChoixConfiguration;
+WindowInt winAdresse;
 WindowInt winIncrement;
-WindowText winName;
-WindowYesNo winBacklight;
+WindowText winNom;
+WindowYesNo winRetroEclairage;
 WindowConfirm winReset;
 WindowLocoControl winLoco;
 WindowInterrupt winStop;
 
 void setupUI()
 {
-	//screen.begin(20, 4, string_table, &lcd);
-	screen.begin(16, 2, string_table, &lcd);
-	lcdui.begin(&screen);
+	ecran.begin(16, 2, string_table, &lcd);
+	lcdui.begin(&ecran);
 	
-	LcdScreen::YesMsg = STR_YES;
-	LcdScreen::NoMsg = STR_NO;
-	LcdScreen::BackspaceMsg = STR_BACKSPACE;
+	LcdScreen::YesMsg = STR_OUI;
+	LcdScreen::NoMsg = STR_NON;
+	LcdScreen::BackspaceMsg = STR_SUPPRIMER;
 
 	winSplash.begin(STR_SPLASH1, STR_SPLASH2, 2000);
-	winMainChoice.begin(STR_MODEMODECHOICE, &modeChoice);
-	winSettingsChoice.begin(STR_MODECONFIG, &configChoice);
-	winAddress.begin(STR_LOCOADDRESS, &winLoco.Address);
-	winIncrement.begin(STR_INCCFG, &winLoco.Speed128Inc);
-	winName.begin(STR_NAMECFG, winLoco.Name, 14);
-	winBacklight.begin(STR_BACKLIGHTCFG, &backlight);
-	winReset.begin(STR_RESETCONFIG, STR_CONFIRM);
-	winLoco.begin(STR_MODELOCOCTRL);
-	winStop.begin(STR_STOP, STR_STOP2, EVENT_EMERGENCY);
+	winChoixPrincipal.begin(STR_CHOIXPRINCIPAL, &choixPrincipal);
+	winChoixConfiguration.begin(STR_CHOIXCONFIG, &choixConfiguration);
+	winAdresse.begin(STR_ADRESSELOCO, &winLoco.Adresse);
+	winIncrement.begin(STR_INCREMENT, &winLoco.Increment128);
+	winNom.begin(STR_NOM, winLoco.Nom, 14);
+	winRetroEclairage.begin(STR_RETROECLAIRAGE, &retroEclairage);
+	winReset.begin(STR_RESETCONFIG, STR_CONFIRMER);
+	winLoco.begin(STR_CONTROLELOCO);
+	winStop.begin(STR_STOP, STR_STOP2, EVENT_STOP);
 
 	lcdui.AddWindow(&winSplash);
-	lcdui.AddWindow(&winMainChoice);
-		lcdui.AddWindow(&winSettingsChoice);
-			lcdui.AddWindow(&winAddress);
+	lcdui.AddWindow(&winChoixPrincipal);
+		lcdui.AddWindow(&winChoixConfiguration);
+			lcdui.AddWindow(&winAdresse);
 			lcdui.AddWindow(&winIncrement);
-			lcdui.AddWindow(&winName);
-			lcdui.AddWindow(&winBacklight);
+			lcdui.AddWindow(&winNom);
+			lcdui.AddWindow(&winRetroEclairage);
 			lcdui.AddWindow(&winReset);
 		lcdui.AddWindow(&winLoco);
 	lcdui.AddWindow(&winStop);
 
-	winMainChoice.AddChoice(STR_MODECONFIG, &winSettingsChoice);
-		winSettingsChoice.AddChoice(STR_LOCOADDRESS, &winAddress);
-		winSettingsChoice.AddChoice(STR_INCCFG, &winIncrement);
-		winSettingsChoice.AddChoice(STR_NAMECFG, &winName);
-		winSettingsChoice.AddChoice(STR_BACKLIGHTCFG, &winBacklight);
-		winSettingsChoice.AddChoice(STR_RESETCONFIG, &winReset);
-	winMainChoice.AddChoice(STR_MODELOCOCTRL, &winLoco);
+	winChoixPrincipal.AddChoice(STR_CHOIXCONFIG, &winChoixConfiguration);
+		winChoixConfiguration.AddChoice(STR_ADRESSELOCO, &winAdresse);
+		winChoixConfiguration.AddChoice(STR_INCREMENT, &winIncrement);
+		winChoixConfiguration.AddChoice(STR_NOM, &winNom);
+		winChoixConfiguration.AddChoice(STR_RETROECLAIRAGE, &winRetroEclairage);
+		winChoixConfiguration.AddChoice(STR_RESETCONFIG, &winReset);
+	winChoixPrincipal.AddChoice(STR_CONTROLELOCO, &winLoco);
 
-	// Initial values of local variables.
-	backlight = false;
-	winMainChoice.SetCurrentChoiceById(STR_MODELOCOCTRL);
-	strcpy(winLoco.Name, "LocoduinoLocoduino");
-
-	//lcdui.printWindows();
+	// Valeurs de départ des variables globales
+	retroEclairage = false;
+	winChoixPrincipal.SetCurrentChoiceById(STR_CONTROLELOCO);
 }
 
 void loopUI(byte inEvent)
 {
-	if (inEvent == EVENT_EMERGENCY)
+	if (inEvent == EVENT_STOP)
 	{
 		Serial.println("Arret d'urgence !");
 	}
@@ -153,37 +143,37 @@ void loopUI(byte inEvent)
 	{
 		Window *pCurrent = lcdui.GetGlobalCurrentWindow();
 
-		// Do things when a window is confirmed:
+		// Faire ce qui doit etre fait apres une confirmation
 		if (lcdui.GetState() == STATE_CONFIRMED)
 		{
 			switch (pCurrent->GetWindowId())
 			{
-			case STR_LOCOADDRESS:
-				Serial.print("New Dcc address: ");
-				Serial.println(winLoco.Address);
+			case STR_ADRESSELOCO:
+				Serial.print("Nouvelle adresse: ");
+				Serial.println(winLoco.Adresse);
 				break;
-			case STR_INCCFG:
-				Serial.print("New incremental value: ");
-				Serial.println(winLoco.Speed128Inc);
+			case STR_INCREMENT:
+				Serial.print("Nouvel incrément: ");
+				Serial.println(winLoco.Increment128);
 				break;
-			case STR_NAMECFG:
-				Serial.print("New name: ");
-				Serial.println(winLoco.Name);
+			case STR_NOM:
+				Serial.print("Nouveau nom: ");
+				Serial.println(winLoco.Nom);
 				break;
-			case STR_BACKLIGHTCFG:
-				Serial.print("New back light value: ");
-				Serial.println(backlight);
+			case STR_RETROECLAIRAGE:
+				Serial.print("Retro-eclairage: ");
+				Serial.println(retroEclairage);
 				break;
 			case STR_RESETCONFIG:
 				Serial.println("Reset Config.");
-				backlight = false;
-				winLoco.Address = 3;
-				winLoco.AddressSize = 3;
-				winLoco.Speed = 0;
-				winLoco.SpeedMax = 128;
-				winLoco.Speed128Inc = 10;
+				retroEclairage = false;
+				winLoco.Adresse = 3;
+				winLoco.FormatAdresse = 3;
+				winLoco.Vitesse = 0;
+				winLoco.VitesseMax = 128;
+				winLoco.Increment128 = 10;
 				winLoco.Direction = true;
-				strcpy(winLoco.Name, "Locoduino");
+				strcpy(winLoco.Nom, "Locoduino");
 				break;
 			case STR_STOP:
 				Serial.println("Fin de l'urgence");
