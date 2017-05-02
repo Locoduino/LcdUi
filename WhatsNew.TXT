@@ -1,3 +1,10 @@
+02/05/2017 V0.97
+	- Correction d'un plantage dans DisplayText()
+	- Correction de la macro PRINT_WINDOWS()
+
+	- Fix crash in DisplayText()
+	- Fix macro PRINT_WINDOWS()
+
 27/04/2017 V0.96
 	- Exemple Locoduino/Dcc traduit en francais.
 	- Exemple Locoduino/Dcc.ino version anglaise dans examples/Dcc .

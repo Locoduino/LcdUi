@@ -78,7 +78,8 @@ public:
 	void DisplayText(char *inText, byte inX, byte inY)
 	{
 		this->setCursor(inX, inY);
-		inText[this->sizex - inX] = 0;
+		if (strlen(inText) > this->sizex - inX)
+			inText[this->sizex - inX] = 0;
 		this->print(inText);
 	}
 

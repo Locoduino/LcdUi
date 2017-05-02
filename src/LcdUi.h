@@ -34,10 +34,10 @@
 #endif
 
 #ifndef STR_LCDTITLE
-#define STR_LCDTITLE16		F("LCD UI V0.96")
+#define STR_LCDTITLE16		F("LCD UI V0.97")
 #define STR_LCDCOPYRIGHT16	F("By Thierry Paris")
 
-#define STR_LCDTITLE		F("LCD User Interface V0.96")
+#define STR_LCDTITLE		F("LCD User Interface V0.97")
 #define STR_LCDCOPYRIGHT	F("Developed by Thierry Paris.")
 #endif
 
@@ -158,10 +158,10 @@ public:
 	static void printEvent(byte inEvent, const __FlashStringHelper *inFunc);
 #endif
 #ifdef LCDUI_PRINT_WINDOWS
-	#define PRINT_WINDOWS()		LcdUi::printWindows();
+	#define PRINT_WINDOWS(pLCDUI)		pLCDUI->printWindows();
 	void printWindows();
 #else
-	#define PRINT_WINDOWS()
+	#define PRINT_WINDOWS(pLCDUI)
 #endif
 };
 #endif

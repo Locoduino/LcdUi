@@ -90,7 +90,7 @@ WindowInterrupt winStop;
 
 void setupUI()
 {
-	ecran.begin(16, 2, string_table, &lcd);
+	ecran.begin(20, 4, string_table, &lcd);
 	lcdui.begin(&ecran);
 	
 	LcdScreen::YesMsg = STR_OUI;
