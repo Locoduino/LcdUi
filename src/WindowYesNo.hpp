@@ -20,13 +20,12 @@ class WindowYesNo : public Window
 {
 private:
 	bool *pValue;
-	bool onlyYes;
 
 public:
 	inline WindowYesNo() { this->pValue = NULL; }
 	inline WindowYesNo(byte inFirstLine, bool *inpValue) { this->begin(inFirstLine, inpValue); }
 
-	void begin(byte inFirstLine, bool *inpValue, bool inOnlyYes = false);
+	void begin(byte inFirstLine, bool *inpValue);
 	inline void SetValueAddress(bool *inpValue) { this->pValue = inpValue; }
 	inline byte GetType() const { return WINDOWTYPE_YESNO; }
 

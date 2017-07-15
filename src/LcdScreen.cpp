@@ -21,9 +21,9 @@ void LcdScreen::begin(byte inSizeX, byte inSizeY, const char * const *inpStringT
 	this->SecondLineY = 1;
 }
 
-void LcdScreen::BuildString(int inValue, char *outString, int digits)
+void LcdScreen::BuildString(long int inValue, char *outString, int digits)
 {
-	int pows_of_ten[6] = { 1, 10, 100, 1000, 10000 };
+	long int pows_of_ten[6] = { 1, 10, 100, 1000, 10000, 100000 };
 	int nb = digits;
 	if (digits > 0 && digits < 6)
 	{
@@ -64,9 +64,19 @@ void LcdScreen::BuildString(int inValue, char *outString, int digits)
 	}
 }
 
+// build a string with '>' or '<' character representing a value inside 0 and a maximum,
+// bounded by '+' and '-' according to the given direction:
+// '-            +' means 0
+// '->>>>>>		 +' means half value
+// '->>>>>>>>>>>>+' for full value in From left dir.
+// '+<<<<<<<<<<<<-' for full value in From right dir.
+////////// An accuracy can be accepted to avoid edge values, for instance 49.99 instead of 50%
+// this is not the case of limit values. 0 cannot be reah if the value is not exactly 0,
+// And the same for maximum value.
 void LcdScreen::BuildProgress(byte inValue, byte inMax, bool inFromLeftDir, byte inLengthString, char *outString)
 {
-	byte localValue = (byte) ((int)(inLengthString-2) * (((double)inValue) / inMax));
+	double exactValue = ((int)(inLengthString - 2) * (((double)inValue) / inMax));
+	byte localValue = (byte)(exactValue + 0.5);
 	if (localValue == 0 && inValue > 0)
 		localValue = 1;
 

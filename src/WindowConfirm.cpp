@@ -7,7 +7,7 @@ description: <Class for a basic screen>
 #include "LcdUi.h"
 #include "WindowConfirm.hpp"
 
-void WindowConfirm::begin(byte inFirstLine, byte inPrefix)
+void WindowConfirm::begin(byte inFirstLine, byte inPrefix, bool *inpValue)
 { 
 	Window::begin(inFirstLine);
 
@@ -19,6 +19,7 @@ void WindowConfirm::begin(byte inFirstLine, byte inPrefix)
 #endif
 
 	this->prefix = inPrefix;
+	this->pValue = inpValue;
 }
 
 void WindowConfirm::Event(byte inEventType, LcdUi *inpLcd)
@@ -29,7 +30,8 @@ void WindowConfirm::Event(byte inEventType, LcdUi *inpLcd)
 	if (this->state == STATE_INITIALIZE)
 	{
 		this->state = STATE_NONE;
-		this->answer = LcdScreen::NoMsg;
+		if (this->pValue != NULL)
+			*(this->pValue) = false;
 		showValue = true;
 	}
 
@@ -45,10 +47,8 @@ void WindowConfirm::Event(byte inEventType, LcdUi *inpLcd)
 	case EVENT_MORE:
 	case EVENT_LESS:
 	case EVENT_MOVE:
-		if (this->answer == LcdScreen::YesMsg)
-			this->answer = LcdScreen::NoMsg;
-		else
-			this->answer = LcdScreen::YesMsg;
+		if(this->pValue != NULL)
+			*(this->pValue) = !*(this->pValue);
 		showValue = true;
 		break;
 	case EVENT_SELECT:
@@ -61,7 +61,7 @@ void WindowConfirm::Event(byte inEventType, LcdUi *inpLcd)
 
 	if (showValue)
 	{
-		pScreen->DisplayYesNo(this->answer, this->prefix);
+		pScreen->DisplayYesNo(this->pValue == NULL || *(this->pValue) ? LcdScreen::YesMsg : LcdScreen::NoMsg, this->pValue == NULL, this->prefix);
 	}
 }
 
@@ -71,8 +71,8 @@ void WindowConfirm::printWindow()
 	printWindowHeader(F("Window Confirm"));
 	Serial.print(F(" / Prefix: "));
 	Serial.print(this->prefix);
-	Serial.print(F(" / Answer: "));
-	Serial.print(this->answer);
+	Serial.print(F(" / OnlyYes: "));
+	Serial.print(this->pValue == NULL ? "Yes":"No");
 	Serial.println("");
 }
 #endif

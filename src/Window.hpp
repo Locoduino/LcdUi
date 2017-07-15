@@ -16,6 +16,7 @@
 #define WINDOWTYPE_INTERRUPTCONFIRM		6
 #define WINDOWTYPE_SPLASH				7
 #define WINDOWTYPE_CHOICETEXT			8
+#define WINDOWTYPE_SEQUENCE				9
 
 /*
 Steps of the life :
@@ -47,7 +48,7 @@ protected:
 	byte firstLine;		// id
 	byte state;
 	bool active;
-	int tag;			// User data...
+	//int tag;			// User data...
 	Window *pNextWindow;
 
 	// A window can have a father window.
@@ -55,7 +56,7 @@ protected:
 	// For instance, you select 'B' in a multiple choice list, and 'B' give acces to three more windows...
 	// Each of these sub windows will say : my father is the choice, 
 	// and I will be called if choice 'B' is activated.
-	Window *pFatherWindow;
+	byte fatherWindowId;
 	byte fatherChoiceValue;	// Index of the choice, 255 if undefined
 
 public:
@@ -66,11 +67,11 @@ public:
 	inline byte GetWindowId() { return this->GetFirstLine(); }
 	inline byte GetFirstLine() const { return this->firstLine; }
 	inline byte GetState() const { return this->state; }
-	inline int GetTag() const { return this->tag; }
+	//inline int GetTag() const { return this->tag; }
 	inline bool IsActive() const { return this->active; }
 	inline void SetFirstLine(byte inLine) { this->firstLine = inLine; }
 	inline void SetState(byte inState) { this->state = inState; }
-	inline void SetTag(int inTag) { this->tag = inTag; }
+	//inline void SetTag(int inTag) { this->tag = inTag; }
 	inline void SetActive(bool inActive) { this->active = inActive; }
 
 	inline virtual byte GetType() const { return 255; }
@@ -79,18 +80,18 @@ public:
 	inline void SetNextWindow(Window *inWindow) { this->pNextWindow = inWindow; }
 	inline Window *GetNextWindow() const { return this->pNextWindow; }
 
-	inline void SetFatherWindow(Window *inpFatherWindow) { this->pFatherWindow = inpFatherWindow; }
-	inline Window *GetFatherWindow() const { return this->pFatherWindow; }
+	inline void SetFatherWindow(byte inFatherWindowId) { this->fatherWindowId = inFatherWindowId; }
+	inline byte GetFatherWindowId() const { return this->fatherWindowId; }
 	inline byte GetFatherChoiceValue() const { return this->fatherChoiceValue; }
 	inline void SetFatherChoiceValue(byte inValue) { this->fatherChoiceValue = inValue; }
-	inline void SetFather(Window *inpFatherWindow, byte inValue) { this->pFatherWindow = inpFatherWindow; this->fatherChoiceValue = inValue; }
+	inline void SetFather(byte inFatherWindowId, byte inValue) { this->fatherWindowId = inFatherWindowId; this->fatherChoiceValue = inValue; }
 
 #ifdef LCDUI_DEBUG_MODE
 	static void printState(byte inState, const __FlashStringHelper *inFunc);
 #endif
 
 #ifdef LCDUI_PRINT_WINDOWS
-	virtual void printWindow() {};
+	virtual void printWindow() {}
 	void printWindowHeader(const __FlashStringHelper *inName);
 #endif
 };

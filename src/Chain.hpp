@@ -20,6 +20,7 @@ public:
 	
 	inline LCDUICHAINEDLIST() { this->pFirst = NULL; this->pCurrentItem = NULL; }
 	void AddItem(T *t);
+	void SetCurrentByObj(T *t);
 	void NextCurrent();
 	void PreviousCurrent();
 	byte GetCount();
@@ -63,6 +64,26 @@ template<class T> void LCDUICHAINEDLIST<T>::NextCurrent()
 		this->pCurrentItem = this->pFirst;
 
 	return;
+}
+
+// This function move the current item to the next in the chain.
+template<class T> void LCDUICHAINEDLIST<T>::SetCurrentByObj(T *inObj)
+{
+	if (this->pFirst == NULL)
+		return;
+
+	LCDUICHAINEDLISTITEM<T> *pCurr = this->pFirst;
+
+	while (pCurr != NULL)
+	{
+		if (pCurr->Obj == inObj)
+		{
+			this->pCurrentItem = pCurr;
+			return;
+		}
+
+		pCurr = pCurr->pNext;
+	}
 }
 
 // This function move the current item to the next in the chain.

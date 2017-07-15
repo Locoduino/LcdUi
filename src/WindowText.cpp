@@ -19,7 +19,8 @@ void WindowText::begin(byte inFirstLine, char *pValue, byte inMaxLengthValue)
 	this->currentCharPos = 0;
 	this->currentCharEdited = 0;
 	this->pTextValue = pValue;
-	memset(this->pTextValue, 0, inMaxLengthValue < WINDOW_MAXTEXTVALUESIZE? inMaxLengthValue: WINDOW_MAXTEXTVALUESIZE);
+	if (pValue != NULL)
+		memset(this->pTextValue, 0, inMaxLengthValue < WINDOW_MAXTEXTVALUESIZE? inMaxLengthValue: WINDOW_MAXTEXTVALUESIZE);
 }
 
 void WindowText::Event(byte inEventType, LcdUi *inpLcd)

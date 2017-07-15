@@ -1,3 +1,29 @@
+14/07/2017 V1.00
+	- Chain : nouvelle fonction SetCurrentByObj()
+	- LcdScreen et dérivées : nouvelle fonction SetStringTable()
+	- LcdScreen : nouvelle fonction DisplayChar()
+	- LcdScreen et dérivées : correction de DisplayText()
+	- Correction d'un paquet de chaînes de debug qui sont maintenant stockées en mémoire programme.
+	- Transformation du pére Window * en byte id du père.
+	- Tag a été retiré de la classe de base Window.
+	- WindowChoice : le choix en cours est un byte.
+	- windowChoiceText : une nouvelle propriété lockScreen a été ajoutée pour éviter les rafraichissements inutiles du texte.
+	- WindowConfirm met à jour maintenant une variable passée à son begin, comme les autres fenêtres d'entrée.
+	- WindowText correction d'un crash si la variable à mettre à jour n'est pas définie.
+	- WindowYesNo : une nouvelle propriété onlyYes a été ajoutée pour les fenêtres d'info sans réponse particulière.
+
+	- LcdScreen and inherited classes : new function SetStringTable()
+	- LcdScreen : new function DisplayChar()
+	- LcdScreen and inherited classes : fix DisplayText() bug
+	- Fix a lot of debug string to store it in program memory.
+	- Transform Window * father to byte id of father.
+	- Removed tag data from Window base class.
+	- WindowChoice : selected choice becomes a byte.
+	- windowChoiceText : a lockScreen property has been added to avoid text refreshing when not necessary...
+	- WindowConfirm now handles an external answer, like the other input windows...
+	- WindowText fix a crash if the value is not defined...
+	- WindowYesNo : a new onlyYes property has been added to handle information window without any choice.
+
 02/05/2017 V0.97
 	- Correction d'un plantage dans DisplayText()
 	- Correction de la macro PRINT_WINDOWS()

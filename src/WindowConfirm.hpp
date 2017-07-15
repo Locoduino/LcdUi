@@ -20,16 +20,14 @@ class WindowConfirm : public Window
 {
 private:
 	byte prefix;
-	byte answer;
+	bool *pValue;
 
 public:
-	inline WindowConfirm() { this->prefix = 0; this->answer = 0; }
-	inline WindowConfirm(byte inFirstLine, byte prefix) { this->begin(inFirstLine, prefix); }
+	inline WindowConfirm() { this->prefix = 0; this->pValue = NULL; }
+	inline WindowConfirm(byte inFirstLine, byte inPrefix, bool *inpValue) { this->begin(inFirstLine, inPrefix, inpValue); }
 
-	void begin(byte inFirstLine, byte prefix);
+	void begin(byte inFirstLine, byte prefix, bool *inpValue);
 	inline byte GetType() const { return WINDOWTYPE_CONFIRM; }
-	inline byte GetValue() const { return this->answer; }
-	inline void SetValue(byte inAnswer) { this->answer = inAnswer; }
 
 	void Event(byte inEventType, LcdUi *inpLcd);
 

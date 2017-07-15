@@ -82,6 +82,7 @@ ScreenLiquid screen;
 bool backlight;
 Choice modeChoice;
 Choice configChoice;
+bool reset;
 
 WindowSplash winSplash;
 WindowChoice winMainChoice;
@@ -111,7 +112,7 @@ void setupUI()
 	winIncrement.begin(STR_INCCFG, &winLoco.Speed128Inc);
 	winName.begin(STR_NAMECFG, winLoco.Name, 14);
 	winBacklight.begin(STR_BACKLIGHTCFG, &backlight);
-	winReset.begin(STR_RESETCONFIG, STR_CONFIRM);
+	winReset.begin(STR_RESETCONFIG, STR_CONFIRM, &reset);
 	winLoco.begin(STR_MODELOCOCTRL);
 	winStop.begin(STR_STOP, STR_STOP2, EVENT_EMERGENCY);
 
@@ -136,6 +137,7 @@ void setupUI()
 
 	// Initial values of local variables.
 	backlight = false;
+	reset = false;
 	winMainChoice.SetCurrentChoiceById(STR_MODELOCOCTRL);
 }
 
@@ -172,15 +174,18 @@ void loopUI(byte inEvent)
 				Serial.println(backlight);
 				break;
 			case STR_RESETCONFIG:
-				Serial.println("Reset Config.");
-				backlight = false;
-				winLoco.Address = 3;
-				winLoco.AddressSize = 3;
-				winLoco.Speed = 0;
-				winLoco.SpeedMax = 128;
-				winLoco.Speed128Inc = 10;
-				winLoco.Direction = true;
-				strcpy(winLoco.Name, "Locoduino");
+				if (reset == true)
+				{
+					Serial.println("Reset Config.");
+					backlight = false;
+					winLoco.Address = 3;
+					winLoco.AddressSize = 3;
+					winLoco.Speed = 0;
+					winLoco.SpeedMax = 128;
+					winLoco.Speed128Inc = 10;
+					winLoco.Direction = true;
+					strcpy(winLoco.Name, "Locoduino");
+				}
 				break;
 			case STR_STOP:
 				Serial.println("Fin de l'urgence");

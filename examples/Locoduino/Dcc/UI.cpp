@@ -76,6 +76,7 @@ ScreenLiquid ecran;
 bool retroEclairage;
 Choice choixPrincipal;
 Choice choixConfiguration;
+bool reset;
 
 WindowSplash winSplash;
 WindowChoice winChoixPrincipal;
@@ -104,7 +105,7 @@ void setupUI()
 	winIncrement.begin(STR_INCREMENT, &winLoco.Increment128);
 	winNom.begin(STR_NOM, winLoco.Nom, 14);
 	winRetroEclairage.begin(STR_RETROECLAIRAGE, &retroEclairage);
-	winReset.begin(STR_RESETCONFIG, STR_CONFIRMER);
+	winReset.begin(STR_RESETCONFIG, STR_CONFIRMER, &reset);
 	winLoco.begin(STR_CONTROLELOCO);
 	winStop.begin(STR_STOP, STR_STOP2, EVENT_STOP);
 
@@ -129,6 +130,7 @@ void setupUI()
 
 	// Valeurs de départ des variables globales
 	retroEclairage = false;
+	reset = false;
 	winChoixPrincipal.SetCurrentChoiceById(STR_CONTROLELOCO);
 }
 
@@ -165,15 +167,18 @@ void loopUI(byte inEvent)
 				Serial.println(retroEclairage);
 				break;
 			case STR_RESETCONFIG:
-				Serial.println("Reset Config.");
-				retroEclairage = false;
-				winLoco.Adresse = 3;
-				winLoco.FormatAdresse = 3;
-				winLoco.Vitesse = 0;
-				winLoco.VitesseMax = 128;
-				winLoco.Increment128 = 10;
-				winLoco.Direction = true;
-				strcpy(winLoco.Nom, "Locoduino");
+				if (reset == true)
+				{
+					Serial.println("Reset Config.");
+					retroEclairage = false;
+					winLoco.Adresse = 3;
+					winLoco.FormatAdresse = 3;
+					winLoco.Vitesse = 0;
+					winLoco.VitesseMax = 128;
+					winLoco.Increment128 = 10;
+					winLoco.Direction = true;
+					strcpy(winLoco.Nom, "Locoduino");
+				}
 				break;
 			case STR_STOP:
 				Serial.println("Fin de l'urgence");

@@ -29,23 +29,20 @@ struct Choice
 class WindowChoice : public Window
 {
 protected:
-	Choice *pSelectedChoice;	// selected choice index
-	byte currentConfiguration;
-
+	byte selectedChoice;	// selected choice
 	LCDUICHAINEDLIST<Choice> Choices;
 
 public:
-	inline WindowChoice() { this->pSelectedChoice = NULL; }
+	inline WindowChoice() { this->selectedChoice = 255; }
 	inline WindowChoice(byte inFirstLine, Choice *inpSelectedChoice) { this->begin(inFirstLine, inpSelectedChoice); }
 
 	void begin(byte inFirstLine, Choice *inpSelectedChoice);
 	inline byte GetType() const { return WINDOWTYPE_CHOICE; }
-	inline const Choice &GetSelectedChoice() const { return *this->pSelectedChoice; }
-	inline byte GetSelectedChoiceId() const { return pSelectedChoice->id; }
-	inline byte GetSelectedChoiceIndex() const { return pSelectedChoice->index; }
-	inline byte GetSelectedChoiceEscapeWindowId() { return this->pSelectedChoice->escapeWindowId; }
-	inline byte GetCurrentConfiguration() const { return this->currentConfiguration; }
-	inline void SetCurrentConfiguration(byte inNewConfiguration) { this->currentConfiguration = inNewConfiguration; }
+	Choice *GetChoice(byte inId) const;
+	inline Choice *GetSelectedChoice() const { return this->GetChoice(this->selectedChoice); }
+	inline byte GetSelectedChoiceId() const { return this->GetChoice(this->selectedChoice)->id; }
+	inline byte GetSelectedChoiceIndex() const { return this->GetChoice(this->selectedChoice)->index; }
+	inline byte GetSelectedChoiceEscapeWindowId() { return this->GetChoice(this->selectedChoice)->escapeWindowId; }
 	void SetCurrentChoiceById(byte inId);
 
 	void MoveNextChoice();

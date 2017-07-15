@@ -11,12 +11,31 @@ void WindowChoice::begin(byte inFirstLine, Choice *inpSelectedChoice)
 {
 	Window::begin(inFirstLine);
 
-	this->pSelectedChoice = inpSelectedChoice;
+	this->selectedChoice = 255;
+}
+
+Choice *WindowChoice::GetChoice(byte inId) const
+{ 
+	LCDUICHAINEDLISTITEM<Choice> *pCurr = this->Choices.pFirst;
+
+	// Find index of current item.
+	while (pCurr != NULL)
+	{
+		if (pCurr->Obj->id == inId)
+			return pCurr->Obj;
+		pCurr = pCurr->pNext;
+	}
+
+	return NULL;
 }
 
 byte WindowChoice::AddChoice(byte inStringNumber, Window *apChildWindow, byte inIndex, byte inInterruptIdOnEscape)
 {
 	Choice *pChoice = new Choice();
+#ifdef DDC_DEBUG_MODE
+	if (pChoice == NULL)
+		Serial.println(F("AddChoice memory error !"));
+#endif
 	pChoice->id = inStringNumber;
 	if (inIndex == 255)
 		inIndex = this->Choices.GetCount();
@@ -26,10 +45,10 @@ byte WindowChoice::AddChoice(byte inStringNumber, Window *apChildWindow, byte in
 	this->Choices.AddItem(pChoice);
 
 	if (this->Choices.GetCount() == 1)
-		*(this->pSelectedChoice) = *pChoice;
+		this->selectedChoice = inStringNumber;
 
 	if (apChildWindow != NULL)
-		apChildWindow->SetFather(this, inStringNumber);
+		apChildWindow->SetFather(this->firstLine, inStringNumber);
 
 	return inStringNumber;
 }
@@ -38,42 +57,34 @@ byte WindowChoice::AddChoice(byte inStringNumber, Window *apChildWindow, byte in
 void WindowChoice::MoveNextChoice()
 {
 	this->Choices.NextCurrent();
-	*(this->pSelectedChoice) = *(this->Choices.pCurrentItem->Obj);
+	this->selectedChoice = this->Choices.pCurrentItem->Obj->id;
 }
 
 // Get the previous choice value from choices, if the current selection is the first one, go to the last...
 void WindowChoice::MovePreviousChoice()
 {
 	this->Choices.PreviousCurrent();
-	*(this->pSelectedChoice) = *(this->Choices.pCurrentItem->Obj);
+	this->selectedChoice = this->Choices.pCurrentItem->Obj->id;
 }
 
 void WindowChoice::SetCurrentChoiceById(byte inId)
 {
-	LCDUICHAINEDLISTITEM<Choice> *pCurr = this->Choices.pFirst;
-
-	// Find index of current item.
-	while (pCurr != NULL)
-	{
-		if (pCurr->Obj->id == inId)
-		{
-			*(this->pSelectedChoice) = *(pCurr->Obj);
-			this->Choices.pCurrentItem = pCurr;
-			return;
-		}
-		pCurr = pCurr->pNext;
-	}
-
 #ifdef LCDUI_DEBUG_MODE
-	Serial.println("Choice selection impossible !");
+	if (this->GetChoice(inId) == NULL)
+	{
+		Serial.println(F("Choice selection impossible !"));
+		return;
+	}
 #endif
+	this->selectedChoice = inId;
+	this->Choices.SetCurrentByObj(this->GetChoice(inId));
 }
 
 void WindowChoice::Event(byte inEventType, LcdUi *inpLcd)
 {
 #ifdef LCDUI_DEBUG_MODE
 	if (this->Choices.pFirst == NULL)
-		Serial.println("At least one choice must be defined with AddChoice() !");
+		Serial.println(F("At least one choice must be defined with AddChoice() !"));
 #endif
 
 	bool showValue = false;
@@ -129,6 +140,8 @@ void WindowChoice::Event(byte inEventType, LcdUi *inpLcd)
 			index++;
 		}
 
+		if (pScreen->FirstChoiceShown >= this->Choices.GetCount())
+			pScreen->FirstChoiceShown = 0;
 		if (index > pScreen->FirstChoiceShown + pScreen->GetSizeY() - 2)
 			pScreen->FirstChoiceShown = index - pScreen->GetSizeY() + 2;
 		if (index < pScreen->FirstChoiceShown)
@@ -158,18 +171,19 @@ void WindowChoice::printWindow()
 	LCDUICHAINEDLISTITEM<Choice> *pCurr = this->Choices.pFirst;
 	while (pCurr != NULL)
 	{
-		Serial.print("    Choice id:");
+		Serial.print(F("    Choice id:"));
 		Serial.print(pCurr->Obj->id);
 		if (pCurr->Obj->index != 255)
 		{
-			Serial.print(" / Index:");
+			Serial.print(F(" / Index:"));
 			Serial.print(pCurr->Obj->index);
 		}
 		if (pCurr->Obj->escapeWindowId != 255)
 		{
-			Serial.print(" / EscapeId:");
+			Serial.print(F(" / EscapeId:"));
 			Serial.print(pCurr->Obj->escapeWindowId);
 		}
+
 		Serial.println("");
 		pCurr = pCurr->pNext;
 	}

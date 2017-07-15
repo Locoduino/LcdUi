@@ -30,7 +30,6 @@ private:
 	char *pTextValue;
 
 public:
-	static byte Backspace;
 	inline WindowText() { this->maxTextValueLength = WINDOW_MAXTEXTVALUESIZE; this->currentCharPos = 0; this->currentCharEdited = 0; this->pTextValue = NULL; }
 	inline WindowText(byte inFirstLine, char *inpValue, byte inMaxLengthValue = WINDOW_MAXTEXTVALUESIZE) { this->begin(inFirstLine, inpValue, inMaxLengthValue); }
 

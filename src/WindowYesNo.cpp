@@ -6,18 +6,17 @@ description: <Class for a basic screen>
 
 #include "LcdUi.h"
 
-void WindowYesNo::begin(byte inFirstLine, bool *inpValue, bool inOnlyYes)
+void WindowYesNo::begin(byte inFirstLine, bool *inpValue)
 {
 	Window::begin(inFirstLine);
 
 #ifdef LCDUI_DEBUG_MODE
 	if (LcdScreen::YesMsg == -1)
 		Serial.println(F("YesMsg undefined !"));
-	if (!inOnlyYes && LcdScreen::NoMsg == -1)
+	if (inpValue != NULL && LcdScreen::NoMsg == -1)
 		Serial.println(F("NoMsg undefined !"));
 #endif
 	this->pValue = inpValue;
-	this->onlyYes = inOnlyYes;
 }
 
 void WindowYesNo::Event(byte inEventType, LcdUi *inpLcd)
@@ -43,7 +42,7 @@ void WindowYesNo::Event(byte inEventType, LcdUi *inpLcd)
 	case EVENT_MORE:
 	case EVENT_LESS:
 	case EVENT_MOVE:
-		if (!this->onlyYes)
+		if (this->pValue != NULL)
 		{
 			*(this->pValue) = !*(this->pValue);
 			showValue = true;
@@ -59,7 +58,7 @@ void WindowYesNo::Event(byte inEventType, LcdUi *inpLcd)
 
 	if (showValue)
 	{
-		pScreen->DisplayYesNo(this->onlyYes || *(this->pValue)? LcdScreen::YesMsg: LcdScreen::NoMsg, this->onlyYes);
+		pScreen->DisplayYesNo(this->pValue == NULL || *(this->pValue)? LcdScreen::YesMsg: LcdScreen::NoMsg, this->pValue == NULL);
 	}
 }
 
@@ -67,6 +66,8 @@ void WindowYesNo::Event(byte inEventType, LcdUi *inpLcd)
 void WindowYesNo::printWindow()
 {
 	printWindowHeader(F("Window YesNo"));
+	Serial.print(F(" / OnlyYes: "));
+	Serial.print(this->pValue == NULL ? "Yes" : "No");
 	Serial.println("");
 }
 #endif

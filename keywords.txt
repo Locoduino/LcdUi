@@ -17,7 +17,7 @@ WindowInterruptConfirm	KEYWORD1
 WindowSplash			KEYWORD1
 WindowText				KEYWORD1
 WindowYesNo				KEYWORD1
-Screen					KEYWORD1
+LcdScreen				KEYWORD1
 ScreenLiquid			KEYWORD1
 ScreenLiquidNew			KEYWORD1
 ScreenNokia5110			KEYWORD1
@@ -36,10 +36,7 @@ IsActive				KEYWORD2
 GetCurrentWindow		KEYWORD2
 GetGlobalCurrentWindow	KEYWORD2
 GetWindowId				KEYWORD2
-SetFather				KEYWORD2
-GetIntValue				KEYWORD2
-GetTextValue			KEYWORD2
-GetSelectedValue		KEYWORD2
+SetFatherWindow			KEYWORD2
 GetState				KEYWORD2
 SetState				KEYWORD2
 SetMinIntValue			KEYWORD2
@@ -57,6 +54,8 @@ BuildProgress			KEYWORD2
 FillBuffer				KEYWORD2
 clear					KEYWORD2
 DisplayHeader			KEYWORD2
+DisplayCenteredText		KEYWORD2
+DisplayChar				KEYWORD2
 DisplayText				KEYWORD2
 DisplayTextF			KEYWORD2
 DisplayChoiceF			KEYWORD2

@@ -11,7 +11,7 @@ description: <Class for a basic screen>
 void Window::printState(byte inState, const __FlashStringHelper *inFunc)
 {
 	Serial.print(inFunc);
-	Serial.print(": ");
+	Serial.print(F(": "));
 	switch (inState)
 	{
 	case STATE_NONE:	Serial.println(F("STATE_NONE"));	break;
@@ -27,11 +27,11 @@ void Window::printState(byte inState, const __FlashStringHelper *inFunc)
 
 Window::Window()
 {
-	this->firstLine = -1;
+	this->firstLine = 255;
 	this->state = STATE_START;
-	this->tag = 0;
+//	this->tag = 0;
 	this->pNextWindow = NULL;
-	this->pFatherWindow = NULL;
+	this->fatherWindowId = 255;
 	this->fatherChoiceValue = 255;
 	this->active = true;
 }
@@ -47,10 +47,11 @@ void Window::printWindowHeader(const __FlashStringHelper *inName)
 	Serial.print(inName);
 	Serial.print(F(": FirstLine: "));
 	Serial.print(this->firstLine);
-	if (this->GetFatherWindow() != NULL)
+
+	if (this->fatherWindowId != 255)
 	{
 		Serial.print(F(" / Father: "));
-		Serial.print(this->GetFatherWindow()->GetFirstLine());
+		Serial.print(this->fatherWindowId);
 		Serial.print(F(" / FatherChoice: "));
 		Serial.print(this->fatherChoiceValue);
 	}

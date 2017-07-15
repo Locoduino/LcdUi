@@ -25,11 +25,12 @@ public:
 	byte FirstChoiceShown;	 
 
 	virtual void begin(byte inSizeX, byte inSizeY, const char * const *inpStringTable);
+	inline void SetStringTable(const char * const *inpStringTable) { this->pStringTable = inpStringTable; }
 	inline byte GetSizeX() const { return this->sizex; }
 	inline byte GetSizeY() const { return this->sizey; }
 
 	// String building in global buffer
-	static void BuildString(int inValue, char *outString, int digits = 0);
+	static void BuildString(long int inValue, char *outString, int digits = 0);
 	static byte BuildString(const char *inString, byte inSizeMax, char *outString);
 	static void BuildProgress(byte inValue, byte inMax, bool inFromLeftDir, byte inLengthString, char *outString);
 	
@@ -55,7 +56,8 @@ public:
 	inline void DisplayChoiceF(const __FlashStringHelper *inChoice, int inIndex, bool inChoosen) { FillBuffer(inChoice); this->DisplayChoice(buffer, inIndex, inChoosen); }
 	inline void DisplayTextResultF(const __FlashStringHelper *inChoice, byte inLength, byte inEditedChar) { FillBuffer(inChoice); this->DisplayTextResult(buffer, inLength, inEditedChar); }
 #endif
-	inline virtual void DisplayText(char *inText, byte inX, byte inY) {}
+	inline virtual void DisplayChar(const char inchar, byte inX, byte inY) {}
+	inline virtual void DisplayText(const char *inText, byte inX, byte inY) {}
 	inline virtual void DisplayChoice(int inChoice, int inIndex, bool inShowIndex, bool inSelected) {}
 	inline virtual void DisplayChoice(const char *inChoice, int inIndex, bool inChoosen) {}
 	inline virtual void DisplayInt(int inValue) {}

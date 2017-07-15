@@ -20,25 +20,23 @@
 /// |     C choice     |
 /// +------------------+
 
+class LcdScreen;
+
 class WindowChoiceText : public Window
 {
 protected:
-	// strings for choice mode.
-	char *currentValueText;
 	// current selected index
 	byte *pValue;
 
 public:
-	inline WindowChoiceText() { this->currentValueText = NULL; this->pValue = NULL; }
+	inline WindowChoiceText() { this->pValue = NULL; this->lockScreen = false; }
 	inline WindowChoiceText(byte inFirstLine, byte *inpValue) { this->begin(inFirstLine, inpValue);	}
 
 	void begin(byte inFirstLine, byte *inpValue);
 	inline void SetValueAddress(byte *inpValue) { this->pValue = inpValue; }
 	inline byte GetType() const { return WINDOWTYPE_CHOICETEXT; }
-	inline unsigned int GetChoiceIntValue() const { return *(this->pValue); }
-	inline char *GetChoiceTextValue() const { return this->currentValueText; }
-	void SetCurrentChoice(char *inChoiceText, byte inChoiceValue);
-	inline void SetCurrentChoice(byte inChoiceValue) { this->SetCurrentChoice(this->GetChoiceTextValue(inChoiceValue), inChoiceValue); }
+	inline unsigned int GetChoiceValue() const { return *(this->pValue); }
+	void SetCurrentChoice(byte inChoiceValue);
 	inline virtual void MoveNextChoice() { this->Move(true); }
 	inline virtual void MovePreviousChoice() { this->Move(false); }
 	virtual void Move(bool inMore);
@@ -46,7 +44,9 @@ public:
 
 	// Abstract functions the derived class must instanciate
 	virtual byte GetChoiceTextNumber() const = 0;
-	virtual char *GetChoiceTextValue(unsigned int indexValue) const = 0;
+	virtual char *GetChoiceTextValue(byte indexValue, LcdScreen *apScreen) const = 0;
+
+	bool lockScreen;
 
 #ifdef LCDUI_PRINT_WINDOWS
 	void printWindow();

@@ -71,6 +71,7 @@ int option1;
 bool option2;
 char nom[20];
 Choice choix;
+bool confirme;
 
 WindowSplash ecranSplash;
 WindowChoice ecranChoix;
@@ -91,6 +92,7 @@ int option1_4;
 bool option2_4;
 char nom_4[20];
 Choice choix_4;
+bool confirme_4;
 
 WindowSplash ecranSplash_4;
 WindowChoice ecranChoix_4;
@@ -117,7 +119,7 @@ void setupUI()
 	ecranOption1.begin(STR_OPTION1, &option1);
 	ecranOption2.begin(STR_OPTION2, &option2);
 	ecranOption3.begin(STR_OPTION3, nom, 16);
-	ecranConfirme.begin(STR_CONFIRME, STR_SUR);
+	ecranConfirme.begin(STR_CONFIRME, STR_SUR, &confirme);
 	ecranInterrupt.begin(STR_INT1, STR_INT2, EVENT_EMERGENCY);
 	ecranInterruptConfirm.begin(STR_INT3, STR_SUR, EVENT_EMERGENCY_CONFIRM);
 
@@ -130,16 +132,16 @@ void setupUI()
 	lcdui.AddWindow(&ecranInterrupt);
 	lcdui.AddWindow(&ecranInterruptConfirm);
 
-	ecranChoix.AddChoice(STR_OPTION1);
-	ecranOption1.SetFather(&ecranChoix, STR_OPTION1);
+	ecranChoix.AddChoice(STR_OPTION1, &ecranOption1);
 	ecranChoix.AddChoice(STR_OPTION2);
-	ecranOption2.SetFather(&ecranChoix, STR_OPTION2);
-	ecranConfirme.SetFather(&ecranChoix, STR_OPTION2);
-	ecranOption3.SetFather(&ecranChoix, STR_OPTION2);
+	ecranOption2.SetFather(STR_CHOIX, STR_OPTION2);
+	ecranConfirme.SetFather(STR_CHOIX, STR_OPTION2);
+	ecranOption3.SetFather(STR_CHOIX, STR_OPTION2);
 
 	// Initial values of local variables.
 	option1 = 10;
 	option2 = false;
+	confirme = false;
 	strcpy(nom, "LOCODUINO");
 
 	// 20x4
@@ -152,7 +154,7 @@ void setupUI()
 	ecranOption1_4.begin(STR_OPTION1, &option1_4);
 	ecranOption2_4.begin(STR_OPTION2, &option2_4);
 	ecranOption3_4.begin(STR_OPTION3, nom_4, 16);
-	ecranConfirme_4.begin(STR_CONFIRME, STR_SUR);
+	ecranConfirme_4.begin(STR_CONFIRME, STR_SUR, &confirme_4);
 	ecranInterrupt_4.begin(STR_INT1, STR_INT2, EVENT_EMERGENCY);
 	ecranInterruptConfirm_4.begin(STR_INT3, STR_SUR, EVENT_EMERGENCY_CONFIRM);
 
@@ -165,16 +167,16 @@ void setupUI()
 	lcdui_4.AddWindow(&ecranInterrupt_4);
 	lcdui_4.AddWindow(&ecranInterruptConfirm_4);
 
-	ecranChoix_4.AddChoice(STR_OPTION1);
-	ecranOption1_4.SetFather(&ecranChoix_4, STR_OPTION1);
+	ecranChoix_4.AddChoice(STR_OPTION1, &ecranChoix_4);
 	ecranChoix_4.AddChoice(STR_OPTION2);
-	ecranOption2_4.SetFather(&ecranChoix_4, STR_OPTION2);
-	ecranConfirme_4.SetFather(&ecranChoix_4, STR_OPTION2);
-	ecranOption3_4.SetFather(&ecranChoix_4, STR_OPTION2);
+	ecranOption2_4.SetFather(STR_CHOIX, STR_OPTION2);
+	ecranConfirme_4.SetFather(STR_CHOIX, STR_OPTION2);
+	ecranOption3_4.SetFather(STR_CHOIX, STR_OPTION2);
 
 	// Initial values of local variables.
 	option1_4 = 10;
 	option2_4 = false;
+	confirme_4 = false;
 	strcpy(nom_4, "LOCODUINO");
 
 	PRINT_WINDOWS();

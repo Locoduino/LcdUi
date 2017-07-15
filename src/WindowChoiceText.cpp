@@ -13,9 +13,8 @@ void WindowChoiceText::begin(byte inFirstLine, byte *inpValue)
 	this->pValue = inpValue;
 }
 
-void WindowChoiceText::SetCurrentChoice(char *inChoiceText, byte inChoiceValue)
+void WindowChoiceText::SetCurrentChoice(byte inChoiceValue)
 {
-	this->currentValueText = inChoiceText;
 	*this->pValue = inChoiceValue;
 }
 
@@ -46,6 +45,10 @@ void WindowChoiceText::Event(byte inEventType, LcdUi *inpLcd)
 	if (this->state == STATE_INITIALIZE)
 	{
 		this->state = STATE_NONE;
+		if (pScreen->FirstChoiceShown >= this->GetChoiceTextNumber())
+			pScreen->FirstChoiceShown = 0;
+		if (*this->pValue >= this->GetChoiceTextNumber())
+			*this->pValue = 0;
 		showValue = true;
 	}
 
@@ -75,7 +78,7 @@ void WindowChoiceText::Event(byte inEventType, LcdUi *inpLcd)
 		break;
 	}
 
-	if (showValue)
+	if (showValue && !this->lockScreen)
 	{
 		if (*this->pValue > pScreen->FirstChoiceShown + pScreen->GetSizeY() - 2)
 			pScreen->FirstChoiceShown = *this->pValue - pScreen->GetSizeY() + 2;
@@ -83,7 +86,7 @@ void WindowChoiceText::Event(byte inEventType, LcdUi *inpLcd)
 			pScreen->FirstChoiceShown = *this->pValue;
 
 		for (byte i = 0; i < this->GetChoiceTextNumber(); i++)
-			pScreen->DisplayChoice(this->GetChoiceTextValue(i), i, i == *this->pValue);
+			pScreen->DisplayChoice(this->GetChoiceTextValue(i, pScreen), i, i == *this->pValue);
 	}
 }
 

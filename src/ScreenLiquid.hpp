@@ -75,21 +75,22 @@ public:
 		this->write(car);
 	}
 
-	void DisplayText(char *inText, byte inX, byte inY)
+	void DisplayText(const char *inText, byte inX, byte inY)
 	{
 		this->setCursor(inX, inY);
-		if (strlen(inText) > this->sizex - inX)
-			inText[this->sizex - inX] = 0;
-		this->print(inText);
+		memcpy(LcdScreen::buffer, inText, (unsigned int) this->sizex - inX);
+		LcdScreen::buffer[this->sizex - inX] = 0;
+
+		this->print(LcdScreen::buffer);
 	}
 
-	void DisplayCenteredText(char *inText, byte inY, bool inChoosen)
+	void DisplayCenteredText(const char *inText, byte inY, bool inChoosen)
 	{
 		this->clearLine(inY);
 		byte pos = (this->sizex / 2) - ((byte)strlen(inText) / 2) - 1;
 
 		this->DisplayChar(inChoosen ? '>' : ' ', pos++, inY);
-		this->DisplayText((char *)inText, pos, inY);
+		this->DisplayText(inText, pos, inY);
 		pos += (byte)strlen(inText);
 		this->DisplayChar(inChoosen ? '<' : ' ', pos, inY);
 	}
@@ -127,7 +128,7 @@ public:
 		int line = inIndex - this->FirstChoiceShown + 1;
 
 		this->clearLine(line);
-		this->DisplayCenteredText((char *)inChoice, line, inChoosen);
+		this->DisplayCenteredText(inChoice, line, inChoosen);
 	}
 
 	void DisplayInt(int inValue)
@@ -139,7 +140,7 @@ public:
 	void DisplayTextResult(const char *inTextValue, byte inLength, byte inEditedChar)
 	{
 		this->noCursor();
-		this->DisplayText((char *)inTextValue, 0, this->HeaderY);
+		this->DisplayText(inTextValue, 0, this->HeaderY);
 
 		for (int i = (int)strlen(inTextValue); i < inLength && i < sizex; i++)
 			this->DisplayChar('_', i, this->HeaderY);

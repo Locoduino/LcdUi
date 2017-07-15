@@ -72,6 +72,7 @@
 #include "WindowInterrupt.hpp"
 #include "WindowInterruptConfirm.hpp"
 #include "WindowSplash.hpp"
+#include "WindowSequence.hpp"
 
 #include "LcdScreen.hpp"
 
@@ -104,22 +105,12 @@ private:
 	LcdScreen *pScreen;
 	Window *pFirstWindow;
 
-	/* (Index of the father Window in the Window list + 1) * 100 + (Choice number + 1 or 0)
-	NodeFather			Comment
-	0	Win A						0					no father...
-	1		Win B choices 0,1,2		100					Win A (index 0+1) is the father.
-	2			Win C				201					Win B/Choice 0 if the father (Index 1+1 * 100) + Choice (0+1)
-	3			Win D				202					Win B/Choice 1 if the father (Index 1+1 * 100) + Choice (1+1)
-	4			Win E				203					Win B/Choice 2 if the father (Index 1+1 * 100) + Choice (2+1)
-	5			Win F				203					Win B/Choice 2 if the father (Index 1+1 * 100) + Choice (2+1)
-	*/
-	int *pNodeFather;
-
 	Window *pCurrentWindow;
 	Window *pWindowInterrupt;
+	Window *pWindowSequence;
 	
 	// Functions used by interactive mode to evoluate in the UI
-	Window *GetNextWindowWithFather(Window *inpCurr, Window *inpFatherTofind, byte inChoiceToFind = 255);
+	Window *GetNextWindowWithFather(Window *inpCurr, byte inFatherToFindId, byte inChoiceToFind = 255);
 	void MoveToNextUIWindow();
 	void MoveToPrevUIWindow();
 
@@ -128,7 +119,7 @@ public:
 
 	void begin(LcdScreen *inpScreen);
 	Window *AddWindow(Window *inpWindow);
-	inline void MoveToWindow(Window *inpWindow) { this->pCurrentWindow = inpWindow; }
+	void MoveToWindow(Window *inpWindow);
 
 	bool loop(byte inEvent);
 	byte InterruptByEvent(byte inEventType);
