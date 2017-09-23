@@ -34,10 +34,10 @@
 #endif
 
 #ifndef STR_LCDTITLE
-#define STR_LCDTITLE16		F("LCD UI V0.97")
+#define STR_LCDTITLE16		F("LCD UI V1.01")
 #define STR_LCDCOPYRIGHT16	F("By Thierry Paris")
 
-#define STR_LCDTITLE		F("LCD User Interface V0.97")
+#define STR_LCDTITLE		F("LCD User Interface V1.01")
 #define STR_LCDCOPYRIGHT	F("Developed by Thierry Paris.")
 #endif
 

@@ -1,3 +1,8 @@
+23/09/2017 V1.01
+	- Correction d'un type d'argument const sur Screen::DisplayChar()
+
+	- Add a const modifier on the first argument of Screen::DisplayChar()
+
 14/07/2017 V1.00
 	- Chain : nouvelle fonction SetCurrentByObj()
 	- LcdScreen et dérivées : nouvelle fonction SetStringTable()

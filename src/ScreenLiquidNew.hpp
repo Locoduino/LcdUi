@@ -69,7 +69,7 @@ public:
 
 	// LcdScreen overrides...
 
-	void DisplayChar(char car, byte inX, byte inY)
+	void DisplayChar(const char car, byte inX, byte inY)
 	{
 		this->setCursor(inX, inY);
 		this->write(car);
