@@ -10,7 +10,7 @@
 // This is a temporary window for time limited messages
 
 /// +------------------+
-/// | LCD UI v0.30     |
+/// | LCD UI v1.00     |
 /// | (c) Locoduino    |
 /// |                  |
 /// |                  |

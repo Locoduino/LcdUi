@@ -1,3 +1,8 @@
+18/10/2017 V1.0.1
+	- Mise en forme du numéro de version en 'semver' (Semantic Versioning 2.0.0).
+
+	- Version number converted to 'semver' format (Semantic Versioning 2.0.0).
+
 23/09/2017 V1.01
 	- Correction d'un type d'argument const sur Screen::DisplayChar()
 

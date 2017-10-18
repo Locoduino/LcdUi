@@ -167,6 +167,7 @@
     <ClCompile Include="..\src\WindowInt.cpp" />
     <ClCompile Include="..\src\WindowInterrupt.cpp" />
     <ClCompile Include="..\src\WindowInterruptConfirm.cpp" />
+    <ClCompile Include="..\src\WindowSequence.cpp" />
     <ClCompile Include="..\src\WindowSplash.cpp" />
     <ClCompile Include="..\src\WindowText.cpp" />
     <ClCompile Include="..\src\WindowYesNo.cpp" />
@@ -212,6 +213,7 @@
     <ClInclude Include="..\src\WindowInt.hpp" />
     <ClInclude Include="..\src\WindowInterrupt.hpp" />
     <ClInclude Include="..\src\WindowInterruptConfirm.hpp" />
+    <ClInclude Include="..\src\WindowSequence.hpp" />
     <ClInclude Include="..\src\WindowSplash.hpp" />
     <ClInclude Include="..\src\WindowText.hpp" />
     <ClInclude Include="..\src\WindowYesNo.hpp" />
