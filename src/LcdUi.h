@@ -22,7 +22,7 @@
 //#define LCDUI_PRINT_WINDOWS
 
 #ifdef VISUALSTUDIO
-#include "arduino.h"
+#include "Arduino.h"
 #include "string.h"
 #define STRNCPY(out, len ,in)	strcpy_s(out, len, in)
 #define STRCPY(out, in)			strcpy_s(out, in)
@@ -34,10 +34,10 @@
 #endif
 
 #ifndef STR_LCDTITLE
-#define STR_LCDTITLE16		F("LCD UI V1.0.1")
+#define STR_LCDTITLE16		F("LCD UI V1.0.2")
 #define STR_LCDCOPYRIGHT16	F("By Thierry Paris")
 
-#define STR_LCDTITLE		F("LCD User Interface V1.0.1")
+#define STR_LCDTITLE		F("LCD User Interface V1.0.2")
 #define STR_LCDCOPYRIGHT	F("Developed by Thierry Paris.")
 #endif
 

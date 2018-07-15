@@ -8,7 +8,7 @@ description: <Base functions of the library>
 #include "../VStudio/LcdUi.hpp"
 
 #ifndef VISUALSTUDIO
-#include "arduino.h"
+#include "Arduino.h"
 #include <avr/pgmspace.h>
 #endif
 

@@ -3,7 +3,7 @@
 #define __window_H__
 //-------------------------------------------------------------------
 
-#include "arduino.h"
+#include "Arduino.h"
 
 #define MAXSTRINGVALUE	20
 

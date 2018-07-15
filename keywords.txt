@@ -6,70 +6,70 @@
 # Datatypes (KEYWORD1)
 #######################################
 
-LcdUi					KEYWORD1
-Window					KEYWORD1
-WindowChoice			KEYWORD1
-WindowChoiceText		KEYWORD1
-WindowConfirm			KEYWORD1
-WindowInt				KEYWORD1
-WindowInterrupt			KEYWORD1
+LcdUi	KEYWORD1
+Window	KEYWORD1
+WindowChoice	KEYWORD1
+WindowChoiceText	KEYWORD1
+WindowConfirm	KEYWORD1
+WindowInt	KEYWORD1
+WindowInterrupt	KEYWORD1
 WindowInterruptConfirm	KEYWORD1
-WindowSplash			KEYWORD1
-WindowText				KEYWORD1
-WindowYesNo				KEYWORD1
-LcdScreen				KEYWORD1
-ScreenLiquid			KEYWORD1
-ScreenLiquidNew			KEYWORD1
-ScreenNokia5110			KEYWORD1
+WindowSplash	KEYWORD1
+WindowText	KEYWORD1
+WindowYesNo	KEYWORD1
+LcdScreen	KEYWORD1
+ScreenLiquid	KEYWORD1
+ScreenLiquidNew	KEYWORD1
+ScreenNokia5110	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
 
-begin					KEYWORD2
-AddWindow				KEYWORD2
-AddWindowInterrupt		KEYWORD2
-AddChoice				KEYWORD2
-Interrupt 				KEYWORD2
-InterruptEnd			KEYWORD2
-IsActive				KEYWORD2
-GetCurrentWindow		KEYWORD2
+begin	KEYWORD2
+AddWindow	KEYWORD2
+AddWindowInterrupt	KEYWORD2
+AddChoice	KEYWORD2
+Interrupt	KEYWORD2
+InterruptEnd	KEYWORD2
+IsActive	KEYWORD2
+GetCurrentWindow	KEYWORD2
 GetGlobalCurrentWindow	KEYWORD2
-GetWindowId				KEYWORD2
-SetFatherWindow			KEYWORD2
-GetState				KEYWORD2
-SetState				KEYWORD2
-SetMinIntValue			KEYWORD2
-SetMaxIntValue			KEYWORD2
+GetWindowId	KEYWORD2
+SetFatherWindow	KEYWORD2
+GetState	KEYWORD2
+SetState	KEYWORD2
+SetMinIntValue	KEYWORD2
+SetMaxIntValue	KEYWORD2
 SetMaxTextValueLength	KEYWORD2
-GetMinIntValue			KEYWORD2
-GetMaxIntValue			KEYWORD2
+GetMinIntValue	KEYWORD2
+GetMaxIntValue	KEYWORD2
 GetMaxTextValueLength	KEYWORD2
-SetValueAddress			KEYWORD2
+SetValueAddress	KEYWORD2
 
-GetSizeX				KEYWORD2
-GetSizeY				KEYWORD2
-BuildString				KEYWORD2
-BuildProgress			KEYWORD2
-FillBuffer				KEYWORD2
-clear					KEYWORD2
-DisplayHeader			KEYWORD2
-DisplayCenteredText		KEYWORD2
-DisplayChar				KEYWORD2
-DisplayText				KEYWORD2
-DisplayTextF			KEYWORD2
-DisplayChoiceF			KEYWORD2
-DisplayTextResultF		KEYWORD2
-DisplayText				KEYWORD2
-DisplayChoice			KEYWORD2
-DisplayChoice			KEYWORD2
-DisplayInt				KEYWORD2
-DisplayTextResult		KEYWORD2
-DisplayTextChoice		KEYWORD2
-DisplayYesNo			KEYWORD2
+GetSizeX	KEYWORD2
+GetSizeY	KEYWORD2
+BuildString	KEYWORD2
+BuildProgress	KEYWORD2
+FillBuffer	KEYWORD2
+clear	KEYWORD2
+DisplayHeader	KEYWORD2
+DisplayCenteredText	KEYWORD2
+DisplayChar	KEYWORD2
+DisplayText	KEYWORD2
+DisplayTextF	KEYWORD2
+DisplayChoiceF	KEYWORD2
+DisplayTextResultF	KEYWORD2
+DisplayText	KEYWORD2
+DisplayChoice	KEYWORD2
+DisplayChoice	KEYWORD2
+DisplayInt	KEYWORD2
+DisplayTextResult	KEYWORD2
+DisplayTextChoice	KEYWORD2
+DisplayYesNo	KEYWORD2
 
-printEvent				KEYWORD2
-printWindows			KEYWORD2
+printEvent	KEYWORD2
+printWindows	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
@@ -77,15 +77,15 @@ printWindows			KEYWORD2
 
 UNDEFINED_ID	LITERAL1
 
-EVENT_NONE		LITERAL1
-EVENT_MORE		LITERAL1
-EVENT_LESS		LITERAL1
+EVENT_NONE	LITERAL1
+EVENT_MORE	LITERAL1
+EVENT_LESS	LITERAL1
 EVENT_SELECT	LITERAL1
 EVENT_CANCEL	LITERAL1
-EVENT_MOVE		LITERAL1
-EVENT_START		LITERAL1
-EVENT_END		LITERAL1
+EVENT_MOVE	LITERAL1
+EVENT_START	LITERAL1
+EVENT_END	LITERAL1
 
 STATE_INITIALIZE	LITERAL1
-STATE_CONFIRMED		LITERAL1
+STATE_CONFIRMED	LITERAL1
 STATE_POSTCONFIRMED	LITERAL1

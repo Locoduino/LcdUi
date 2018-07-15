@@ -33,3 +33,5 @@ VStudio/Project/x64
 *.filters
 *.user
 *.log
+
+desktop\.ini
