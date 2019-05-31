@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -19,38 +19,39 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{109A4E7B-5119-4B0D-B021-480D83510EF2}</ProjectGuid>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <ProjectGuid>{9696B190-8A31-45BA-A43E-0287102EF438}</ProjectGuid>
+    <TargetFrameworkVersion>
+    </TargetFrameworkVersion>
     <Keyword>ManagedCProj</Keyword>
-    <RootNamespace>LcdUi</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <RootNamespace>TestExe</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CLRSupport>true</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CLRSupport>true</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
-    <CLRSupport>true</CLRSupport>
+    <PlatformToolset>v142</PlatformToolset>
+    <CLRSupport>false</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CLRSupport>true</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -72,82 +73,71 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(IncludePath);$(VisualStudioDir)\..\Arduino\ArduiEmulatorWin\ArduiEmulatorLib;$(VisualStudioDir)\..\Arduino\Libraries\DIO2\VStudio;$(VisualStudioDir)\..\Arduino\Libraries\Commanders\VStudio;</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../../ArduiEmulator/ArduiEmulator</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies />
+      <SubSystem>Windows</SubSystem>
+      <EntryPointSymbol>Main</EntryPointSymbol>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);VISUALSTUDIO</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(VisualStudioDir)\..\Arduino\ArduiEmulator\ArduiEmulator</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions);VISUALSTUDIO;LCDUI_DEBUG_MODE;LCDUI_PRINT_WINDOWS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\src</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>uafxcwd.lib;Libcmtd.lib</AdditionalDependencies>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+      <NoEntryPoint>false</NoEntryPoint>
+      <SubSystem>Console</SubSystem>
+      <IgnoreSpecificDefaultLibraries>uafxcwd.lib;Libcmtd.lib</IgnoreSpecificDefaultLibraries>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies />
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies />
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\src\Chain.hpp" />
-    <ClInclude Include="..\..\src\LcdScreen.hpp" />
-    <ClInclude Include="..\..\src\LcdUi.h" />
-    <ClInclude Include="..\..\src\ScreenLiquid.hpp" />
-    <ClInclude Include="..\..\src\ScreenLiquidNew.hpp" />
-    <ClInclude Include="..\..\src\ScreenNokia5110.hpp" />
-    <ClInclude Include="..\..\src\Window.hpp" />
-    <ClInclude Include="..\..\src\WindowChoice.hpp" />
-    <ClInclude Include="..\..\src\WindowChoiceText.hpp" />
-    <ClInclude Include="..\..\src\WindowConfirm.hpp" />
-    <ClInclude Include="..\..\src\WindowInt.hpp" />
-    <ClInclude Include="..\..\src\WindowInterrupt.hpp" />
-    <ClInclude Include="..\..\src\WindowInterruptConfirm.hpp" />
-    <ClInclude Include="..\..\src\WindowSplash.hpp" />
-    <ClInclude Include="..\..\src\WindowText.hpp" />
-    <ClInclude Include="..\..\src\WindowYesNo.hpp" />
-    <ClInclude Include="..\LcdUi.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\src\LcdScreen.cpp" />
-    <ClCompile Include="..\..\src\LcdUi.cpp" />
-    <ClCompile Include="..\..\src\Window.cpp" />
-    <ClCompile Include="..\..\src\WindowChoice.cpp" />
-    <ClCompile Include="..\..\src\WindowChoiceText.cpp" />
-    <ClCompile Include="..\..\src\WindowConfirm.cpp" />
-    <ClCompile Include="..\..\src\WindowInt.cpp" />
-    <ClCompile Include="..\..\src\WindowInterrupt.cpp" />
-    <ClCompile Include="..\..\src\WindowInterruptConfirm.cpp" />
-    <ClCompile Include="..\..\src\WindowSplash.cpp" />
-    <ClCompile Include="..\..\src\WindowText.cpp" />
-    <ClCompile Include="..\..\src\WindowYesNo.cpp" />
-  </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -156,12 +146,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\ArduiEmulator\ArduiEmulator\ArduiEmulator.vcxproj">
-      <Project>{2cedff9d-11ac-46b3-92b0-8b43cbccffac}</Project>
+    <ClCompile Include="ArduinoIno.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TestExe.ino" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Commanders\VStudio\Commanders.vcxproj">
+      <Project>{9b47755b-558d-4577-9c7f-4e573605cae3}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\DIO2\VStudio\DIO2.vcxproj">
+    <ProjectReference Include="..\..\DIO2\VStudio\DIO2.vcxproj">
       <Project>{cc4048d1-7ac0-4d3d-98a3-2922d996b5ab}</Project>
     </ProjectReference>
+    <ProjectReference Include="LcdUi.vcxproj">
+      <Project>{7b26ba45-2af4-4eb1-8780-d28e09b51759}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\WhatsNew.TXT" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -21,17 +21,25 @@
 // line.
 //#define LCDUI_PRINT_WINDOWS
 
-#ifdef VISUALSTUDIO
+/*#ifdef VISUALSTUDIO
 #include "Arduino.h"
 #include "string.h"
 #define STRNCPY(out, len ,in)	strcpy_s(out, len, in)
 #define STRCPY(out, in)			strcpy_s(out, in)
-#define LCDUI_DEBUG_MODE
-#define LCDUI_PRINT_WINDOWS
 #else
 #define STRNCPY(out, len ,in)	strcpy(out, in)
 #define STRCPY(out, in)			strcpy(out, in)
+#endif*/
+
+#include "Arduino.h"
+
+// GetNextWindow already exists in system includes sdk/winuser.h...
+#ifdef GetNextWindow
+#undef GetNextWindow
 #endif
+
+#define STRNCPY(out, len ,in)	strcpy(out, in)
+#define STRCPY(out, in)			strcpy(out, in)
 
 #ifndef STR_LCDTITLE
 #define STR_LCDTITLE16		F("LCD UI V1.0.2")

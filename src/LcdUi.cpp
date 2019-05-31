@@ -5,12 +5,11 @@ description: <Base functions of the library>
 *************************************************************/
 
 #include "LcdUi.h"
-#include "../VStudio/LcdUi.hpp"
 
-#ifndef VISUALSTUDIO
+/*#ifndef VISUALSTUDIO
 #include "Arduino.h"
 #include <avr/pgmspace.h>
-#endif
+#endif*/
 
 bool LcdUi::firstLoop = false;
 
